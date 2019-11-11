@@ -12,12 +12,18 @@ const fb = require('./firebaseConfig')
 import {
   faUserSecret,
   faEyeSlash,
-  faEye
+  faEye,
+  faEllipsisV,
+  faSignOutAlt,
+  faBars
 } from '@fortawesome/free-solid-svg-icons'
 library.add(
   faUserSecret,
   faEyeSlash,
-  faEye
+  faEye,
+  faEllipsisV,
+  faSignOutAlt,
+  faBars
 )
 
 Vue.component('font-awesome-icon', FontAwesomeIcon)
