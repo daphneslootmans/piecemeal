@@ -15,7 +15,8 @@ import {
   faEye,
   faEllipsisV,
   faSignOutAlt,
-  faBars
+  faBars,
+  faExclamation
 } from '@fortawesome/free-solid-svg-icons'
 library.add(
   faUserSecret,
@@ -23,7 +24,8 @@ library.add(
   faEye,
   faEllipsisV,
   faSignOutAlt,
-  faBars
+  faBars,
+  faExclamation
 )
 
 Vue.component('font-awesome-icon', FontAwesomeIcon)

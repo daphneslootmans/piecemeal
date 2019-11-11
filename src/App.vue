@@ -1,10 +1,22 @@
 <template>
   <div id="app">
-      <router-view/>
+    <router-view/>
   </div>
 </template>
 
+<script>
+  import firebase from 'firebase/app'
+  import 'firebase/auth'
+
+  export default {
+    created () {
+      firebase.auth().onAuthStateChanged(user => {this.$store.commit('setAuthUser', user)})
+    }
+  }
+</script>
+
 <style lang="scss">
+  @import "sass/main.scss";
   #app {
     font-family: 'Avenir', Helvetica, Arial, sans-serif;
     -webkit-font-smoothing: antialiased;

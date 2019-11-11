@@ -7,9 +7,18 @@
           justify="center"
         >
           <v-col cols="12" md="6">
-            <v-form @submit.prevent>
+            <v-form @submit.prevent="signInEmail">
               <v-col cols="12">
                 <h2>Login</h2>
+                <v-alert
+                  v-show="error"
+                  text
+                  type="error"
+                >
+                  <font-awesome-icon slot="prepend" icon="exclamation"></font-awesome-icon>
+                  {{ error }}
+                </v-alert>
+<!--                TODO: add more detailed authentication-->
                 <div v-if="user">{{ user.email }}</div>
               </v-col>
               <v-col cols="12">
@@ -38,7 +47,7 @@
               <v-col>
                 <v-btn
                   color="primary"
-                  @click="signIn({email: email, password: password})"
+                  @click="signInEmail"
                 >
                   Sign in
                 </v-btn>
@@ -52,7 +61,8 @@
 </template>
 
 <script>
-  import firebase from 'firebase'
+  import firebase from 'firebase/app'
+  import 'firebase/auth'
   import { mapState, mapActions } from 'vuex'
 
   export default {
@@ -66,16 +76,22 @@
     },
     computed: {
       ...mapState({
-        user: 'authUser'
+        user: 'authUser',
+        error: 'error'
       })
     },
     methods: {
       ...mapActions({
         signIn: 'signIn'
-      })
-    },
-    created () {
-      firebase.auth().onAuthStateChanged(user => {this.$store.commit('setAuthUser', user)})
+      }),
+      signInEmail () {
+        firebase.auth().signInWithEmailAndPassword(this.email, this.password)
+            .then(user => {
+                  this.$router.push('/dashboard')
+                }
+            )
+            .catch(error => { this.$store.commit('setError', error)})
+      }
     }
   }
 </script>
