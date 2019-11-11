@@ -6,10 +6,8 @@
     >
       <v-col cols="12" md="6">
         <v-form @submit.prevent>
-          <v-col cols="12">
-            <h2>Login</h2>
-            <div v-if="user">{{ user.email }}</div>
-          </v-col>
+          <h2>Register</h2>
+          <div v-if="user">{{ user.email }}</div>
           <v-col cols="12">
             <v-text-field
               v-model="email"
@@ -34,13 +32,12 @@
               </template>
             </v-text-field>
           </v-col>
-          <v-col>
+          <div>
             <v-btn
               color="primary"
-              @click="login"
-            >Register
-            </v-btn>
-          </v-col>
+              @click="registerEmail({email: email, password: password})"
+            >Register</v-btn>
+          </div>
         </v-form>
 
       </v-col>
@@ -50,8 +47,7 @@
 
 <script>
   import firebase from 'firebase'
-  import { mapState } from 'vuex'
-
+  import { mapState, mapActions } from 'vuex'
   export default {
     name: 'Login',
     data () {
@@ -67,10 +63,9 @@
       })
     },
     methods: {
-      login () {
-        console.log('registering')
-        firebase.auth().login(this.email, this.password)
-      }
+      ...mapActions({
+        registerEmail: 'registerEmail'
+      })
     },
     created () {
       firebase.auth().onAuthStateChanged(user => {this.$store.commit('setAuthUser', user)})

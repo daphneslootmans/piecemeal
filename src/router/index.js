@@ -3,6 +3,7 @@ import VueRouter from 'vue-router'
 import firebase from 'firebase'
 
 import Login from '../views/Login.vue'
+import Register from '../views/Register.vue'
 import Dashboard from '../views/Dashboard.vue'
 import Settings from '../views/Settings.vue'
 
@@ -17,6 +18,11 @@ const routes = [
     path: '/login',
     name: 'login',
     component: Login
+  },
+  {
+    path: '/register',
+    name: 'register',
+    component: Register
   },
   {
     path: '/dashboard',
