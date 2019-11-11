@@ -9,14 +9,14 @@ export default new Vuetify({
         customProperties: true,
       },
     themes: {
-      light: {
-        primary: '#ee44aa',
-        secondary: '#424242',
-        accent: '#82B1FF',
-        error: '#FF5252',
-        info: '#2196F3',
-        success: '#4CAF50',
-        warning: '#FFC107'
+      light:   {
+        primary: '#673ab7',
+        secondary: '#e91e63',
+        accent: '#9c27b0',
+        error: '#ff5722',
+        warning: '#ffc107',
+        info: '#03a9f4',
+        success: '#4caf50'
       },
     },
   },

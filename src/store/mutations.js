@@ -4,6 +4,9 @@ const mutations = {
   },
   setError(state, error) {
     state.error = error
+  },
+  addRecipe (state, value) {
+    state.recipes.push(value)
   }
 }
 
