@@ -5,11 +5,20 @@ import store from './store'
 import vuetify from './plugins/vuetify';
 import { library } from '@fortawesome/fontawesome-svg-core'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
+import { fas } from '@fortawesome/free-solid-svg-icons'
 
 const fb = require('./firebaseConfig')
 
-import { faUserSecret } from '@fortawesome/free-solid-svg-icons'
-library.add(faUserSecret)
+import {
+  faUserSecret,
+  faEyeSlash,
+  faEye
+} from '@fortawesome/free-solid-svg-icons'
+library.add(
+  faUserSecret,
+  faEyeSlash,
+  faEye
+)
 
 Vue.component('font-awesome-icon', FontAwesomeIcon)
 
