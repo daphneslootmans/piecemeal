@@ -1,63 +1,48 @@
 <template>
-  <v-app>
-    <v-content>
-      <v-container>
-        <v-row
-          align="center"
-          justify="center"
-        >
-          <v-col cols="12" md="6">
-            <v-form @submit.prevent="signInEmail">
-              <v-col cols="12">
-                <h2>Login</h2>
-                <v-alert
-                  v-show="error"
-                  text
-                  type="error"
-                >
-                  <font-awesome-icon slot="prepend" icon="exclamation"></font-awesome-icon>
-                  {{ error }}
-                </v-alert>
-<!--                TODO: add more detailed authentication-->
-                <div v-if="user">{{ user.email }}</div>
-              </v-col>
-              <v-col cols="12">
-                <v-text-field
-                  v-model="email"
-                  label="Email"
-                  outlined
-                ></v-text-field>
-              </v-col>
-              <v-col cols="12">
-                <v-text-field
-                  v-model="password"
-                  :type="showPw ? 'text' : 'password'"
-                  name="input-10-1"
-                  label="Password"
-                  outlined
-                >
-                  <template v-slot:append>
-                    <v-fade-transition leave-absolute>
-                      <font-awesome-icon icon="eye" v-if="showPw" @click="showPw = !showPw"></font-awesome-icon>
-                      <font-awesome-icon icon="eye-slash" v-else @click="showPw = !showPw"></font-awesome-icon>
-                    </v-fade-transition>
-                  </template>
-                </v-text-field>
-              </v-col>
-              <v-col>
-                <v-btn
-                  color="primary"
-                  @click="signInEmail"
-                >
-                  Sign in
-                </v-btn>
-              </v-col>
-            </v-form>
-          </v-col>
-        </v-row>
-      </v-container>
-    </v-content>
-  </v-app>
+  <section class="section">
+    <div class="container">
+      <div class="columns">
+        <div class="column is-6">
+          <form @submit.prevent="signInEmail">
+            <div class="content">
+              <h2>Login</h2>
+            </div>
+            <b-notification
+              :active.sync="showError"
+              aria-close-label="Close notification"
+              role="alert"
+              type="is-danger"
+            >
+              {{ error }}
+            </b-notification>
+            <!--                TODO: add more detailed authentication-->
+            <div v-if="user">{{ user.email }}</div>
+            <b-field label="Email">
+              <b-input type="email" v-model="email"></b-input>
+            </b-field>
+            <b-field label="Password">
+              <b-input type="password" v-model="password" password-reveal></b-input>
+            </b-field>
+
+            <div class="level">
+              <div class="level-left"></div>
+              <div class="level-right">
+                <div class="level-item">
+                  <b-button
+                    type="is-primary"
+                    expanded
+                    @click="signInEmail"
+                  >
+                    Sign in
+                  </b-button>
+                </div>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </section>
 </template>
 
 <script>
@@ -78,7 +63,10 @@
       ...mapState({
         user: 'authUser',
         error: 'error'
-      })
+      }),
+      showError () {
+        return this.error !== null
+      }
     },
     methods: {
       ...mapActions({
@@ -88,6 +76,7 @@
         firebase.auth().signInWithEmailAndPassword(this.email, this.password)
             .then(user => {
                   this.$router.push('/dashboard')
+                  this.$store.commit('setError', null)
                 }
             )
             .catch(error => { this.$store.commit('setError', error)})

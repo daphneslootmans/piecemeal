@@ -1,53 +1,48 @@
 <template>
-  <v-app>
-    <v-content>
-      <v-container>
-        <v-row
-          align="center"
-          justify="center"
-        >
-          <v-col cols="12" md="6">
-            <v-form @submit.prevent>
+  <section class="section">
+    <div class="container">
+      <div class="columns">
+        <div class="column is-6">
+          <form @submit.prevent="registerEmail">
+            <div class="content">
               <h2>Register</h2>
-              <div v-if="user">{{ user.email }}</div>
-              <v-col cols="12">
-                <v-text-field
-                  v-model="email"
-                  label="Email"
-                  outlined
-                ></v-text-field>
-              </v-col>
-              <v-col cols="12">
-                <v-text-field
-                  v-model="password"
-                  :type="showPw ? 'text' : 'password'"
-                  name="input-10-1"
-                  label="Password"
-                  hint="At least 8 characters"
-                  outlined
-                >
-                  <template v-slot:append>
-                    <v-fade-transition leave-absolute>
-                      <font-awesome-icon icon="eye" v-if="showPw" @click="showPw = !showPw"></font-awesome-icon>
-                      <font-awesome-icon icon="eye-slash" v-else @click="showPw = !showPw"></font-awesome-icon>
-                    </v-fade-transition>
-                  </template>
-                </v-text-field>
-              </v-col>
-              <div>
-                <v-btn
-                  color="primary"
-                  @click="registerEmail({email: email, password: password})"
-                >Register
-                </v-btn>
-              </div>
-            </v-form>
+            </div>
+            <b-notification
+              :active.sync="showError"
+              aria-close-label="Close notification"
+              role="alert"
+              type="is-danger"
+            >
+              {{ error }}
+            </b-notification>
+            <!--                TODO: add more detailed authentication-->
+            <div v-if="user">{{ user.email }}</div>
+            <b-field label="Email">
+              <b-input type="email" v-model="email"></b-input>
+            </b-field>
+            <b-field label="Password">
+              <b-input type="password" v-model="password" password-reveal></b-input>
+            </b-field>
 
-          </v-col>
-        </v-row>
-      </v-container>
-    </v-content>
-  </v-app>
+            <div class="level">
+              <div class="level-left"></div>
+              <div class="level-right">
+                <div class="level-item">
+                  <b-button
+                    type="is-primary"
+                    expanded
+                    @click="registerEmail"
+                  >
+                    Register
+                  </b-button>
+                </div>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </section>
 </template>
 
 <script>
@@ -65,8 +60,12 @@
     },
     computed: {
       ...mapState({
-        user: 'authUser'
-      })
+        user: 'authUser',
+        error: 'error'
+      }),
+      showError () {
+        return this.error !== null
+      }
     },
     methods: {
       ...mapActions({

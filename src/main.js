@@ -2,37 +2,53 @@ import Vue from 'vue'
 import App from './App.vue'
 import router from './router'
 import store from './store'
-import vuetify from './plugins/vuetify';
+import Buefy from 'buefy'
 import { library } from '@fortawesome/fontawesome-svg-core'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
-import { fas } from '@fortawesome/free-solid-svg-icons'
 
 const fb = require('./firebaseConfig')
 
 import {
+  faCheck, faCheckCircle, faInfoCircle, faExclamationTriangle, faExclamationCircle,
+  faArrowUp, faAngleRight, faAngleLeft, faAngleDown,
+  faEye, faEyeSlash, faCaretDown, faCaretUp, faUpload,
   faUserSecret,
-  faEyeSlash,
-  faEye,
   faEllipsisV,
   faSignOutAlt,
   faBars,
   faExclamation,
-  faFileAlt
+  faFileAlt,
+  faDrumstickBite,
+  faHamburger,
+  faPlus,
+  faMinus,
+  faLink
 } from '@fortawesome/free-solid-svg-icons'
 library.add(
+  faCheck, faCheckCircle, faInfoCircle, faExclamationTriangle, faExclamationCircle,
+  faArrowUp, faAngleRight, faAngleLeft, faAngleDown,
+  faEye, faEyeSlash, faCaretDown, faCaretUp, faUpload,
   faUserSecret,
-  faEyeSlash,
-  faEye,
   faEllipsisV,
   faSignOutAlt,
   faBars,
   faExclamation,
-  faFileAlt
+  faFileAlt,
+  faDrumstickBite,
+  faHamburger,
+  faPlus,
+  faMinus,
+  faLink
 )
 
-Vue.component('font-awesome-icon', FontAwesomeIcon)
+Vue.component('vue-fontawesome', FontAwesomeIcon)
 
 Vue.config.productionTip = false
+
+Vue.use(Buefy, {
+  defaultIconComponent: 'vue-fontawesome',
+  defaultIconPack: 'fas'
+})
 
 let app
 fb.auth.onAuthStateChanged(user => {
@@ -41,7 +57,6 @@ fb.auth.onAuthStateChanged(user => {
       el: '#app',
       router,
       store,
-      vuetify,
       render: h => h(App)
     })
   }

@@ -1,59 +1,65 @@
 <template>
-  <v-app>
-    <v-app-bar
-      app
-      color="primary"
-      dark
-    >
-      <v-app-bar-nav-icon @click.stop="drawer = !drawer">
-        <font-awesome-icon :icon="['fas', 'bars']"></font-awesome-icon>
-      </v-app-bar-nav-icon>
-      <v-toolbar-title>piecemeal</v-toolbar-title>
-      <v-spacer/>
-      <div v-if="user">{{ user.email }}</div>
-      <v-btn icon>
-        <font-awesome-icon :icon="['fas', 'sign-out-alt']" size="lg" @click.stop="signOut"></font-awesome-icon>
-      </v-btn>
-    </v-app-bar>
+  <div>
+    <b-navbar type="is-primary" spaced>
+      <template slot="brand">
+        <b-navbar-item tag="router-link" :to="{ path: '/' }">
+          <vue-fontawesome icon="drumstick-bite" size="lg"></vue-fontawesome>
+          <span>piecemeal</span>
+        </b-navbar-item>
+      </template>
 
-    <v-navigation-drawer
-      v-model="drawer"
-      app
-    >
-      <v-list>
-        <v-list-item @click.stop="addRecipe">
-          <v-list-item-action>
-            <font-awesome-icon icon="file-alt"></font-awesome-icon>
-          </v-list-item-action>
-          <v-list-item-content>
-            <v-list-item-title>Add a recipe</v-list-item-title>
-          </v-list-item-content>
-        </v-list-item>
-        <v-list-item @click.stop="signOut">
-          <v-list-item-action>
-            <font-awesome-icon icon="sign-out-alt"></font-awesome-icon>
-          </v-list-item-action>
-          <v-list-item-content>
-            <v-list-item-title>Sign out</v-list-item-title>
-          </v-list-item-content>
-        </v-list-item>
-      </v-list>
-    </v-navigation-drawer>
+      <template slot="start">
+        <b-navbar-item tag="router-link" :to="{ path: '/Dashboard' }">
+         Recipes
+        </b-navbar-item>
+        <b-navbar-item tag="router-link" :to="{ path: '/Register' }">
+          Register
+        </b-navbar-item>
+        <b-navbar-item tag="router-link" :to="{ path: '/Settings' }">
+          Settings
+        </b-navbar-item>
+      </template>
 
-    <v-content>
-      <component :is="currentComponent"></component>
-    </v-content>
+      <template slot="end">
+        <b-navbar-item tag="div">
+          <div v-if="user">{{ user.email }}</div>
+          <div class="buttons">
+            <b-button icon-right="sign-out-alt" type="is-primary">
+            </b-button>
+          </div>
+        </b-navbar-item>
+      </template>
+    </b-navbar>
 
-    <v-footer
-      app
-      color="primary"
-      class="white--text"
-    >
-<!--      <span>Daphne Slootmans</span>-->
-      <v-spacer/>
-      <span>&copy; 2019</span>
-    </v-footer>
-  </v-app>
+    <section class="section">
+      <div class="container">
+          <b-menu>
+            <b-menu-list label="Menu">
+              <b-menu-item icon="hamburger" label="Info"></b-menu-item>
+              <b-menu-item icon="account" label="My Account">
+                <b-menu-item label="Account data"></b-menu-item>
+                <b-menu-item label="Addresses"></b-menu-item>
+              </b-menu-item>
+            </b-menu-list>
+            <b-menu-list>
+              <b-menu-item
+                label="Expo"
+                icon="link"
+                tag="router-link"
+                target="_blank"
+                to="/expo">
+              </b-menu-item>
+            </b-menu-list>
+            <b-menu-list label="Actions">
+              <b-menu-item label="Logout"></b-menu-item>
+            </b-menu-list>
+          </b-menu>
+
+        <component :is="currentComponent"></component>
+      </div>
+    </section>
+
+  </div>
 </template>
 
 <script>
@@ -65,10 +71,10 @@
       AddRecipe
     },
     props: {
-      source: String,
+      source: String
     },
     data: () => ({
-      drawer: true,
+      isActive: true,
       currentComponent: 'AddRecipe'
     }),
     computed: {
