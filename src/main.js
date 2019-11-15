@@ -22,8 +22,14 @@ import {
   faHamburger,
   faPlus,
   faMinus,
-  faLink
+  faLink,
+  faBook,
+  faTag,
+  faHashtag,
+  faBlender,
+
 } from '@fortawesome/free-solid-svg-icons'
+
 library.add(
   faCheck, faCheckCircle, faInfoCircle, faExclamationTriangle, faExclamationCircle,
   faArrowUp, faAngleRight, faAngleLeft, faAngleDown,
@@ -38,7 +44,12 @@ library.add(
   faHamburger,
   faPlus,
   faMinus,
-  faLink
+  faLink,
+  faBook,
+  faTag,
+  faHashtag,
+  faBlender,
+
 )
 
 Vue.component('vue-fontawesome', FontAwesomeIcon)
