@@ -25,7 +25,6 @@
             <div class="column is-full">
               <b-field label="Category">
                 <b-select
-                  :value="categories[0]"
                   v-model="category"
                 >
                   <option
@@ -173,7 +172,14 @@
       </div>
       <div class="columns">
         <div class="column is-narrow ml-auto">
-          <b-button type="is-primary" expanded size="is-medium" @click="addRecipe">Add recipe</b-button>
+          <b-button
+            type="is-primary"
+            expanded
+            size="is-medium"
+            @click="addRecipe"
+            :loading="this.loading"
+            :disabled="this.loading"
+          >Add recipe</b-button>
         </div>
       </div>
     </form>
@@ -203,7 +209,8 @@
         dropFiles: [],
         categories: [
           'Dinner', 'Side Dish', 'Breakfast', 'Lunch', 'Dessert'
-        ]
+        ],
+        loading: false
       }
     },
     computed: {
@@ -226,6 +233,8 @@
         this.ingredients = this.ingredientsRaw.replace(/\r\n/g, '\n').split('\n')
       },
       addRecipe () {
+        this.loading = true
+
         let ingredientsList = []
         this.ingredients.forEach(item => {
           if (item !== '') {
@@ -247,7 +256,16 @@
           createdAt: new Date(),
           users: [this.user.uid]
         }
-        let setDoc = db.collection('recipes').doc().set(recipe)
+        let setDoc = db.collection('recipes').add(recipe)
+            .then(docRef => {
+              this.loading = false
+              this.$buefy.toast.open({
+                message: `Recipe saved successfully!`,
+                type: 'is-primary',
+                position: 'is-top-right',
+                duration: 3000
+              })
+            })
       }
     },
     watch: {
@@ -256,6 +274,7 @@
       }
     },
     mounted () {
+      this.category = this.categories[0]
       // db.ref('recipes').on('value', snapshot => {
       //   this.$store.commit('addRecipe', snapshot.val())
       // })
