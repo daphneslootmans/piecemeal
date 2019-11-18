@@ -18,13 +18,32 @@
                 ></b-input>
               </b-field>
             </div>
+
             <div class="column is-full">
+              <b-field label="Category">
+                <b-select>
+                  <option
+                    v-for="option in categories"
+                    :value="option"
+                    :key="option">
+                    {{ option }}
+                  </option>
+                </b-select>
+              </b-field>
+            </div>
+
+            <div class="column">
               <b-field label="Description">
                 <b-input
                   type="textarea"
                   v-model="description"
-                  rows="2"
+                  rows="4"
                 ></b-input>
+              </b-field>
+            </div>
+            <div class="column is-narrow">
+              <b-field label="Rating">
+                <b-rate icon="heart" spaced v-model="rating"></b-rate>
               </b-field>
             </div>
             <div class="column is-full">
@@ -40,7 +59,7 @@
             <div class="column is-6">
               <b-field label="Preparation time in minutes">
                 <b-numberinput
-                  v-model="prepTime"
+                  v-model.number="prepTime"
                 ></b-numberinput>
               </b-field>
             </div>
@@ -85,8 +104,8 @@
         <div class="column is-half">
           <b-field label="Ingredients">
             <b-input
+              v-model="ingredientsRaw"
               type="textarea"
-              v-model="ingredients"
               rows="8"
               placeholder="Add one ingredient per line"
             ></b-input>
@@ -116,17 +135,22 @@
             <h3>Directions</h3>
           </div>
           <b-field
-            v-for="(step, index) in prepSteps"
+            v-for="(step, index) in directions"
             :label="stepName(index)"
             :key="'step' + index"
           >
             <b-input
               type="textarea"
-              v-model="prepSteps[index]"
+              v-model.trim="directions[index]"
             ></b-input>
           </b-field>
           <b-button icon-right="plus" type="is-primary" @click="addStep">
           </b-button>
+        </div>
+      </div>
+      <div class="columns">
+        <div class="column is-narrow ml-auto">
+          <b-button type="is-primary" expanded size="is-medium" @click="addRecipe">Add recipe</b-button>
         </div>
       </div>
     </form>
@@ -134,23 +158,36 @@
 </template>
 
 <script>
-  const fb = require('@/firebaseConfig.js')
+  import { db } from '../firebaseConfig.js'
+  import { mapState } from 'vuex'
+
   export default {
     name: 'AddRecipe',
     data () {
       return {
         title: '',
-        prepTime: null,
-        tags: [],
+        category: '',
         description: '',
-        ingredients: '',
+        rating: 0,
+        imageUrl: '',
+        tags: [],
+        prepTime: null,
+        ingredientsRaw: '',
+        ingredients: [],
         materials: [],
+        comment: '',
+        directions: [''],
         dropFiles: [],
-        prepSteps: [''],
-        comment: ''
+        categories: [
+            'Side Dish', 'Breakfast', 'Lunch', 'Dinner', 'Dessert'
+        ]
       }
     },
-    computed: {},
+    computed: {
+      ...mapState({
+        user: 'authUser'
+      })
+    },
     methods: {
       deleteDropFiles (index) {
         this.dropFiles.splice(index, 1)
@@ -160,13 +197,39 @@
         return 'Step ' + stepNr.toString()
       },
       addStep () {
-        this.prepSteps.push('')
+        this.directions.push('')
+      },
+      parseIngredients () {
+        this.ingredients = this.ingredientsRaw.replace(/\r\n/g,"\n").split("\n")
+      },
+      addRecipe () {
+        let recipe = {
+          title: this.title,
+          category: this.category,
+          description: this.description,
+          rating: this.rating,
+          imageUrl: this.imageUrl,
+          tags: this.tags,
+          prepTime: this.prepTime,
+          ingredients: this.ingredients,
+          materials: this.materials,
+          comment: this.comment,
+          directions: this.directions,
+          createdAt: new Date(),
+          users: [this.user.uid]
+        }
+        let setDoc = db.collection('recipes').doc().set(recipe)
+      }
+    },
+    watch: {
+      ingredientsRaw () {
+        this.parseIngredients()
       }
     },
     mounted () {
-      fb.db.ref('recipes').on('value', snapshot => {
-        this.$store.commit('addRecipe', snapshot.val())
-      })
+      // db.ref('recipes').on('value', snapshot => {
+      //   this.$store.commit('addRecipe', snapshot.val())
+      // })
     }
   }
 </script>
