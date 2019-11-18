@@ -7,6 +7,8 @@
       <div class="content">
         <h3>Details</h3>
       </div>
+
+      <!--title-->
       <div class="columns">
         <div class="column">
           <div class="columns is-multiline">
@@ -19,19 +21,25 @@
               </b-field>
             </div>
 
+            <!--category-->
             <div class="column is-full">
               <b-field label="Category">
-                <b-select>
+                <b-select
+                  :value="categories[0]"
+                  v-model="category"
+                >
                   <option
                     v-for="option in categories"
                     :value="option"
-                    :key="option">
+                    :key="option"
+                  >
                     {{ option }}
                   </option>
                 </b-select>
               </b-field>
             </div>
 
+            <!--description-->
             <div class="column">
               <b-field label="Description">
                 <b-input
@@ -41,11 +49,15 @@
                 ></b-input>
               </b-field>
             </div>
+
+            <!--rating-->
             <div class="column is-narrow">
               <b-field label="Rating">
                 <b-rate icon="heart" spaced v-model="rating"></b-rate>
               </b-field>
             </div>
+
+            <!--tags-->
             <div class="column is-full">
               <b-field label="Tags">
                 <b-taginput
@@ -56,6 +68,8 @@
                 </b-taginput>
               </b-field>
             </div>
+
+            <!--prep time-->
             <div class="column is-6">
               <b-field label="Preparation time in minutes">
                 <b-numberinput
@@ -66,6 +80,7 @@
           </div>
         </div>
 
+        <!--image-->
         <div class="column is-5">
           <b-field label="Image">
             <b-upload v-model="dropFiles"
@@ -100,6 +115,8 @@
           </div>
         </div>
       </div>
+
+      <!--ingredients-->
       <div class="columns">
         <div class="column is-half">
           <b-field label="Ingredients">
@@ -111,6 +128,8 @@
             ></b-input>
           </b-field>
         </div>
+
+        <!--materials-->
         <div class="column is-half">
           <b-field label="Materials">
             <b-taginput
@@ -120,6 +139,8 @@
               placeholder="Add required materials">
             </b-taginput>
           </b-field>
+
+          <!--comment-->
           <b-field label="Comment">
             <b-input
               type="textarea"
@@ -129,6 +150,8 @@
           </b-field>
         </div>
       </div>
+
+      <!--directions-->
       <div class="columns">
         <div class="column">
           <div class="content">
@@ -179,7 +202,7 @@
         directions: [''],
         dropFiles: [],
         categories: [
-            'Side Dish', 'Breakfast', 'Lunch', 'Dinner', 'Dessert'
+          'Dinner', 'Side Dish', 'Breakfast', 'Lunch', 'Dessert'
         ]
       }
     },
@@ -200,9 +223,15 @@
         this.directions.push('')
       },
       parseIngredients () {
-        this.ingredients = this.ingredientsRaw.replace(/\r\n/g,"\n").split("\n")
+        this.ingredients = this.ingredientsRaw.replace(/\r\n/g, '\n').split('\n')
       },
       addRecipe () {
+        let ingredientsList = []
+        this.ingredients.forEach(item => {
+          if (item !== '') {
+            ingredientsList.push(item)
+          }
+        })
         let recipe = {
           title: this.title,
           category: this.category,
@@ -211,7 +240,7 @@
           imageUrl: this.imageUrl,
           tags: this.tags,
           prepTime: this.prepTime,
-          ingredients: this.ingredients,
+          ingredients: ingredientsList,
           materials: this.materials,
           comment: this.comment,
           directions: this.directions,
