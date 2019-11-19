@@ -207,15 +207,13 @@
         comment: '',
         directions: [''],
         dropFiles: [],
-        categories: [
-          'Dinner', 'Side Dish', 'Breakfast', 'Lunch', 'Dessert'
-        ],
         loading: false
       }
     },
     computed: {
       ...mapState({
-        user: 'authUser'
+        user: 'authUser',
+        categories: 'categories'
       })
     },
     methods: {
@@ -261,7 +259,7 @@
               this.loading = false
               this.$buefy.toast.open({
                 message: `Recipe saved successfully!`,
-                type: 'is-primary',
+                type: 'is-dark',
                 position: 'is-top-right',
                 duration: 3000
               })
@@ -275,9 +273,6 @@
     },
     mounted () {
       this.category = this.categories[0]
-      // db.ref('recipes').on('value', snapshot => {
-      //   this.$store.commit('addRecipe', snapshot.val())
-      // })
     }
   }
 </script>

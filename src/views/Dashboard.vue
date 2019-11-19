@@ -35,26 +35,32 @@
     <section class="section">
       <div class="container">
         <div class="columns">
-          <div class="column is-3">
+          <div class="column is-3 sidebar">
+            <b-button icon-right="plus" type="is-primary" outlined expanded @click="addRecipe">
+              Add a recipe
+            </b-button>
             <b-menu>
-              <b-menu-list label="Actions">
-                <b-menu-item icon="plus" label="Add a recipe" @click="addRecipe"></b-menu-item>
-                <b-menu-item icon="sign-out-alt" label="Sign out" @click="signOut"></b-menu-item>
-              </b-menu-list>
               <b-menu-list label="Recipes">
                 <b-menu-item
-                  icon="book"
-                  :active="isActive"
-                  :expanded="isActive"
-                  @click="isActive = !isActive">
+                  v-for="category in categories"
+                  v-if="categoryRecipes(category)"
+                  icon="utensils"
+                  :active="activeCat === category"
+                  :expanded="true"
+                  @click="setActiveCat(category)">
                   <template slot="label" slot-scope="props">
-                    Breakfast
+                    {{ category }}
                     <b-icon
                       class="is-pulled-right"
-                      :icon="props.expanded ? 'caret-down' : 'caret-up'">
+                      :icon="props.expanded ? 'angle-down' : 'angle-up'">
                     </b-icon>
                   </template>
-                  <b-menu-item label="Recipe 1"></b-menu-item>
+                  <b-menu-item
+                    v-for="recipe in recipes"
+                    v-if="recipe.data.category === category"
+                    :label="recipe.data.title"
+                    @click="getRecipeDetail(recipe.id)"
+                  ></b-menu-item>
                 </b-menu-item>
               </b-menu-list>
             </b-menu>
@@ -73,6 +79,7 @@
 
 <script>
   import { mapState, mapActions } from 'vuex'
+  import { db } from '../firebaseConfig'
   import AddRecipe from '@/components/AddRecipe'
 
   export default {
@@ -83,12 +90,14 @@
       source: String
     },
     data: () => ({
-      isActive: true,
-      currentComponent: 'AddRecipe'
+      activeCat: '',
+      currentComponent: 'AddRecipe',
+      recipes: []
     }),
     computed: {
       ...mapState({
-        user: 'authUser'
+        user: 'authUser',
+        categories: 'categories'
       })
     },
     methods: {
@@ -97,7 +106,42 @@
       }),
       addRecipe () {
         this.component = 'AddRecipe'
+      },
+      setActiveCat (cat) {
+        this.activeCat = cat
+      },
+      getRecipeDetail (id) {
+        this.$buefy.toast.open({
+          message: `clicked recipe ${id}`,
+          type: 'is-dark',
+          position: 'is-top-right',
+          duration: 3000
+        })
+      },
+      categoryRecipes (cat) {
+        return this.recipes.some(recipe => recipe.data.category === cat)
       }
+    },
+    mounted () {
+      this.activeCat = this.categories[0]
+      let recipesRef = db.collection('recipes')
+      recipesRef.where('users', 'array-contains', this.user.uid).get()
+          .then(snapshot => {
+            if (snapshot.empty) {
+              console.log('No matching documents.')
+              return
+            }
+            snapshot.forEach(doc => {
+              console.log(doc)
+              this.recipes.push({
+                id: doc.id,
+                data: doc.data()
+              })
+            })
+          })
+          .catch(err => {
+            console.log('Error getting documents', err)
+          })
     }
   }
 </script>
@@ -114,13 +158,22 @@
       margin-right: 0.5em;
     }
   }
+
+  .sidebar {
+    button {
+      margin-bottom: 1rem;
+    }
+  }
+
   .menu-list {
-   a {
-     line-height: 1;
-     .icon.is-small {
-       position: relative;
-       top: 5px
-     }
-   }
+    a {
+      line-height: 1;
+
+      .icon.is-small {
+        position: relative;
+        top: 5px;
+        margin-right: 5px;
+      }
+    }
   }
 </style>
