@@ -79,7 +79,7 @@
 
 <script>
   import { mapState, mapActions } from 'vuex'
-  import { db } from '../firebaseConfig'
+  import { db, auth } from '../firebaseConfig'
   import AddRecipe from '@/components/AddRecipe'
 
   export default {
@@ -96,9 +96,11 @@
     }),
     computed: {
       ...mapState({
-        user: 'authUser',
         categories: 'categories'
-      })
+      }),
+      user () {
+        return auth.currentUser
+      }
     },
     methods: {
       ...mapActions({
@@ -120,28 +122,45 @@
       },
       categoryRecipes (cat) {
         return this.recipes.some(recipe => recipe.data.category === cat)
-      }
-    },
-    mounted () {
-      this.activeCat = this.categories[0]
-      let recipesRef = db.collection('recipes')
-      recipesRef.where('users', 'array-contains', this.user.uid).get()
-          .then(snapshot => {
+      },
+      getRecipes () {
+        if (this.user.uid) {
+          console.log(this.user.email)
+          let recipeQuery = db.collection('recipes').where('users', 'array-contains', this.user.uid)
+          let recipeObserver = recipeQuery.onSnapshot(snapshot => {
+            console.log(snapshot)
             if (snapshot.empty) {
               console.log('No matching documents.')
               return
             }
-            snapshot.forEach(doc => {
-              console.log(doc)
-              this.recipes.push({
-                id: doc.id,
-                data: doc.data()
-              })
+            snapshot.docChanges().forEach(change => {
+              if (change.type === 'added') {
+                this.recipes.push({
+                  id: change.doc.id,
+                  data: change.doc.data()
+                })
+              }
+              if (change.type === 'modified') {
+                console.log('Modified recipe: ', change.doc.data())
+              }
+              if (change.type === 'removed') {
+                console.log('Removed recipe: ', change.doc.data())
+              }
             })
           })
-          .catch(err => {
-            console.log('Error getting documents', err)
-          })
+        } else {
+          this.recipes = []
+        }
+      }
+    },
+    watch: {
+      user () {
+        this.getRecipes()
+      }
+    },
+    mounted () {
+      this.activeCat = this.categories[0]
+      this.getRecipes()
     }
   }
 </script>

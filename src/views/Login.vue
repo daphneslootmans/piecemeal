@@ -28,13 +28,11 @@
               <div class="level-left"></div>
               <div class="level-right">
                 <div class="level-item">
-                  <b-button
-                    type="is-primary"
-                    expanded
-                    @click="signInEmail"
-                  >
-                    Sign in
-                  </b-button>
+                  <b-button tag="input"
+                            native-type="submit"
+                            value="Sign in"
+                            expanded
+                  />
                 </div>
               </div>
             </div>
@@ -73,6 +71,7 @@
         signIn: 'signIn'
       }),
       signInEmail () {
+        console.log('trying to sign in')
         firebase.auth().signInWithEmailAndPassword(this.email, this.password)
             .then(user => {
                   this.$router.push('/dashboard')

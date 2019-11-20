@@ -4,9 +4,9 @@ import router from '@/router/'
 const actions = {
   signOut ({ state, commit }) {
     firebase.auth().signOut()
-      .then(
+      .then( () => {
         router.push('/login')
-      )
+      })
       .catch(error => { state.error = error })
   },
   registerEmail ({ state, commit }, payload) {

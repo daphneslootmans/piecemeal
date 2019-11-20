@@ -187,7 +187,7 @@
 </template>
 
 <script>
-  import { db } from '../firebaseConfig.js'
+  import { db, auth } from '../firebaseConfig.js'
   import { mapState } from 'vuex'
 
   export default {
@@ -212,9 +212,11 @@
     },
     computed: {
       ...mapState({
-        user: 'authUser',
         categories: 'categories'
-      })
+      }),
+      user () {
+        return auth.currentUser
+      }
     },
     methods: {
       deleteDropFiles (index) {
