@@ -28,13 +28,11 @@
               <div class="level-left"></div>
               <div class="level-right">
                 <div class="level-item">
-                  <b-button
-                    type="is-primary"
-                    expanded
-                    @click="signInEmail"
-                  >
-                    Sign in
-                  </b-button>
+                  <b-button tag="input"
+                            native-type="submit"
+                            value="Sign in"
+                            expanded
+                  />
                 </div>
               </div>
             </div>
@@ -46,8 +44,7 @@
 </template>
 
 <script>
-  import firebase from 'firebase/app'
-  import 'firebase/auth'
+  import { db, auth } from '../firebaseConfig'
   import { mapState, mapActions } from 'vuex'
 
   export default {
@@ -73,8 +70,9 @@
         signIn: 'signIn'
       }),
       signInEmail () {
-        firebase.auth().signInWithEmailAndPassword(this.email, this.password)
-            .then(user => {
+        console.log('trying to sign in')
+        auth.signInWithEmailAndPassword(this.email, this.password)
+            .then(response => {
                   this.$router.push('/dashboard')
                   this.$store.commit('setError', null)
                 }

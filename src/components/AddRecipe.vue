@@ -28,11 +28,11 @@
                   v-model="category"
                 >
                   <option
-                    v-for="option in categories"
-                    :value="option"
-                    :key="option"
+                    v-for="option in currentUser.categories"
+                    :value="option.name"
+                    :key="option.name"
                   >
-                    {{ option }}
+                    {{ option.name }}
                   </option>
                 </b-select>
               </b-field>
@@ -187,7 +187,7 @@
 </template>
 
 <script>
-  import { db } from '../firebaseConfig.js'
+  import { db, auth } from '../firebaseConfig.js'
   import { mapState } from 'vuex'
 
   export default {
@@ -207,16 +207,16 @@
         comment: '',
         directions: [''],
         dropFiles: [],
-        categories: [
-          'Dinner', 'Side Dish', 'Breakfast', 'Lunch', 'Dessert'
-        ],
         loading: false
       }
     },
     computed: {
       ...mapState({
-        user: 'authUser'
-      })
+        currentUser: 'currentUser'
+      }),
+      user () {
+        return auth.currentUser
+      }
     },
     methods: {
       deleteDropFiles (index) {
@@ -261,7 +261,7 @@
               this.loading = false
               this.$buefy.toast.open({
                 message: `Recipe saved successfully!`,
-                type: 'is-primary',
+                type: 'is-dark',
                 position: 'is-top-right',
                 duration: 3000
               })
@@ -271,13 +271,14 @@
     watch: {
       ingredientsRaw () {
         this.parseIngredients()
+      },
+      currentUser () {
+        if (this.currentUser.categories) {
+          this.category = this.currentUser.categories[0].name
+        }
       }
     },
     mounted () {
-      this.category = this.categories[0]
-      // db.ref('recipes').on('value', snapshot => {
-      //   this.$store.commit('addRecipe', snapshot.val())
-      // })
     }
   }
 </script>

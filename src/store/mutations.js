@@ -2,6 +2,9 @@ const mutations = {
   setAuthUser(state, user) {
     state.authUser = user
   },
+  setCurrentUser(state, user) {
+    state.currentUser = user
+  },
   setError(state, error) {
     state.error = error
   },

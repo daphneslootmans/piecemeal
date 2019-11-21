@@ -35,26 +35,33 @@
     <section class="section">
       <div class="container">
         <div class="columns">
-          <div class="column is-3">
+          <div class="column is-3 sidebar">
+            <b-button icon-right="plus" type="is-primary" outlined expanded @click="addRecipe">
+              Add a recipe
+            </b-button>
             <b-menu>
-              <b-menu-list label="Actions">
-                <b-menu-item icon="plus" label="Add a recipe" @click="addRecipe"></b-menu-item>
-                <b-menu-item icon="sign-out-alt" label="Sign out" @click="signOut"></b-menu-item>
-              </b-menu-list>
-              <b-menu-list label="Recipes">
+              <b-menu-list
+                label="Recipes"
+              >
                 <b-menu-item
-                  icon="book"
-                  :active="isActive"
-                  :expanded="isActive"
-                  @click="isActive = !isActive">
+                  v-for="(category, index) in currentUser.categories"
+                  v-if="categoryRecipes(category.name)"
+                  icon="utensils"
+                  :active="activeCat === category.name"
+                  :expanded="category.expanded">
                   <template slot="label" slot-scope="props">
-                    Breakfast
+                    {{ category.name }}
                     <b-icon
                       class="is-pulled-right"
-                      :icon="props.expanded ? 'caret-down' : 'caret-up'">
+                      :icon="props.expanded ? 'angle-down' : 'angle-up'">
                     </b-icon>
                   </template>
-                  <b-menu-item label="Recipe 1"></b-menu-item>
+                  <b-menu-item
+                    v-for="recipe in recipes"
+                    v-if="recipe.data.category === category.name"
+                    :label="recipe.data.title"
+                    @click="getRecipeDetail(recipe.id)"
+                  ></b-menu-item>
                 </b-menu-item>
               </b-menu-list>
             </b-menu>
@@ -63,8 +70,6 @@
             <component :is="currentComponent"></component>
           </div>
         </div>
-
-
       </div>
     </section>
 
@@ -73,6 +78,7 @@
 
 <script>
   import { mapState, mapActions } from 'vuex'
+  import { db, auth } from '../firebaseConfig'
   import AddRecipe from '@/components/AddRecipe'
 
   export default {
@@ -83,21 +89,109 @@
       source: String
     },
     data: () => ({
-      isActive: true,
-      currentComponent: 'AddRecipe'
+      activeCat: '',
+      currentComponent: 'AddRecipe',
+      recipes: []
     }),
     computed: {
       ...mapState({
-        user: 'authUser'
-      })
+        currentUser: 'currentUser'
+      }),
+      user () {
+        return auth.currentUser
+      }
     },
     methods: {
       ...mapActions({
-        signOut: 'signOut'
+        signOut: 'signOut',
+        getUser: 'getUser',
+        setUser: 'setUser'
       }),
       addRecipe () {
         this.component = 'AddRecipe'
+      },
+      setActiveCat (cat, index) {
+        this.activeCat = cat.name
+        let catExp = this.currentUser.categories[index].expanded
+        // this.$set(catExp, 'expanded', !catExp)
+      },
+      getRecipeDetail (id) {
+        this.$buefy.toast.open({
+          message: `clicked recipe ${id}`,
+          type: 'is-dark',
+          position: 'is-top-right',
+          duration: 3000
+        })
+      },
+      categoryRecipes (cat) {
+        return this.recipes.some(recipe => recipe.data.category === cat)
+      },
+      setCategories () {
+        let data = {standard:
+            [
+              {
+                name: 'Dinner',
+                expanded: true
+              },
+              {
+                name: 'Lunch',
+                expanded: true
+              },
+              {
+                name: 'Breakfast',
+                expanded: true
+              },
+              {
+                name: 'Side Dish',
+                expanded: true
+              },
+              {
+                name: 'Dessert',
+                expanded: true
+              },
+            ]
+        }
+        let cats = db.collection('users').doc('categories').set(data)
+      },
+      getRecipes () {
+        if (this.user.uid) {
+          console.log(this.user.email)
+          let recipeQuery = db.collection('recipes').where('users', 'array-contains', this.user.uid)
+          let recipeObserver = recipeQuery.onSnapshot(snapshot => {
+            console.log(snapshot)
+            if (snapshot.empty) {
+              console.log('No matching documents.')
+              return
+            }
+            snapshot.docChanges().forEach(change => {
+              if (change.type === 'added') {
+                this.recipes.push({
+                  id: change.doc.id,
+                  data: change.doc.data()
+                })
+              }
+              if (change.type === 'modified') {
+                console.log('Modified recipe: ', change.doc.data())
+              }
+              if (change.type === 'removed') {
+                console.log('Removed recipe: ', change.doc.data())
+              }
+            })
+          })
+        } else {
+          this.recipes = []
+        }
       }
+    },
+    watch: {
+      user () {
+        this.getRecipes()
+      }
+    },
+    mounted () {
+      this.getRecipes()
+      this.getUser()
+      // this.setUser(auth.currentUser.uid)
     }
   }
 </script>
@@ -114,13 +208,22 @@
       margin-right: 0.5em;
     }
   }
+
+  .sidebar {
+    button {
+      margin-bottom: 1rem;
+    }
+  }
+
   .menu-list {
-   a {
-     line-height: 1;
-     .icon.is-small {
-       position: relative;
-       top: 5px
-     }
-   }
+    a {
+      line-height: 1;
+
+      .icon.is-small {
+        position: relative;
+        top: 5px;
+        margin-right: 5px;
+      }
+    }
   }
 </style>

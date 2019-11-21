@@ -28,7 +28,10 @@ import {
   faHashtag,
   faBlender,
   faCookie,
-  faHeart
+  faHeart,
+  faAngleUp,
+  faBookOpen,
+  faUtensils
 } from '@fortawesome/free-solid-svg-icons'
 
 library.add(
@@ -51,7 +54,10 @@ library.add(
   faHashtag,
   faBlender,
   faCookie,
-  faHeart
+  faHeart,
+  faAngleUp,
+  faBookOpen,
+  faUtensils
 )
 
 Vue.component('vue-fontawesome', FontAwesomeIcon)

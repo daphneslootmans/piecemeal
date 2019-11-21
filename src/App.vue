@@ -9,9 +9,6 @@
   import 'firebase/auth'
 
   export default {
-    created () {
-      firebase.auth().onAuthStateChanged(user => {this.$store.commit('setAuthUser', user)})
-    }
   }
 </script>
 
