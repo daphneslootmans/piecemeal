@@ -28,11 +28,11 @@
                   v-model="category"
                 >
                   <option
-                    v-for="option in categories"
-                    :value="option"
-                    :key="option"
+                    v-for="option in currentUser.categories"
+                    :value="option.name"
+                    :key="option.name"
                   >
-                    {{ option }}
+                    {{ option.name }}
                   </option>
                 </b-select>
               </b-field>
@@ -212,7 +212,7 @@
     },
     computed: {
       ...mapState({
-        categories: 'categories'
+        currentUser: 'currentUser'
       }),
       user () {
         return auth.currentUser
@@ -271,10 +271,14 @@
     watch: {
       ingredientsRaw () {
         this.parseIngredients()
+      },
+      currentUser () {
+        if (this.currentUser.categories) {
+          this.category = this.currentUser.categories[0].name
+        }
       }
     },
     mounted () {
-      this.category = this.categories[0]
     }
   }
 </script>

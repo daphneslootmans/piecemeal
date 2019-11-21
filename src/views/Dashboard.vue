@@ -40,16 +40,17 @@
               Add a recipe
             </b-button>
             <b-menu>
-              <b-menu-list label="Recipes">
+              <b-menu-list
+                label="Recipes"
+              >
                 <b-menu-item
-                  v-for="category in categories"
-                  v-if="categoryRecipes(category)"
+                  v-for="(category, index) in currentUser.categories"
+                  v-if="categoryRecipes(category.name)"
                   icon="utensils"
-                  :active="activeCat === category"
-                  :expanded="true"
-                  @click="setActiveCat(category)">
+                  :active="activeCat === category.name"
+                  :expanded="category.expanded">
                   <template slot="label" slot-scope="props">
-                    {{ category }}
+                    {{ category.name }}
                     <b-icon
                       class="is-pulled-right"
                       :icon="props.expanded ? 'angle-down' : 'angle-up'">
@@ -57,7 +58,7 @@
                   </template>
                   <b-menu-item
                     v-for="recipe in recipes"
-                    v-if="recipe.data.category === category"
+                    v-if="recipe.data.category === category.name"
                     :label="recipe.data.title"
                     @click="getRecipeDetail(recipe.id)"
                   ></b-menu-item>
@@ -69,8 +70,6 @@
             <component :is="currentComponent"></component>
           </div>
         </div>
-
-
       </div>
     </section>
 
@@ -96,7 +95,7 @@
     }),
     computed: {
       ...mapState({
-        categories: 'categories'
+        currentUser: 'currentUser'
       }),
       user () {
         return auth.currentUser
@@ -105,13 +104,16 @@
     methods: {
       ...mapActions({
         signOut: 'signOut',
-        getUser: 'getUser'
+        getUser: 'getUser',
+        setUser: 'setUser'
       }),
       addRecipe () {
         this.component = 'AddRecipe'
       },
-      setActiveCat (cat) {
-        this.activeCat = cat
+      setActiveCat (cat, index) {
+        this.activeCat = cat.name
+        let catExp = this.currentUser.categories[index].expanded
+        // this.$set(catExp, 'expanded', !catExp)
       },
       getRecipeDetail (id) {
         this.$buefy.toast.open({
@@ -123,6 +125,33 @@
       },
       categoryRecipes (cat) {
         return this.recipes.some(recipe => recipe.data.category === cat)
+      },
+      setCategories () {
+        let data = {standard:
+            [
+              {
+                name: 'Dinner',
+                expanded: true
+              },
+              {
+                name: 'Lunch',
+                expanded: true
+              },
+              {
+                name: 'Breakfast',
+                expanded: true
+              },
+              {
+                name: 'Side Dish',
+                expanded: true
+              },
+              {
+                name: 'Dessert',
+                expanded: true
+              },
+            ]
+        }
+        let cats = db.collection('users').doc('categories').set(data)
       },
       getRecipes () {
         if (this.user.uid) {
@@ -160,9 +189,9 @@
       }
     },
     mounted () {
-      this.activeCat = this.categories[0]
       this.getRecipes()
       this.getUser()
+      // this.setUser(auth.currentUser.uid)
     }
   }
 </script>

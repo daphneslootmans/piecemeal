@@ -12,10 +12,7 @@ export default new Vuex.Store({
     authUser: null,
     currentUser: {},
     error: null,
-    recipes: [],
-    categories: [
-      'Dinner', 'Side Dish', 'Breakfast', 'Lunch', 'Dessert'
-    ]
+    recipes: []
   },
   getters,
   mutations,
