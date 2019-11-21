@@ -44,8 +44,7 @@
 </template>
 
 <script>
-  import firebase from 'firebase/app'
-  import 'firebase/auth'
+  import { db, auth } from '../firebaseConfig'
   import { mapState, mapActions } from 'vuex'
 
   export default {
@@ -72,8 +71,8 @@
       }),
       signInEmail () {
         console.log('trying to sign in')
-        firebase.auth().signInWithEmailAndPassword(this.email, this.password)
-            .then(user => {
+        auth.signInWithEmailAndPassword(this.email, this.password)
+            .then(response => {
                   this.$router.push('/dashboard')
                   this.$store.commit('setError', null)
                 }

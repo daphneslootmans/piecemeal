@@ -104,7 +104,8 @@
     },
     methods: {
       ...mapActions({
-        signOut: 'signOut'
+        signOut: 'signOut',
+        getUser: 'getUser'
       }),
       addRecipe () {
         this.component = 'AddRecipe'
@@ -161,6 +162,7 @@
     mounted () {
       this.activeCat = this.categories[0]
       this.getRecipes()
+      this.getUser()
     }
   }
 </script>

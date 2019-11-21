@@ -49,7 +49,6 @@
 </template>
 
 <script>
-  import firebase from 'firebase'
   import { mapState, mapActions } from 'vuex'
 
   export default {
