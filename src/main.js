@@ -31,7 +31,9 @@ import {
   faHeart,
   faAngleUp,
   faBookOpen,
-  faUtensils
+  faUtensils,
+  faStopwatch,
+
 } from '@fortawesome/free-solid-svg-icons'
 
 library.add(
@@ -57,7 +59,9 @@ library.add(
   faHeart,
   faAngleUp,
   faBookOpen,
-  faUtensils
+  faUtensils,
+  faStopwatch,
+
 )
 
 Vue.component('vue-fontawesome', FontAwesomeIcon)

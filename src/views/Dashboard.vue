@@ -58,8 +58,8 @@
                   </template>
                   <b-menu-item
                     v-for="recipe in recipes"
-                    v-if="recipe.data.category === category.name"
-                    :label="recipe.data.title"
+                    v-if="recipe.category === category.name"
+                    :label="recipe.title"
                     @click="getRecipeDetail(recipe.id)"
                   ></b-menu-item>
                 </b-menu-item>
@@ -67,7 +67,9 @@
             </b-menu>
           </div>
           <div class="column">
-            <component :is="currentComponent"></component>
+            <component
+              :is="currentComponent"
+            ></component>
           </div>
         </div>
       </div>
@@ -80,22 +82,24 @@
   import { mapState, mapActions } from 'vuex'
   import { db, auth } from '../firebaseConfig'
   import AddRecipe from '@/components/AddRecipe'
+  import ViewRecipe from '@/components/ViewRecipe'
 
   export default {
     components: {
-      AddRecipe
+      AddRecipe,
+      ViewRecipe
     },
     props: {
       source: String
     },
     data: () => ({
       activeCat: '',
-      currentComponent: 'AddRecipe',
-      recipes: []
+      currentComponent: 'AddRecipe'
     }),
     computed: {
       ...mapState({
-        currentUser: 'currentUser'
+        currentUser: 'currentUser',
+        recipes: 'recipes'
       }),
       user () {
         return auth.currentUser
@@ -105,7 +109,8 @@
       ...mapActions({
         signOut: 'signOut',
         getUser: 'getUser',
-        setUser: 'setUser'
+        setUser: 'setUser',
+        getRecipes: 'getRecipes'
       }),
       addRecipe () {
         this.component = 'AddRecipe'
@@ -122,9 +127,11 @@
           position: 'is-top-right',
           duration: 3000
         })
+        this.$router.push(`/dashboard/${id}`)
+        this.currentComponent = 'ViewRecipe'
       },
       categoryRecipes (cat) {
-        return this.recipes.some(recipe => recipe.data.category === cat)
+        return this.recipes.some(recipe => recipe.category === cat)
       },
       setCategories () {
         let data = {standard:
@@ -152,35 +159,6 @@
             ]
         }
         let cats = db.collection('users').doc('categories').set(data)
-      },
-      getRecipes () {
-        if (this.user.uid) {
-          console.log(this.user.email)
-          let recipeQuery = db.collection('recipes').where('users', 'array-contains', this.user.uid)
-          let recipeObserver = recipeQuery.onSnapshot(snapshot => {
-            console.log(snapshot)
-            if (snapshot.empty) {
-              console.log('No matching documents.')
-              return
-            }
-            snapshot.docChanges().forEach(change => {
-              if (change.type === 'added') {
-                this.recipes.push({
-                  id: change.doc.id,
-                  data: change.doc.data()
-                })
-              }
-              if (change.type === 'modified') {
-                console.log('Modified recipe: ', change.doc.data())
-              }
-              if (change.type === 'removed') {
-                console.log('Removed recipe: ', change.doc.data())
-              }
-            })
-          })
-        } else {
-          this.recipes = []
-        }
       }
     },
     watch: {
@@ -188,9 +166,9 @@
         this.getRecipes()
       }
     },
-    mounted () {
-      this.getRecipes()
+    created () {
       this.getUser()
+      this.getRecipes()
       // this.setUser(auth.currentUser.uid)
     }
   }

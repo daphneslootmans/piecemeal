@@ -32,6 +32,10 @@ const routes = [
       requiresAuth: true
     }
   },
+  { path: '/dashboard/:id',
+    name: 'recipe',
+    component: Dashboard
+  },
   {
     path: '/settings',
     name: 'settings',

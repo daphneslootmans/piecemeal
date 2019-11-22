@@ -18,7 +18,7 @@ const actions = {
       })
       .catch(error => { state.error = error })
   },
-  getUser ({ state, commit }) {
+  getUser ({ state, commit, dispatch }) {
     let users = db.collection('users')
     let getCurrent = users.doc(auth.currentUser.uid).get()
       .then(doc => {
@@ -40,6 +40,33 @@ const actions = {
         let setDoc = users.doc(uid).set({categories: doc.data().standard})
       }
     })
+  },
+  getRecipes ({ commit }) {
+    let uid = auth.currentUser.uid
+    if (uid) {
+      console.log(auth.currentUser.email)
+      let recipeQuery = db.collection('recipes').where('users', 'array-contains', uid)
+      let recipeObserver = recipeQuery.onSnapshot(snapshot => {
+        console.log(snapshot)
+        if (snapshot.empty) {
+          console.log('No matching documents.')
+          return
+        }
+        snapshot.docChanges().forEach(change => {
+          if (change.type === 'added') {
+            commit('addRecipe', change.doc)
+          }
+          if (change.type === 'modified') {
+            console.log('Modified recipe: ', change.doc.data())
+          }
+          if (change.type === 'removed') {
+            console.log('Removed recipe: ', change.doc.data())
+          }
+        })
+      })
+    } else {
+      commit('clearRecipes')
+    }
   }
 }
 
