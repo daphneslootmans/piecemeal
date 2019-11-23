@@ -43,6 +43,7 @@ const actions = {
   },
   getRecipes ({ commit }) {
     let uid = auth.currentUser.uid
+    commit('clearRecipes')
     if (uid) {
       console.log(auth.currentUser.email)
       let recipeQuery = db.collection('recipes').where('users', 'array-contains', uid)

@@ -45,6 +45,7 @@
               >
                 <b-menu-item
                   v-for="(category, index) in currentUser.categories"
+                  :key="category.name + index"
                   v-if="categoryRecipes(category.name)"
                   icon="utensils"
                   :active="activeCat === category.name"
@@ -58,6 +59,7 @@
                   </template>
                   <b-menu-item
                     v-for="recipe in recipes"
+                    :key="recipe.id"
                     v-if="recipe.category === category.name"
                     :label="recipe.title"
                     @click="getRecipeDetail(recipe.id)"
@@ -66,7 +68,7 @@
               </b-menu-list>
             </b-menu>
           </div>
-          <div class="column">
+          <div class="column main-content">
             <component
               :is="currentComponent"
             ></component>
@@ -113,7 +115,8 @@
         getRecipes: 'getRecipes'
       }),
       addRecipe () {
-        this.component = 'AddRecipe'
+        this.$router.push('/dashboard')
+        this.currentComponent = 'AddRecipe'
       },
       setActiveCat (cat, index) {
         this.activeCat = cat.name
@@ -127,8 +130,9 @@
           position: 'is-top-right',
           duration: 3000
         })
-        this.$router.push(`/dashboard/${id}`)
-        this.currentComponent = 'ViewRecipe'
+          console.log('id: ', id)
+          this.$router.push({ name: 'recipe', params: { id } })
+          this.currentComponent = 'ViewRecipe'
       },
       categoryRecipes (cat) {
         return this.recipes.some(recipe => recipe.category === cat)
@@ -191,6 +195,10 @@
     button {
       margin-bottom: 1rem;
     }
+  }
+
+  .main-content {
+    padding-left: 2rem;
   }
 
   .menu-list {

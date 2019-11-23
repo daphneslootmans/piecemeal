@@ -28,6 +28,7 @@ import {
   faHashtag,
   faBlender,
   faCookie,
+  faCookieBite,
   faHeart,
   faAngleUp,
   faBookOpen,
@@ -56,6 +57,7 @@ library.add(
   faHashtag,
   faBlender,
   faCookie,
+  faCookieBite,
   faHeart,
   faAngleUp,
   faBookOpen,
@@ -72,6 +74,7 @@ Vue.use(Buefy, {
   defaultIconComponent: 'vue-fontawesome',
   defaultIconPack: 'fas'
 })
+Vue.use(require('vue-moment'))
 
 let app
 auth.onAuthStateChanged(user => {
