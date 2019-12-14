@@ -34,6 +34,7 @@ import {
   faBookOpen,
   faUtensils,
   faStopwatch,
+  faPenAlt
 
 } from '@fortawesome/free-solid-svg-icons'
 
@@ -63,7 +64,7 @@ library.add(
   faBookOpen,
   faUtensils,
   faStopwatch,
-
+  faPenAlt
 )
 
 Vue.component('vue-fontawesome', FontAwesomeIcon)

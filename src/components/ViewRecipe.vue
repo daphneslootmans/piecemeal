@@ -14,10 +14,9 @@
       </div>
       <div class="level-right">
         <div class="level-item">
-          <p class="prep-time">
-            <vue-fontawesome icon="stopwatch"/>
-            {{ recipe.prepTime }} min
-          </p>
+          <b-button icon-right="pen-alt" type="is-primary" outlined expanded @click="editRecipe">
+            Edit recipe
+          </b-button>
         </div>
       </div>
     </div>
@@ -36,15 +35,26 @@
       </div>
       <div class="level-right">
         <div class="level-item">
-          <p>{{ recipe.createdAt.toDate() | moment('DD-MM-YYYY HH:mm') }}</p>
+          <p class="prep-time">
+            <vue-fontawesome icon="stopwatch"/>
+            {{ recipe.prepTime }} min
+          </p>
         </div>
       </div>
     </div>
 
-    <div class="columns">
-      <div class="column is-narrow">
-        <p class="is-italic">{{ recipe.description }}</p>
+    <div class="level">
+      <div class="level-left">
+        <div class="level-item">
+          <p class="is-italic">{{ recipe.description }}</p>
+        </div>
       </div>
+      <div class="level-right">
+        <div class="level-item">
+          <p>{{ recipe.createdAt.toDate() | moment('DD-MM-YYYY HH:mm') }}</p>
+        </div>
+      </div>
+
     </div>
 
     <div class="columns">
@@ -56,15 +66,15 @@
             </div>
           </div>
           <div class="card-content">
-              <p
-                v-for="ingredient in recipe.ingredients"
-              >
+            <p
+              v-for="ingredient in recipe.ingredients"
+            >
                 <span>
                   <vue-fontawesome v-if="randIngredient === ingredient" icon="cookie-bite"/>
                   <vue-fontawesome v-else icon="cookie"/>
                 </span>
-                {{ ingredient }}
-              </p>
+              {{ ingredient }}
+            </p>
           </div>
         </div>
       </div>
@@ -93,16 +103,16 @@
     <div class="columns">
       <div class="column is-full">
         <h4>Directions</h4>
-          <div v-for="(step, index) in recipe.directions" class="card">
-            <header class="card-header">
-              <p class="card-header-title">Step {{ index +1 }}</p>
-            </header>
-            <div class="card-content">
-              <p>
-               {{ step }}
-              </p>
-            </div>
+        <div v-for="(step, index) in recipe.directions" class="card">
+          <header class="card-header">
+            <p class="card-header-title">Step {{ index +1 }}</p>
+          </header>
+          <div class="card-content">
+            <p>
+              {{ step }}
+            </p>
           </div>
+        </div>
       </div>
     </div>
   </div>
@@ -168,14 +178,17 @@
   .card {
     margin-bottom: 1rem;
   }
+
   .card-header {
     background: $grey-lightest;
   }
+
   .card-content {
     p {
       display: flex;
       align-items: center;
     }
+
     span {
       margin-right: 0.8em;
       font-size: 0.8em;
