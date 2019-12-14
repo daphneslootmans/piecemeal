@@ -8,14 +8,14 @@
         </div>
         <div class="level-item">
           <b-field label="">
-            <b-rate icon="heart" spaced v-model="recipe.rating" disabled></b-rate>
+            <b-rate icon="heart" spaced v-model="recipe.rating" disabled/>
           </b-field>
         </div>
       </div>
       <div class="level-right">
         <div class="level-item">
           <p class="prep-time">
-            <vue-fontawesome icon="stopwatch"></vue-fontawesome>
+            <vue-fontawesome icon="stopwatch"/>
             {{ recipe.prepTime }} min
           </p>
         </div>
@@ -60,8 +60,8 @@
                 v-for="ingredient in recipe.ingredients"
               >
                 <span>
-                  <vue-fontawesome v-if="randIngredient === ingredient" icon="cookie-bite"></vue-fontawesome>
-                  <vue-fontawesome v-else icon="cookie"></vue-fontawesome>
+                  <vue-fontawesome v-if="randIngredient === ingredient" icon="cookie-bite"/>
+                  <vue-fontawesome v-else icon="cookie"/>
                 </span>
                 {{ ingredient }}
               </p>
@@ -80,8 +80,8 @@
               v-for="material in recipe.materials"
             >
                 <span>
-                  <vue-fontawesome v-if="randMaterial === material" icon="cookie-bite"></vue-fontawesome>
-                  <vue-fontawesome v-else icon="cookie"></vue-fontawesome>
+                  <vue-fontawesome v-if="randMaterial === material" icon="cookie-bite"/>
+                  <vue-fontawesome v-else icon="cookie"/>
                 </span>
               {{ material }}
             </p>
@@ -93,12 +93,16 @@
     <div class="columns">
       <div class="column is-full">
         <h4>Directions</h4>
-        <ol>
-          <li
-            v-for="step in recipe.directions"
-          >{{ step }}
-          </li>
-        </ol>
+          <div v-for="(step, index) in recipe.directions" class="card">
+            <header class="card-header">
+              <p class="card-header-title">Step {{ index +1 }}</p>
+            </header>
+            <div class="card-content">
+              <p>
+               {{ step }}
+              </p>
+            </div>
+          </div>
       </div>
     </div>
   </div>
@@ -161,9 +165,12 @@
     font-size: 1.2em;
   }
 
-  /*.card {*/
-  /*  height: 100%;*/
-  /*}*/
+  .card {
+    margin-bottom: 1rem;
+  }
+  .card-header {
+    background: $grey-lightest;
+  }
   .card-content {
     p {
       display: flex;
