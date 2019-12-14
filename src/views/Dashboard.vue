@@ -76,7 +76,6 @@
         </div>
       </div>
     </section>
-
   </div>
 </template>
 
@@ -130,15 +129,16 @@
           position: 'is-top-right',
           duration: 3000
         })
-          console.log('id: ', id)
-          this.$router.push({ name: 'recipe', params: { id } })
-          this.currentComponent = 'ViewRecipe'
+        console.log('id: ', id)
+        this.$router.push({ name: 'recipe', params: { id } })
+        this.currentComponent = 'ViewRecipe'
       },
       categoryRecipes (cat) {
         return this.recipes.some(recipe => recipe.category === cat)
       },
       setCategories () {
-        let data = {standard:
+        let data = {
+          standard:
             [
               {
                 name: 'Dinner',
@@ -168,12 +168,22 @@
     watch: {
       user () {
         this.getRecipes()
+      },
+      recipes () {
+
       }
     },
     created () {
       this.getUser()
       this.getRecipes()
-      // this.setUser(auth.currentUser.uid)
+    },
+    mounted () {
+      if (this.$route.params.id) {
+        this.getRecipeDetail(this.$route.params.id)
+      } else if (this.recipes.length) {
+        console.log('recipes detected')
+        this.getRecipeDetail(this.recipes[0].id)
+      }
     }
   }
 </script>
