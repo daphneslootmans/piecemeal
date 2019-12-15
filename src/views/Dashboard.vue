@@ -83,11 +83,13 @@
   import { mapState, mapActions } from 'vuex'
   import { db, auth } from '../firebaseConfig'
   import AddRecipe from '@/components/AddRecipe'
+  import EditRecipe from '@/components/EditRecipe'
   import ViewRecipe from '@/components/ViewRecipe'
 
   export default {
     components: {
       AddRecipe,
+      EditRecipe,
       ViewRecipe
     },
     props: {
@@ -137,6 +139,7 @@
         return this.recipes.some(recipe => recipe.category === cat)
       },
       setCategories () {
+        // tmp function to edit standard categories
         let data = {
           standard:
             [
@@ -171,6 +174,12 @@
       },
       recipes () {
 
+      },
+      $route (to, from) {
+        console.log(to)
+        if (to.name === 'edit-recipe') {
+          this.currentComponent = EditRecipe
+        }
       }
     },
     created () {

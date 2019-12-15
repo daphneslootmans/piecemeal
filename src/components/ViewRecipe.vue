@@ -14,7 +14,7 @@
       </div>
       <div class="level-right">
         <div class="level-item">
-          <b-button icon-right="pen-alt" type="is-primary" outlined expanded @click="editRecipe">
+          <b-button icon-right="pen-alt" type="is-primary" outlined expanded @click="editRecipe(recipe.id)">
             Edit recipe
           </b-button>
         </div>
@@ -147,9 +147,8 @@
       }
     },
     methods: {
-      randValue (array) {
-        console.log(array)
-
+      editRecipe (id) {
+        this.$router.push({ name: 'edit-recipe', params: { id } })
       }
     },
     mounted () {

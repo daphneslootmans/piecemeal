@@ -36,6 +36,10 @@ const routes = [
     name: 'recipe',
     component: Dashboard
   },
+  { path: '/dashboard/:id/edit',
+    name: 'edit-recipe',
+    component: Dashboard
+  },
   {
     path: '/settings',
     name: 'settings',
