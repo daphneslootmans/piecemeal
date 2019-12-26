@@ -34,10 +34,16 @@ const actions = {
     let users = db.collection('users')
     let cats = users.doc('categories').get().then(doc => {
       if (!doc.exists) {
-        console.log('No such document!');
+        console.log('No such document!')
       } else {
-        console.log('Document data:', doc.data());
-        let setDoc = users.doc(uid).set({categories: doc.data().standard})
+        console.log('Document data:', doc.data())
+        let setDoc = users.doc(uid).set({
+          categories: doc.data().standard,
+          settings: {
+            mode: 'light',
+            linkedUsers: []
+          }
+        })
       }
     })
   },
