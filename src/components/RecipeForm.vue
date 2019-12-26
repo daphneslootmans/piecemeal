@@ -162,20 +162,32 @@
             v-model.trim="form.directions[index]"
           ></b-input>
         </b-field>
-        <b-button icon-right="plus" type="is-primary" @click="addStep">
+      </div>
+      </div>
+    <div class="columns">
+      <div class="column is-narrow">
+        <b-button
+          icon-left="plus"
+          type="is-primary"
+          @click="addStep"
+          size="is-medium"
+          expanded
+          outlined>
+          Add a step
         </b-button>
       </div>
     </div>
     <div class="columns">
       <div class="column is-narrow ml-auto">
         <b-button
+          icon-left="cloud-upload-alt"
           type="is-primary"
           expanded
           size="is-medium"
           @click="save"
           :loading="this.loading"
           :disabled="this.loading"
-        >Add recipe</b-button>
+        >Save recipe</b-button>
       </div>
     </div>
   </form>
@@ -191,6 +203,9 @@
       loading: {
         type: Boolean,
         required: true
+      },
+      editing: {
+        type: Boolean
       }
     },
     data () {
@@ -257,7 +272,7 @@
       }
     },
     mounted () {
-      if (this.$route.params.id) {
+      if (this.editing) {
         let recipe = this.recipes.find(rec => rec.id === this.$route.params.id)
         this.form = recipe
         let ingr = recipe.ingredients.toString()

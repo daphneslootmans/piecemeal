@@ -1,6 +1,6 @@
 <template>
   <div class="column is-3 sidebar">
-    <b-button icon-right="plus" type="is-primary" outlined expanded @click="addRecipe">
+    <b-button icon-left="plus" type="is-primary" outlined expanded @click="addRecipe">
       Add a recipe
     </b-button>
     <b-menu>

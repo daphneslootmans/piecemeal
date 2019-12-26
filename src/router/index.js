@@ -48,11 +48,19 @@ const routes = [
       requiresAuth: true
     }
   },
-  { path: '/recipes/:id/edit',
+  { path: '/recipes/:id',
     name: 'edit-recipe',
     components: {
       default: EditRecipe,
       sidebar: Sidebar
+    },
+    props: {
+      default: {
+        editing: true
+      }
+    },
+    query: {
+      editing: true
     },
     meta: {
       requiresAuth: true

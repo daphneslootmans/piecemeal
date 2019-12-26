@@ -5,6 +5,7 @@
     </div>
     <recipe-form
       :loading="loading"
+      :editing="editing"
       @save-form="updateRecipe"
     ></recipe-form>
   </div>
@@ -20,6 +21,11 @@
     name: 'EditRecipe',
     components: {
       RecipeForm
+    },
+    props: {
+      editing: {
+        type: Boolean
+      }
     },
     data () {
       return {
@@ -48,7 +54,7 @@
               position: 'is-top-right',
               duration: 3000
             })
-            this.$router.push('/dashboard/' + this.$route.params.id)
+            this.$router.push({ name: 'recipe', params: { id: this.$route.params.id } })
           })
       }
     },

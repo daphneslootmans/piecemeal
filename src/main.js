@@ -36,7 +36,8 @@ import {
   faStopwatch,
   faPenAlt,
   faTrashAlt,
-  faTrash
+  faTrash,
+  faCloudUploadAlt
 
 } from '@fortawesome/free-solid-svg-icons'
 
@@ -68,7 +69,8 @@ library.add(
   faStopwatch,
   faPenAlt,
   faTrashAlt,
-  faTrash
+  faTrash,
+  faCloudUploadAlt
 )
 
 Vue.component('vue-fontawesome', FontAwesomeIcon)

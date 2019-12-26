@@ -39,10 +39,10 @@
         </div>
         <div class="column is-narrow">
           <div class="button-group">
-            <b-button icon-right="pen-alt" type="is-primary" outlined expanded @click="editRecipe(recipe.id)">
+            <b-button icon-left="pen-alt" type="is-primary" outlined expanded @click="editRecipe(recipe.id)">
               Edit recipe
             </b-button>
-            <b-button icon-right="trash" type="is-primary" outlined @click="deletePrompt(recipe.id)">
+            <b-button icon-left="trash" type="is-primary" outlined @click="deletePrompt(recipe.id)">
             </b-button>
           </div>
         </div>
@@ -153,7 +153,7 @@
         deleteRecipe: 'deleteRecipe'
       }),
       editRecipe (id) {
-        this.$router.push({ name: 'edit-recipe', params: { id } })
+        this.$router.push({ name: 'edit-recipe', params: { id: id }, query: {'editing': true} })
       },
       deletePrompt (id) {
         this.$buefy.dialog.confirm({
