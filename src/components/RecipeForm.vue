@@ -214,7 +214,8 @@
     },
     computed: {
       ...mapState({
-        currentUser: 'currentUser'
+        currentUser: 'currentUser',
+        recipes: 'recipes'
       }),
       user () {
         return auth.currentUser
@@ -253,6 +254,14 @@
         if (this.currentUser.categories) {
           this.category = this.currentUser.categories[0].name
         }
+      }
+    },
+    mounted () {
+      if (this.$route.params.id) {
+        let recipe = this.recipes.find(rec => rec.id === this.$route.params.id)
+        this.form = recipe
+        let ingr = recipe.ingredients.toString()
+        this.ingredientsRaw = ingr.replace(/,/g, "\n")
       }
     }
   }
