@@ -1,5 +1,6 @@
 <template>
-  <div class="content">
+  <div>
+  <div class="content" v-if="recipe">
     <section class="info-section">
       <!--    title-->
       <div class="columns mb-0 is-multiline">
@@ -109,7 +110,12 @@
         </div>
       </div>
     </section>
-
+  </div>
+    <div class="content" v-else>
+      <b-message type="is-danger">
+       Invalid recipe id
+      </b-message>
+    </div>
   </div>
 </template>
 
