@@ -52,6 +52,7 @@
 
         form.createdAt = new Date()
         form.users = [this.user.uid]
+        form.isDeleted = false
 
         let setDoc = db.collection('recipes').add(form)
           .then(docRef => {

@@ -4,7 +4,7 @@
       <!--    title-->
       <div class="columns mb-0 is-multiline">
         <div class="column">
-          <h1 class="is-marginless">{{ recipe.title }}</h1>
+          <h1 :class="[{deleted: deleted}, 'is-marginless']">{{ recipe.title }}</h1>
         </div>
         <div class="column is-narrow">
           <b-field label="">
@@ -38,9 +38,13 @@
           </div>
         </div>
         <div class="column is-narrow">
-          <b-button icon-right="pen-alt" type="is-primary" outlined expanded @click="editRecipe(recipe.id)">
-            Edit recipe
-          </b-button>
+          <div class="button-group">
+            <b-button icon-right="pen-alt" type="is-primary" outlined expanded @click="editRecipe(recipe.id)">
+              Edit recipe
+            </b-button>
+            <b-button icon-right="trash" type="is-primary" outlined @click="deletePrompt(recipe.id)">
+            </b-button>
+          </div>
         </div>
       </div>
     </section>
@@ -110,7 +114,7 @@
 </template>
 
 <script>
-  import { mapState } from 'vuex'
+  import { mapState, mapActions } from 'vuex'
 
   export default {
     name: 'ViewRecipe',
@@ -135,11 +139,34 @@
         if (mat.length > 1) {
           return mat[Math.random() * mat.length | 0]
         }
+      },
+      deleted () {
+      return this.recipe ? this.recipe.isDeleted : false
       }
     },
     methods: {
+      ...mapActions({
+        deleteRecipe: 'deleteRecipe'
+      }),
       editRecipe (id) {
         this.$router.push({ name: 'edit-recipe', params: { id } })
+      },
+      deletePrompt (id) {
+        this.$buefy.dialog.confirm({
+          title: `Deleting recipe`,
+          message: `Are you sure you want to <b>delete</b> '${this.recipe.title}'? This action cannot be undone.`,
+          confirmText: 'Delete Recipe',
+          type: 'is-danger',
+          hasIcon: true,
+          onConfirm: () => this.deleteRecipe(id).then(() => {
+            this.$buefy.toast.open({
+              message: `Recipe deleted`,
+              type: 'is-dark',
+              position: 'is-top-right',
+              duration: 3000
+            })
+          })
+        })
       }
     },
     mounted () {
@@ -149,6 +176,9 @@
 </script>
 
 <style scoped lang="scss">
+  .deleted {
+    color: darkred;
+  }
   .tags {
     display: flex;
 

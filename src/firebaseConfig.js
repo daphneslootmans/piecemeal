@@ -8,9 +8,15 @@ firebase.initializeApp(config)
 const db = firebase.firestore()
 const auth = firebase.auth()
 const currentUser = auth.currentUser
+const recipeCollection = db.collection('recipes')
+const userCollection = db.collection('users')
+const timestamp = firebase.firestore.FieldValue.serverTimestamp()
 
 export {
   db,
   auth,
   currentUser,
+  recipeCollection,
+  userCollection,
+  timestamp
 }

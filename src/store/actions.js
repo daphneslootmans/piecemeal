@@ -1,17 +1,17 @@
-import { db, auth } from '../firebaseConfig'
+import { db, auth, timestamp, recipeCollection } from '../firebaseConfig'
 import router from '@/router/'
 
 const actions = {
   signOut ({ state, commit }) {
     auth.signOut()
-      .then( () => {
+      .then(() => {
         router.push('/login')
       })
       .catch(error => { state.error = error })
   },
   registerEmail ({ state, commit, dispatch }, payload) {
     auth.createUserWithEmailAndPassword(payload.email, payload.password)
-      .then( response => {
+      .then(response => {
         console.log('new user uid:', response.user.uid)
         router.push('/dashboard')
         dispatch('setUser', response.user.uid)
@@ -23,9 +23,9 @@ const actions = {
     let getCurrent = users.doc(auth.currentUser.uid).get()
       .then(doc => {
         if (!doc.exists) {
-          console.log('No user data!');
+          console.log('No user data!')
         } else {
-          console.log('User data:', doc.data());
+          console.log('User data:', doc.data())
           commit('setCurrentUser', doc.data())
         }
       })
@@ -58,16 +58,24 @@ const actions = {
             commit('addRecipe', change.doc)
           }
           if (change.type === 'modified') {
-            console.log('Modified recipe: ', change.doc.data())
-          }
-          if (change.type === 'removed') {
-            console.log('Removed recipe: ', change.doc.data())
+            console.log('Modified recipe: ', change.doc)
+            if (!snapshot.metadata.hasPendingWrites) {
+              console.log('no pending writes')
+              commit('updateRecipe', change.doc)
+            }
           }
         })
       })
     } else {
       commit('clearRecipes')
     }
+  },
+  deleteRecipe ({ state }, id) {
+    let recipe = recipeCollection.doc(id)
+    return recipe.update({
+      isDeleted: true,
+      deletedTimestamp: timestamp
+    })
   }
 }
 

@@ -8,6 +8,12 @@ const mutations = {
   setError(state, error) {
     state.error = error
   },
+  updateRecipe (state, recipe) {
+    let data = recipe.data()
+    data.id = recipe.id
+    let index = state.recipes.indexOf(rec => rec.id === data.id)
+    state.recipes.splice(index, 1, data)
+  },
   addRecipe (state, recipe) {
     let data = recipe.data()
     data.id = recipe.id
