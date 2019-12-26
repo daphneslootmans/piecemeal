@@ -1,9 +1,10 @@
 const mutations = {
-  setAuthUser(state, user) {
-    state.authUser = user
-  },
   setCurrentUser(state, user) {
     state.currentUser = user
+  },
+  clearUserData(state) {
+    state.currentUser = {}
+    state.recipes = []
   },
   setError(state, error) {
     state.error = error

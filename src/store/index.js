@@ -9,7 +9,6 @@ Vue.use(Vuex)
 
 export default new Vuex.Store({
   state: {
-    authUser: null,
     currentUser: {},
     error: null,
     recipes: []

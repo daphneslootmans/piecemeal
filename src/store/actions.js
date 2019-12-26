@@ -5,6 +5,7 @@ const actions = {
   signOut ({ state, commit }) {
     auth.signOut()
       .then(() => {
+        commit('clearUserData')
         router.push('/login')
       })
       .catch(error => { state.error = error })
@@ -18,9 +19,9 @@ const actions = {
       })
       .catch(error => { state.error = error })
   },
-  getUser ({ state, commit, dispatch }) {
+  getUser ({ commit }) {
     let users = db.collection('users')
-    let getCurrent = users.doc(auth.currentUser.uid).get()
+    users.doc(auth.currentUser.uid).get()
       .then(doc => {
         if (!doc.exists) {
           console.log('No user data!')
@@ -32,7 +33,7 @@ const actions = {
   },
   setUser ({ state }, uid) {
     let users = db.collection('users')
-    let cats = users.doc('categories').get().then(doc => {
+    users.doc('categories').get().then(doc => {
       if (!doc.exists) {
         console.log('No such document!')
       } else {
@@ -55,7 +56,7 @@ const actions = {
       let recipeQuery = db.collection('recipes')
         .where('users', 'array-contains', uid)
         .where('isDeleted', '==', false)
-      let recipeObserver = recipeQuery.onSnapshot(snapshot => {
+      recipeQuery.onSnapshot(snapshot => {
         console.log(snapshot)
         if (snapshot.empty) {
           console.log('No matching documents.')
