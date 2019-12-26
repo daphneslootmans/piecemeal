@@ -8,7 +8,7 @@
     <div class="columns">
       <div class="column">
         <div class="columns is-multiline">
-          <div class="column is-full">
+          <div class="column">
             <b-field label="Title">
               <b-input
                 type="text"
@@ -18,7 +18,7 @@
           </div>
 
           <!--category-->
-          <div class="column is-full">
+          <div class="column is-narrow">
             <b-field label="Category">
               <b-select
                 v-model="form.category"
@@ -33,9 +33,11 @@
               </b-select>
             </b-field>
           </div>
+        </div>
 
+        <div class="columns is-multiline">
           <!--description-->
-          <div class="column">
+          <div class="column" >
             <b-field label="Description">
               <b-input
                 type="textarea"
@@ -76,39 +78,39 @@
       </div>
 
       <!--image-->
-      <div class="column is-5">
-        <b-field label="Image">
-          <b-upload v-model="form.dropFiles"
-                    multiple
-                    drag-drop
-                    accept="image/*"
-          >
-            <section class="section">
-              <div class="content has-text-centered">
-                <p>
-                  <b-icon
-                    icon="upload"
-                    size="is-large">
-                  </b-icon>
-                </p>
-                <p>Drop your image here or click to upload</p>
-              </div>
-            </section>
-          </b-upload>
-        </b-field>
+<!--      <div class="column is-5">-->
+<!--        <b-field label="Image">-->
+<!--          <b-upload v-model="form.dropFiles"-->
+<!--                    multiple-->
+<!--                    drag-drop-->
+<!--                    accept="image/*"-->
+<!--          >-->
+<!--            <section class="section">-->
+<!--              <div class="content has-text-centered">-->
+<!--                <p>-->
+<!--                  <b-icon-->
+<!--                    icon="upload"-->
+<!--                    size="is-large">-->
+<!--                  </b-icon>-->
+<!--                </p>-->
+<!--                <p>Drop your image here or click to upload</p>-->
+<!--              </div>-->
+<!--            </section>-->
+<!--          </b-upload>-->
+<!--        </b-field>-->
 
-        <div class="tags">
-            <span v-for="(file, index) in form.dropFiles"
-                  :key="index"
-                  class="tag is-primary">
-                {{file.name}}
-                <button class="delete is-small"
-                        type="button"
-                        @click="deleteDropFiles(index)">
-                </button>
-            </span>
-        </div>
-      </div>
+<!--        <div class="tags">-->
+<!--            <span v-for="(file, index) in form.dropFiles"-->
+<!--                  :key="index"-->
+<!--                  class="tag is-primary">-->
+<!--                {{file.name}}-->
+<!--                <button class="delete is-small"-->
+<!--                        type="button"-->
+<!--                        @click="deleteDropFiles(index)">-->
+<!--                </button>-->
+<!--            </span>-->
+<!--        </div>-->
+<!--      </div>-->
     </div>
 
     <!--ingredients-->
