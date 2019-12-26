@@ -52,7 +52,9 @@ const actions = {
     commit('clearRecipes')
     if (uid) {
       console.log(auth.currentUser.email)
-      let recipeQuery = db.collection('recipes').where('users', 'array-contains', uid)
+      let recipeQuery = db.collection('recipes')
+        .where('users', 'array-contains', uid)
+        .where('isDeleted', '==', false)
       let recipeObserver = recipeQuery.onSnapshot(snapshot => {
         console.log(snapshot)
         if (snapshot.empty) {
