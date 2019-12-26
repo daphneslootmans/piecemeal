@@ -8,13 +8,13 @@
     </template>
 
     <template slot="start">
-      <b-navbar-item tag="router-link" :to="{ path: '/Dashboard' }">
+      <b-navbar-item tag="router-link" :to="{ name: 'recipes' }">
         Recipes
       </b-navbar-item>
-      <b-navbar-item tag="router-link" :to="{ path: '/Register' }">
+      <b-navbar-item tag="router-link" :to="{ name: 'register' }">
         Register
       </b-navbar-item>
-      <b-navbar-item tag="router-link" :to="{ path: '/Settings' }">
+      <b-navbar-item tag="router-link" :to="{ name: 'settings' }">
         Settings
       </b-navbar-item>
     </template>
