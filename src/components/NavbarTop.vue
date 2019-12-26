@@ -11,9 +11,6 @@
       <b-navbar-item tag="router-link" :to="{ name: 'recipes' }">
         Recipes
       </b-navbar-item>
-      <b-navbar-item tag="router-link" :to="{ name: 'register' }">
-        Register
-      </b-navbar-item>
       <b-navbar-item tag="router-link" :to="{ name: 'settings' }">
         Settings
       </b-navbar-item>
