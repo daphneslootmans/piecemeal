@@ -9,13 +9,14 @@ import Settings from '../views/Settings.vue'
 import AddRecipe from '../components/AddRecipe'
 import EditRecipe from '../components/EditRecipe'
 import ViewRecipe from '../components/ViewRecipe'
+import NotFoundComponent from '../views/NotFoundComponent'
 
 Vue.use(VueRouter)
 
 const routes = [
   {
     path: '*',
-    redirect: '/recipes'
+    component: NotFoundComponent
   },
   {
     path: '/login',
