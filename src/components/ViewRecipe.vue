@@ -114,7 +114,8 @@
 </template>
 
 <script>
-  import { mapState, mapActions } from 'vuex'
+  import { mapState, mapMutations, mapActions } from 'vuex'
+  import router from '../store/actions'
 
   export default {
     name: 'ViewRecipe',
@@ -124,6 +125,9 @@
     computed: {
       ...mapState({
         recipes: 'recipes'
+      }),
+      ...mapMutations({
+        removeRecipe: 'removeRecipe'
       }),
       recipe () {
         return this.recipes.find(recipe => recipe.id === this.$route.params.id)
@@ -165,6 +169,8 @@
               position: 'is-top-right',
               duration: 3000
             })
+            console.log('first recipe id: ', this.recipes[0].id)
+            this.$router.push({ name: 'recipe', params: { id: this.recipes[0].id} })
           })
         })
       }

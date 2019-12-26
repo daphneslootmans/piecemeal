@@ -48,7 +48,7 @@ const actions = {
       }
     })
   },
-  getRecipes ({ commit }) {
+  getRecipes ({ commit, state }) {
     let uid = auth.currentUser.uid
     commit('clearRecipes')
     if (uid) {
@@ -63,14 +63,17 @@ const actions = {
           return
         }
         snapshot.docChanges().forEach(change => {
-          if (change.type === 'added') {
-            commit('addRecipe', change.doc)
-          }
-          if (change.type === 'modified') {
-            console.log('Modified recipe: ', change.doc)
-            if (!snapshot.metadata.hasPendingWrites) {
-              console.log('no pending writes')
-              commit('updateRecipe', change.doc)
+          if (!snapshot.metadata.hasPendingWrites) {
+            console.log('no pending writes')
+            if (change.type === 'added') {
+              console.log('Added recipe: ', change.doc)
+              commit('addRecipe', change.doc)
+            } else if (change.type === 'modified') {
+              console.log('Modified recipe: ', change.doc)
+                commit('updateRecipe', change.doc)
+            } else if (change.type === 'removed') {
+              console.log('Removed recipe: ', change.doc)
+              commit('removeRecipe', change.doc)
             }
           }
         })

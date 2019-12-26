@@ -1,5 +1,5 @@
 <template>
-  <section class="section">
+  <div>
     <div class="content">
       <h1>Edit recipe</h1>
     </div>
@@ -7,7 +7,7 @@
       :loading="loading"
       @save-form="updateRecipe"
     ></recipe-form>
-  </section>
+  </div>
 </template>
 
 <script>
