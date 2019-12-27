@@ -132,7 +132,7 @@
 
   export default {
     name: 'ViewRecipe',
-    components: { NavbarTop, RecipeActions },
+    components: { RecipeActions },
     data () {
       return {}
     },
