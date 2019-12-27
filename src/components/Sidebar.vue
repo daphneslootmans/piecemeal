@@ -71,12 +71,6 @@
         // this.$set(catExp, 'expanded', !catExp)
       },
       getRecipeDetail (id) {
-        this.$buefy.toast.open({
-          message: `clicked recipe ${id}`,
-          type: 'is-dark',
-          position: 'is-top-right',
-          duration: 3000
-        })
         console.log('id: ', id)
         this.$router.push({ name: 'recipe', params: { id } })
       },
