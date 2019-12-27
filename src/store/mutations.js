@@ -31,8 +31,8 @@ const mutations = {
     state.recipes = []
   },
   setCurrentRecipe (state, recipe) {
-    console.log(typeof recipe)
     state.currentRecipe = JSON.parse(JSON.stringify(recipe))
+    state.currentRecipe.createdAt = recipe.createdAt.toDate()
   }
 }
 

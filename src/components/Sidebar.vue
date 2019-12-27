@@ -36,7 +36,7 @@
 
 <script>
   import { mapActions, mapState } from 'vuex'
-  import { auth, db } from '../firebaseConfig'
+  import { auth } from '../firebaseConfig'
 
   export default {
     name: 'Sidebar',

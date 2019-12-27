@@ -34,7 +34,8 @@
     },
     computed: {
       ...mapState({
-        currentUser: 'currentUser'
+        currentUser: 'currentUser',
+        recipe: 'currentRecipe'
       }),
       user () {
         return auth.currentUser
@@ -44,7 +45,7 @@
       updateRecipe (form) {
         this.loading = true
 
-        let recipe = recipeCollection.doc(this.$route.params.id)
+        let recipe = recipeCollection.doc(this.recipe.id)
         recipe.update(form)
           .then(() => {
             this.loading = false
@@ -54,7 +55,7 @@
               position: 'is-top-right',
               duration: 3000
             })
-            this.$router.push({ name: 'recipe', params: { id: this.$route.params.id } })
+            this.$router.push({ name: 'recipe', params: { id: recipe.id } })
           })
       }
     },

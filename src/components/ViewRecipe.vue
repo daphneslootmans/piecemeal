@@ -16,7 +16,7 @@
         <!--    title-->
         <div class="columns mb-0 is-multiline">
           <div class="column">
-            <h1 :class="[{deleted: deleted}, 'is-marginless']">{{ recipe.title }}</h1>
+            <h1 :class="['is-marginless']">{{ recipe.title }}</h1>
           </div>
           <div class="column is-narrow">
             <b-field label="">
@@ -27,7 +27,7 @@
 
         <div class="columns is-multiline">
           <div class="column date-stamp">
-            <p class="is-italic">{{ recipe.createdAt.toDate() | moment('DD-MM-YYYY HH:mm') }}</p>
+            <p class="is-italic">{{ recipe.createdAt | moment('DD-MM-YYYY HH:mm') }}</p>
           </div>
           <div class="column is-narrow">
             <div class="prep-time has-text-right">
@@ -79,7 +79,7 @@
               </div>
             </div>
           </div>
-          <div class="column is-half" v-if="recipe.materials.length">
+          <div class="column is-half" v-if="recipe.materials">
             <div class="card">
               <div class="card-header">
                 <div class="card-header-title">
@@ -132,19 +132,15 @@
 
   export default {
     name: 'ViewRecipe',
+    components: { NavbarTop, RecipeActions },
     data () {
       return {}
     },
     computed: {
       ...mapState({
-        recipes: 'recipes'
+        recipes: 'recipes',
+        recipe: 'currentRecipe'
       }),
-      ...mapMutations({
-        removeRecipe: 'removeRecipe'
-      }),
-      recipe () {
-        return this.recipes.find(recipe => recipe.id === this.$route.params.id)
-      },
       randIngredient () {
         let ingr = this.recipe.ingredients
         if (ingr.length > 1) {
@@ -157,39 +153,13 @@
           return mat[Math.random() * mat.length | 0]
         }
       },
-      deleted () {
-        return this.recipe ? this.recipe.isDeleted : false
+      recipeNotEmpty () {
+        return Object.entries(this.recipe).length !== 0
       }
     },
     methods: {
-      ...mapActions({
-        deleteRecipe: 'deleteRecipe'
-      }),
-      editRecipe (id) {
-        this.$router.push({ name: 'edit-recipe', params: { id: id }, query: { 'editing': true } })
-      },
-      deletePrompt (id) {
-        this.$buefy.dialog.confirm({
-          title: `Deleting recipe`,
-          message: `Are you sure you want to <b>delete</b> '${this.recipe.title}'? This action cannot be undone.`,
-          confirmText: 'Delete Recipe',
-          type: 'is-danger',
-          hasIcon: true,
-          onConfirm: () => this.deleteRecipe(id).then(() => {
-            this.$buefy.toast.open({
-              message: `Recipe deleted`,
-              type: 'is-dark',
-              position: 'is-top-right',
-              duration: 3000
-            })
-            console.log('first recipe id: ', this.recipes[0].id)
-            this.$router.push({ name: 'recipe', params: { id: this.recipes[0].id } })
-          })
-        })
-      }
     },
     mounted () {
-      console.log('recipes: ', this.recipes)
     }
   }
 </script>
