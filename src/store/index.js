@@ -11,7 +11,8 @@ export default new Vuex.Store({
   state: {
     currentUser: {},
     error: null,
-    recipes: []
+    recipes: [],
+    currentRecipe: {}
   },
   getters,
   mutations,

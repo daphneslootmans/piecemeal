@@ -1,12 +1,13 @@
 const mutations = {
-  setCurrentUser(state, user) {
+  setCurrentUser (state, user) {
     state.currentUser = user
   },
-  clearUserData(state) {
+  clearUserData (state) {
     state.currentUser = {}
     state.recipes = []
+    state.currentRecipe = {}
   },
-  setError(state, error) {
+  setError (state, error) {
     state.error = error
   },
   updateRecipe (state, recipe) {
@@ -28,7 +29,11 @@ const mutations = {
   },
   clearRecipes (state) {
     state.recipes = []
+  },
+  setCurrentRecipe (state, recipe) {
+    console.log(typeof recipe)
+    state.currentRecipe = JSON.parse(JSON.stringify(recipe))
   }
 }
 
-export default mutations;
+export default mutations

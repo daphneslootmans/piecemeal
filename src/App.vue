@@ -18,18 +18,30 @@
 <script>
   import NavbarTop from './components/NavbarTop'
   import { auth, db } from './firebaseConfig'
-  import { mapActions } from 'vuex'
+  import { mapState, mapMutations, mapActions } from 'vuex'
 
   export default {
     components: {
       NavbarTop
     },
     computed: {
+      ...mapState({
+        currentRecipe: 'currentRecipe',
+        recipes: 'recipes'
+      }),
       user () {
         return auth.currentUser
-      }
+      },
+      recipe () {
+        if (this.$route.params.id && this.recipes) {
+          return this.recipes.find(recipe => recipe.id === this.$route.params.id)
+        }
+      },
     },
     methods: {
+      ...mapMutations({
+        setRecipe: 'setCurrentRecipe'
+      }),
       ...mapActions({
         getUser: 'getUser',
         setUser: 'setUser',
@@ -68,6 +80,14 @@
     watch: {
       user () {
         this.getRecipes()
+      },
+      recipe () {
+        if (this.$route.params.id && this.recipes) {
+          if (this.recipe.id !== this.currentRecipe.id) {
+            this.setRecipe(this.recipe)
+          }
+        }
+
       }
     },
     created () {
@@ -87,6 +107,7 @@
     color: #2c3e50;
     min-height: 100vh;
   }
+
   .navbar-brand {
     a {
       margin-right: 2rem;
@@ -98,6 +119,7 @@
       margin-right: 0.5em;
     }
   }
+
   .main-content {
     padding-left: 2rem;
   }
