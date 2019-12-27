@@ -37,7 +37,8 @@ import {
   faPenAlt,
   faTrashAlt,
   faTrash,
-  faCloudUploadAlt
+  faCloudUploadAlt,
+  faCog
 
 } from '@fortawesome/free-solid-svg-icons'
 
@@ -70,7 +71,8 @@ library.add(
   faPenAlt,
   faTrashAlt,
   faTrash,
-  faCloudUploadAlt
+  faCloudUploadAlt,
+  faCog
 )
 
 Vue.component('vue-fontawesome', FontAwesomeIcon)

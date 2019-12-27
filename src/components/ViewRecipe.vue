@@ -1,46 +1,10 @@
 <template>
   <div>
-  <div class="content" v-if="recipe">
-    <section class="info-section">
-      <!--    title-->
-      <div class="columns mb-0 is-multiline">
-        <div class="column">
-          <h1 :class="[{deleted: deleted}, 'is-marginless']">{{ recipe.title }}</h1>
-        </div>
-        <div class="column is-narrow">
-          <b-field label="">
-            <b-rate icon="heart" spaced v-model="recipe.rating" disabled/>
-          </b-field>
-          <p class="prep-time has-text-right">
-            <vue-fontawesome icon="stopwatch"/>
-            {{ recipe.prepTime }} min
-          </p>
-        </div>
-        <div class="column is-full date-stamp">
-          <p class="is-italic">{{ recipe.createdAt.toDate() | moment('DD-MM-YYYY HH:mm') }}</p>
-        </div>
-      </div>
-
-      <!--    description-->
-      <div class="columns">
-        <div class="column">
-          <p>{{ recipe.description }}</p>
-        </div>
-      </div>
-
-      <!--    tags-->
-      <div class="columns">
-        <div class="column">
-          <div class="tags">
-            <div v-for="tag in recipe.tags">
-              {{ tag }}
-            </div>
-            <div>{{ recipe.category }}</div>
-          </div>
-        </div>
+    <div class="content" v-if="recipe">
+      <div class="columns justify-content-end">
         <div class="column is-narrow">
           <div class="button-group">
-            <b-button icon-left="pen-alt" type="is-primary" outlined expanded @click="editRecipe(recipe.id)">
+            <b-button icon-left="pen-alt" type="is-primary" outlined @click="editRecipe(recipe.id)">
               Edit recipe
             </b-button>
             <b-button icon-left="trash" type="is-primary" outlined @click="deletePrompt(recipe.id)">
@@ -48,72 +12,115 @@
           </div>
         </div>
       </div>
-    </section>
+      <section class="info-section">
+        <!--    title-->
+        <div class="columns mb-0 is-multiline">
+          <div class="column">
+            <h1 :class="[{deleted: deleted}, 'is-marginless']">{{ recipe.title }}</h1>
+          </div>
+          <div class="column is-narrow">
+            <b-field label="">
+              <b-rate icon="heart" spaced v-model="recipe.rating" disabled/>
+            </b-field>
+          </div>
+        </div>
 
-    <section class="body-section">
-      <div class="columns">
-        <div class="column is-half">
-          <div class="card ingredients">
-            <div class="card-header">
-              <div class="card-header-title">
-                Ingredients
-              </div>
+        <div class="columns is-multiline">
+          <div class="column date-stamp">
+            <p class="is-italic">{{ recipe.createdAt.toDate() | moment('DD-MM-YYYY HH:mm') }}</p>
+          </div>
+          <div class="column is-narrow">
+            <div class="prep-time has-text-right">
+              <vue-fontawesome icon="stopwatch"/>
+              {{ recipe.prepTime }} min
             </div>
-            <div class="card-content">
-              <p
-                v-for="ingredient in recipe.ingredients"
-              >
+          </div>
+        </div>
+
+        <!--    description-->
+        <div class="columns">
+          <div class="column pt-0">
+            <p>{{ recipe.description }}</p>
+          </div>
+        </div>
+
+        <!--    tags-->
+        <div class="columns">
+          <div class="column">
+            <div class="tags">
+              <div v-for="tag in recipe.tags">
+                {{ tag }}
+              </div>
+              <div>{{ recipe.category }}</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="body-section">
+        <div class="columns">
+          <div class="column is-half">
+            <div class="card ingredients">
+              <div class="card-header">
+                <div class="card-header-title">
+                  Ingredients
+                </div>
+              </div>
+              <div class="card-content">
+                <p
+                  v-for="ingredient in recipe.ingredients"
+                >
                 <span>
                   <vue-fontawesome v-if="randIngredient === ingredient" icon="cookie-bite"/>
                   <vue-fontawesome v-else icon="cookie"/>
                 </span>
-                {{ ingredient }}
-              </p>
-            </div>
-          </div>
-        </div>
-        <div class="column is-half" v-if="recipe.materials.length">
-          <div class="card">
-            <div class="card-header">
-              <div class="card-header-title">
-                Materials
+                  {{ ingredient }}
+                </p>
               </div>
             </div>
-            <div class="card-content">
-              <p
-                v-for="material in recipe.materials"
-              >
+          </div>
+          <div class="column is-half" v-if="recipe.materials.length">
+            <div class="card">
+              <div class="card-header">
+                <div class="card-header-title">
+                  Materials
+                </div>
+              </div>
+              <div class="card-content">
+                <p
+                  v-for="material in recipe.materials"
+                >
                 <span>
                   <vue-fontawesome v-if="randMaterial === material" icon="cookie-bite"/>
                   <vue-fontawesome v-else icon="cookie"/>
                 </span>
-                {{ material }}
-              </p>
+                  {{ material }}
+                </p>
+              </div>
             </div>
           </div>
         </div>
-      </div>
 
-      <div class="columns">
-        <div class="column is-full">
-          <h4>Directions</h4>
-          <div v-for="(step, index) in recipe.directions" class="card">
-            <header class="card-header">
-              <p class="card-header-title">Step {{ index +1 }}</p>
-            </header>
-            <div class="card-content">
-              <p>
-                {{ step }}
-              </p>
+        <div class="columns">
+          <div class="column is-full">
+            <h4>Directions</h4>
+            <div v-for="(step, index) in recipe.directions" class="card">
+              <header class="card-header">
+                <p class="card-header-title">Step {{ index +1 }}</p>
+              </header>
+              <div class="card-content">
+                <p>
+                  {{ step }}
+                </p>
+              </div>
             </div>
           </div>
         </div>
-      </div>
-    </section>
-  </div>
+      </section>
+    </div>
     <div class="content" v-else>
       <b-message type="is-danger">
-       Invalid recipe id
+        Invalid recipe id
       </b-message>
     </div>
   </div>
@@ -151,7 +158,7 @@
         }
       },
       deleted () {
-      return this.recipe ? this.recipe.isDeleted : false
+        return this.recipe ? this.recipe.isDeleted : false
       }
     },
     methods: {
@@ -159,7 +166,7 @@
         deleteRecipe: 'deleteRecipe'
       }),
       editRecipe (id) {
-        this.$router.push({ name: 'edit-recipe', params: { id: id }, query: {'editing': true} })
+        this.$router.push({ name: 'edit-recipe', params: { id: id }, query: { 'editing': true } })
       },
       deletePrompt (id) {
         this.$buefy.dialog.confirm({
@@ -176,7 +183,7 @@
               duration: 3000
             })
             console.log('first recipe id: ', this.recipes[0].id)
-            this.$router.push({ name: 'recipe', params: { id: this.recipes[0].id} })
+            this.$router.push({ name: 'recipe', params: { id: this.recipes[0].id } })
           })
         })
       }
@@ -191,6 +198,7 @@
   .deleted {
     color: darkred;
   }
+
   .tags {
     display: flex;
 
@@ -236,7 +244,6 @@
   }
 
   .date-stamp {
-    padding-top: 0;
     font-size: 0.9em;
   }
 </style>

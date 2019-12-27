@@ -8,20 +8,22 @@
     </template>
 
     <template slot="start">
-      <b-navbar-item tag="router-link" :to="{ name: 'recipes' }">
-        Recipes
-      </b-navbar-item>
-      <b-navbar-item tag="router-link" :to="{ name: 'settings' }">
-        Settings
-      </b-navbar-item>
+
     </template>
 
     <template slot="end">
       <b-navbar-item tag="div">
-        <div v-if="user">{{ user.email }}</div>
+        <div v-if="user" class="user-name">{{ user.email }}</div>
         <div class="buttons">
-          <b-button icon-right="sign-out-alt" type="is-primary" @click="signOut">
-          </b-button>
+          <b-button tag="router-link"
+                    to="/settings"
+                    type="is-primary"
+                    icon-left="cog"
+          ></b-button>
+          <b-button icon-right="sign-out-alt"
+                    type="is-primary"
+                    @click="signOut"
+          ></b-button>
         </div>
       </b-navbar-item>
     </template>
@@ -56,5 +58,7 @@
 </script>
 
 <style scoped lang="scss">
-
+  .user-name {
+    padding-right: 1em;
+  }
 </style>

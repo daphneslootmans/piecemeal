@@ -90,6 +90,9 @@
 
 <style lang="scss">
   .sidebar {
+    height: calc(100vh - 132px - 1.5rem);
+    max-height: calc(100vh - 132px - 1.5rem);
+    border-right: 1px solid $grey-lightest;
     button {
       margin-bottom: 1rem;
     }
