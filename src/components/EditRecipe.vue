@@ -5,14 +5,13 @@
     </div>
     <recipe-form
       :loading="loading"
-      :editing="editing"
       @save-form="updateRecipe"
     ></recipe-form>
   </div>
 </template>
 
 <script>
-  import { db, auth, recipeCollection } from '../firebaseConfig.js'
+  import { auth, recipeCollection } from '../firebaseConfig.js'
   import { mapState } from 'vuex'
   import RecipeForm from './RecipeForm'
   import { timestamp } from '../firebaseConfig'
@@ -21,11 +20,6 @@
     name: 'EditRecipe',
     components: {
       RecipeForm
-    },
-    props: {
-      editing: {
-        type: Boolean
-      }
     },
     data () {
       return {
@@ -59,7 +53,6 @@
           })
       }
     },
-    watch: {},
     mounted () {
     }
   }

@@ -37,7 +37,7 @@
 
         <div class="columns is-multiline">
           <!--description-->
-          <div class="column" >
+          <div class="column">
             <b-field label="Description">
               <b-input
                 type="textarea"
@@ -78,39 +78,39 @@
       </div>
 
       <!--image-->
-<!--      <div class="column is-5">-->
-<!--        <b-field label="Image">-->
-<!--          <b-upload v-model="form.dropFiles"-->
-<!--                    multiple-->
-<!--                    drag-drop-->
-<!--                    accept="image/*"-->
-<!--          >-->
-<!--            <section class="section">-->
-<!--              <div class="content has-text-centered">-->
-<!--                <p>-->
-<!--                  <b-icon-->
-<!--                    icon="upload"-->
-<!--                    size="is-large">-->
-<!--                  </b-icon>-->
-<!--                </p>-->
-<!--                <p>Drop your image here or click to upload</p>-->
-<!--              </div>-->
-<!--            </section>-->
-<!--          </b-upload>-->
-<!--        </b-field>-->
+      <!--      <div class="column is-5">-->
+      <!--        <b-field label="Image">-->
+      <!--          <b-upload v-model="form.dropFiles"-->
+      <!--                    multiple-->
+      <!--                    drag-drop-->
+      <!--                    accept="image/*"-->
+      <!--          >-->
+      <!--            <section class="section">-->
+      <!--              <div class="content has-text-centered">-->
+      <!--                <p>-->
+      <!--                  <b-icon-->
+      <!--                    icon="upload"-->
+      <!--                    size="is-large">-->
+      <!--                  </b-icon>-->
+      <!--                </p>-->
+      <!--                <p>Drop your image here or click to upload</p>-->
+      <!--              </div>-->
+      <!--            </section>-->
+      <!--          </b-upload>-->
+      <!--        </b-field>-->
 
-<!--        <div class="tags">-->
-<!--            <span v-for="(file, index) in form.dropFiles"-->
-<!--                  :key="index"-->
-<!--                  class="tag is-primary">-->
-<!--                {{file.name}}-->
-<!--                <button class="delete is-small"-->
-<!--                        type="button"-->
-<!--                        @click="deleteDropFiles(index)">-->
-<!--                </button>-->
-<!--            </span>-->
-<!--        </div>-->
-<!--      </div>-->
+      <!--        <div class="tags">-->
+      <!--            <span v-for="(file, index) in form.dropFiles"-->
+      <!--                  :key="index"-->
+      <!--                  class="tag is-primary">-->
+      <!--                {{file.name}}-->
+      <!--                <button class="delete is-small"-->
+      <!--                        type="button"-->
+      <!--                        @click="deleteDropFiles(index)">-->
+      <!--                </button>-->
+      <!--            </span>-->
+      <!--        </div>-->
+      <!--      </div>-->
     </div>
 
     <!--ingredients-->
@@ -165,7 +165,7 @@
           ></b-input>
         </b-field>
       </div>
-      </div>
+    </div>
     <div class="columns">
       <div class="column is-narrow">
         <b-button
@@ -189,7 +189,8 @@
           @click="save"
           :loading="this.loading"
           :disabled="this.loading"
-        >Save recipe</b-button>
+        >Save recipe
+        </b-button>
       </div>
     </div>
   </form>
@@ -205,9 +206,6 @@
       loading: {
         type: Boolean,
         required: true
-      },
-      editing: {
-        type: Boolean
       }
     },
     data () {
@@ -233,7 +231,8 @@
       ...mapState({
         currentUser: 'currentUser',
         recipes: 'recipes',
-        recipe: 'currentRecipe'
+        recipe: 'currentRecipe',
+        editing: 'editing'
       }),
       user () {
         return auth.currentUser
@@ -272,14 +271,16 @@
         if (!this.editing && this.currentUser.categories) {
           this.category = this.currentUser.categories[0].name
         }
+      },
+      editing () {
+        if (this.editing) {
+          this.form = this.recipe
+          let ingr = this.recipe.ingredients.toString()
+          this.ingredientsRaw = ingr.replace(/,/g, '\n')
+        }
       }
     },
     mounted () {
-      if (this.editing) {
-        this.form = this.recipe
-        let ingr = this.recipe.ingredients.toString()
-        this.ingredientsRaw = ingr.replace(/,/g, "\n")
-      }
     }
   }
 </script>

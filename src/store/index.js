@@ -12,7 +12,8 @@ export default new Vuex.Store({
     currentUser: {},
     error: null,
     recipes: [],
-    currentRecipe: {}
+    currentRecipe: {},
+    editing: false
   },
   getters,
   mutations,

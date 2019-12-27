@@ -40,7 +40,8 @@
     },
     methods: {
       ...mapMutations({
-        setRecipe: 'setCurrentRecipe'
+        setRecipe: 'setCurrentRecipe',
+        setEditing: 'setEditing'
       }),
       ...mapActions({
         getUser: 'getUser',
@@ -74,7 +75,20 @@
               },
             ]
         }
-        let cats = db.collection('users').doc('categories').set(data)
+        db.collection('users').doc('categories').set(data)
+      },
+      checkRoute () {
+        console.log('checking route')
+        if (this.$route.params.id) {
+          console.log('id in route')
+          if (this.recipe.id !== this.currentRecipe.id) {
+            this.setRecipe(this.recipe)
+          }
+        }
+        if (this.$route.query.editing) {
+          console.log('editing in route')
+          this.setEditing({editing: true})
+        }
       }
     },
     watch: {
@@ -82,17 +96,15 @@
         this.getRecipes()
       },
       recipe () {
-        if (this.$route.params.id && this.recipes) {
-          if (this.recipe.id !== this.currentRecipe.id) {
-            this.setRecipe(this.recipe)
-          }
-        }
-
+        this.checkRoute()
       }
     },
     created () {
       this.getUser()
       this.getRecipes()
+    },
+    mounted () {
+      this.checkRoute()
     }
   }
 </script>

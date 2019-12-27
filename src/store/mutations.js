@@ -33,6 +33,9 @@ const mutations = {
   setCurrentRecipe (state, recipe) {
     state.currentRecipe = JSON.parse(JSON.stringify(recipe))
     state.currentRecipe.createdAt = recipe.createdAt.toDate()
+  },
+  setEditing (state, payload) {
+    state.editing = payload.editing
   }
 }
 
