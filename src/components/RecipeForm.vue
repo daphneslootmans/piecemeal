@@ -12,7 +12,7 @@
             <b-field label="Title">
               <b-input
                 type="text"
-                v-model="form.title"
+                v-model="title"
               ></b-input>
             </b-field>
           </div>
@@ -21,7 +21,7 @@
           <div class="column is-narrow">
             <b-field label="Category">
               <b-select
-                v-model="form.category"
+                v-model="category"
               >
                 <option
                   v-for="option in currentUser.categories"
@@ -41,7 +41,7 @@
             <b-field label="Description">
               <b-input
                 type="textarea"
-                v-model="form.description"
+                v-model="description"
                 rows="4"
               ></b-input>
             </b-field>
@@ -50,7 +50,7 @@
           <!--rating-->
           <div class="column is-narrow">
             <b-field label="Rating">
-              <b-rate icon="heart" spaced v-model="form.rating"></b-rate>
+              <b-rate icon="heart" spaced v-model="rating"></b-rate>
             </b-field>
           </div>
 
@@ -58,7 +58,7 @@
           <div class="column is-full">
             <b-field label="Tags">
               <b-taginput
-                v-model="form.tags"
+                v-model="tags"
                 ellipsis
                 icon="tag"
                 placeholder="Add a tag">
@@ -70,7 +70,7 @@
           <div class="column is-6">
             <b-field label="Preparation time in minutes">
               <b-numberinput
-                v-model.number="form.prepTime"
+                v-model.number="prepTime"
               ></b-numberinput>
             </b-field>
           </div>
@@ -80,7 +80,7 @@
       <!--image-->
       <!--      <div class="column is-5">-->
       <!--        <b-field label="Image">-->
-      <!--          <b-upload v-model="form.dropFiles"-->
+      <!--          <b-upload v-model="dropFiles"-->
       <!--                    multiple-->
       <!--                    drag-drop-->
       <!--                    accept="image/*"-->
@@ -100,7 +100,7 @@
       <!--        </b-field>-->
 
       <!--        <div class="tags">-->
-      <!--            <span v-for="(file, index) in form.dropFiles"-->
+      <!--            <span v-for="(file, index) in dropFiles"-->
       <!--                  :key="index"-->
       <!--                  class="tag is-primary">-->
       <!--                {{file.name}}-->
@@ -118,10 +118,10 @@
       <div class="column is-half">
         <b-field label="Ingredients">
           <b-input
-            v-model="ingredientsRaw"
             type="textarea"
-            rows="8"
+            v-model.trim="ingredientsRaw"
             placeholder="Add one ingredient per line"
+            rows="8"
           ></b-input>
         </b-field>
       </div>
@@ -130,7 +130,7 @@
       <div class="column is-half">
         <b-field label="Materials">
           <b-taginput
-            v-model="form.materials"
+            v-model="materials"
             ellipsis
             icon="blender"
             placeholder="Add required materials">
@@ -141,7 +141,7 @@
         <b-field label="Comment">
           <b-input
             type="textarea"
-            v-model="form.comment"
+            v-model.trim="comment"
             class="comment-input"
           ></b-input>
         </b-field>
@@ -151,32 +151,14 @@
     <!--directions-->
     <div class="columns">
       <div class="column">
-        <div class="content">
-          <h3>Directions</h3>
-        </div>
-        <b-field
-          v-for="(step, index) in form.directions"
-          :label="stepName(index)"
-          :key="'step' + index"
-        >
+        <b-field label="Directions">
           <b-input
             type="textarea"
-            v-model.trim="form.directions[index]"
+            v-model.trim="directionsRaw"
+            placeholder="Add one direction per line"
+            rows="10"
           ></b-input>
         </b-field>
-      </div>
-    </div>
-    <div class="columns">
-      <div class="column is-narrow">
-        <b-button
-          icon-left="plus"
-          type="is-primary"
-          @click="addStep"
-          size="is-medium"
-          expanded
-          outlined>
-          Add a step
-        </b-button>
       </div>
     </div>
     <div class="columns">
@@ -197,7 +179,7 @@
 </template>
 
 <script>
-  import { mapState } from 'vuex'
+  import { mapState, mapActions } from 'vuex'
   import { auth } from '../firebaseConfig'
 
   export default {
@@ -210,21 +192,6 @@
     },
     data () {
       return {
-        form: {
-          title: '',
-          category: '',
-          description: '',
-          rating: 0,
-          imageUrl: '',
-          tags: [],
-          prepTime: null,
-          ingredients: [],
-          materials: [],
-          comment: '',
-          directions: [''],
-          dropFiles: [],
-        },
-        ingredientsRaw: '',
       }
     },
     computed: {
@@ -236,49 +203,121 @@
       }),
       user () {
         return auth.currentUser
-      }
+      },
+      title: {
+        get () {
+          return this.recipe.message
+        },
+        set (value) {
+          this.$store.commit('updateTitle', value)
+        }
+      },
+      category: {
+        get () {
+          return this.recipe.category
+        },
+        set (value) {
+          this.$store.commit('updateCategory', value)
+        }
+      },
+      description: {
+        get () {
+          return this.recipe.description
+        },
+        set (value) {
+          this.$store.commit('updateDescription', value)
+        }
+      },
+      rating: {
+        get () {
+          return this.recipe.rating
+        },
+        set (value) {
+          this.$store.commit('updateRating', value)
+        }
+      },
+      imageUrl: {
+        get () {
+          return this.recipe.imageUrl
+        },
+        set (value) {
+          this.$store.commit('imageUrl', value)
+        }
+      },
+      tags: {
+        get () {
+          return this.recipe.tags
+        },
+        set (value) {
+          this.$store.commit('updateTags', value)
+        }
+      },
+      prepTime: {
+        get () {
+          return this.recipe.prepTime
+        },
+        set (value) {
+          this.$store.commit('updatePrepTime', value)
+        }
+      },
+      ingredientsRaw: {
+        get () {
+          return this.recipe.ingredientsRaw
+        },
+        set (value) {
+          this.$store.commit('updateIngredientsRaw', value)
+        }
+      },
+      materials: {
+        get () {
+          return this.recipe.materials
+        },
+        set (value) {
+          this.$store.commit('updateMaterials', value)
+        }
+      },
+      comment: {
+        get () {
+          return this.recipe.comment
+        },
+        set (value) {
+          this.$store.commit('updateComment', value)
+        }
+      },
+      directionsRaw: {
+        get () {
+          return this.recipe.directionsRaw
+        },
+        set (value) {
+          this.$store.commit('updateDirectionsRaw', value)
+        }
+      },
+      dropFiles: {
+        get () {
+          return this.recipe.dropFiles
+        },
+        set (value) {
+          this.$store.commit('updateDropFiles', value)
+        }
+      },
     },
     methods: {
+      ...mapActions({
+        parseRecipe: 'parseRecipe'
+      }),
       deleteDropFiles (index) {
-        this.form.dropFiles.splice(index, 1)
-      },
-      stepName (index) {
-        let stepNr = index + 1
-        return 'Step ' + stepNr.toString()
-      },
-      addStep () {
-        this.form.directions.push('')
-      },
-      parseIngredients () {
-        this.form.ingredients = this.ingredientsRaw.replace(/\r\n/g, '\n').split('\n')
+        this.dropFiles.splice(index, 1)
       },
       save () {
-        let ingredientsList = []
-        this.form.ingredients.forEach(item => {
-          if (item !== '') {
-            ingredientsList.push(item)
-          }
-        })
-        this.form.ingredients = ingredientsList
-        this.$emit('save-form', this.form)
-      }
+        this.parseRecipe().then(() => this.$emit('save-form', this.recipe))
+      },
     },
     watch: {
-      ingredientsRaw () {
-        this.parseIngredients()
-      },
       currentUser () {
         if (!this.editing && this.currentUser.categories) {
           this.category = this.currentUser.categories[0].name
         }
       },
-      editing () {
-        if (this.editing) {
-          this.form = this.recipe
-          let ingr = this.recipe.ingredients.toString()
-          this.ingredientsRaw = ingr.replace(/,/g, '\n')
-        }
-      }
     },
     mounted () {
     }

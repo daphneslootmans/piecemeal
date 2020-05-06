@@ -82,12 +82,33 @@ const actions = {
       commit('clearRecipes')
     }
   },
+  parseRecipe ({state, commit}) {
+    let ingredientsList = []
+    let directionsList = []
+    console.log(state.currentRecipe)
+    let ingredients = state.currentRecipe.ingredientsRaw.replace(/\r\n/g, '\n').split('\n')
+    let directions = state.currentRecipe.directionsRaw.replace(/\r\n/g, '\n').split('\n')
+    commit('updateIngredients', ingredients)
+    commit('updateDirections', directions)
+    ingredients.forEach(item => {
+      if (item !== '') {
+        ingredientsList.push(item)
+      }
+    })
+    directions.forEach(item => {
+      if (item !== '') {
+        directionsList.push(item)
+      }
+    })
+    commit('updateIngredients', ingredientsList)
+    commit('updateDirections', directionsList)
+  },
   deleteRecipe ({ state }, id) {
     let recipe = recipeCollection.doc(id)
     return recipe.update({
       isDeleted: true,
       deletedTimestamp: timestamp
-    })
+    }).then(() => commit('clearCurrentRecipe'))
   }
 }
 

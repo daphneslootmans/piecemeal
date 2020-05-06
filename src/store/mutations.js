@@ -34,9 +34,69 @@ const mutations = {
     state.currentRecipe = JSON.parse(JSON.stringify(recipe))
     state.currentRecipe.createdAt = recipe.createdAt.toDate()
   },
+  clearCurrentRecipe (state) {
+    state.currentRecipe = {
+      title: '',
+      category: '',
+      description: '',
+      rating: 0,
+      imageUrl: '',
+      tags: [],
+      prepTime: null,
+      ingredientsRaw: '',
+      ingredients: [],
+      materials: [],
+      comment: '',
+      directionsRaw: '',
+      directions: [],
+      dropFiles: [],
+    }
+  },
   setEditing (state, payload) {
     state.editing = payload.editing
-  }
+  },
+  updateTitle (state, payload) {
+    state.currentRecipe.title = payload
+  },
+  updateCategory (state, payload) {
+    state.currentRecipe.category = payload
+  },
+  updateDescription (state, payload) {
+    state.currentRecipe.description = payload
+  },
+  updateRating (state, payload) {
+    state.currentRecipe.rating = payload
+  },
+  updateImageUrl (state, payload) {
+    state.currentRecipe.imageUrl = payload
+  },
+  updateTags (state, payload) {
+    state.currentRecipe.tags = payload
+  },
+  updatePrepTime (state, payload) {
+    state.currentRecipe.prepTime = payload
+  },
+  updateIngredients (state, payload) {
+    state.currentRecipe.ingredients = payload
+  },
+  updateIngredientsRaw (state, payload) {
+    state.currentRecipe.ingredientsRaw = payload
+  },
+  updateMaterials (state, payload) {
+    state.currentRecipe.materials = payload
+  },
+  updateComment (state, payload) {
+    state.currentRecipe.comment = payload
+  },
+  updateDirections (state, payload) {
+    state.currentRecipe.directions = payload
+  },
+  updateDirectionsRaw (state, payload) {
+    state.currentRecipe.directionsRaw = payload
+  },
+  updateDropFiles (state, payload) {
+    state.currentRecipe.dropFiles = payload
+  },
 }
 
 export default mutations

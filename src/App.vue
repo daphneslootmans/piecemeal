@@ -41,6 +41,7 @@
     methods: {
       ...mapMutations({
         setRecipe: 'setCurrentRecipe',
+        clearCurrentRecipe: 'clearCurrentRecipe',
         setEditing: 'setEditing'
       }),
       ...mapActions({
@@ -84,10 +85,14 @@
           if (this.recipe.id !== this.currentRecipe.id) {
             this.setRecipe(this.recipe)
           }
+        } else {
+          this.clearCurrentRecipe()
         }
         if (this.$route.query.editing) {
           console.log('editing in route')
           this.setEditing({editing: true})
+        } else {
+          this.setEditing({editing: false})
         }
       }
     },
@@ -104,7 +109,7 @@
       this.getRecipes()
     },
     mounted () {
-      this.checkRoute()
+      // this.checkRoute()
     }
   }
 </script>
