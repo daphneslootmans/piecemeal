@@ -100,17 +100,16 @@
       user () {
         this.getRecipes()
       },
-      recipe () {
+      $route (to, from){
         this.checkRoute()
       }
     },
     created () {
-      this.getUser()
-      this.getRecipes()
+      if (this.user) {
+        this.getUser()
+        this.getRecipes()
+      }
     },
-    mounted () {
-      // this.checkRoute()
-    }
   }
 </script>
 
