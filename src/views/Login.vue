@@ -73,7 +73,8 @@
         console.log('trying to sign in')
         auth.signInWithEmailAndPassword(this.email, this.password)
             .then(response => {
-                  this.$router.push('/dashboard')
+                  console.log(response)
+                  this.$router.push('/recipes')
                   this.$store.commit('setError', null)
                 }
             )

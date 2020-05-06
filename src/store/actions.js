@@ -14,7 +14,7 @@ const actions = {
     auth.createUserWithEmailAndPassword(payload.email, payload.password)
       .then(response => {
         console.log('new user uid:', response.user.uid)
-        router.push('/dashboard')
+        router.push('/recipes')
         dispatch('setUser', response.user.uid)
       })
       .catch(error => { state.error = error })
