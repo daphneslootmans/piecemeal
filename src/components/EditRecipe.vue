@@ -1,11 +1,14 @@
 <template>
   <div>
+    <recipe-actions
+      :id="recipe.id"
+      @save-form="updateRecipe"
+    ></recipe-actions>
     <div class="content">
       <h1>Edit recipe</h1>
     </div>
     <recipe-form
       :loading="loading"
-      @save-form="updateRecipe"
     ></recipe-form>
   </div>
 </template>
@@ -14,11 +17,12 @@
   import { auth, recipeCollection } from '../firebaseConfig.js'
   import { mapState } from 'vuex'
   import RecipeForm from './RecipeForm'
-  import { timestamp } from '../firebaseConfig'
+  import RecipeActions from './RecipeActions'
 
   export default {
     name: 'EditRecipe',
     components: {
+      RecipeActions,
       RecipeForm
     },
     data () {

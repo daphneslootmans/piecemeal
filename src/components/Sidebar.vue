@@ -84,6 +84,8 @@
 
 <style lang="scss">
   .sidebar {
+    position: sticky;
+    top: 0;
     height: calc(100vh - 132px - 1.5rem);
     max-height: calc(100vh - 132px - 1.5rem);
     border-right: 1px solid $grey-lightest;

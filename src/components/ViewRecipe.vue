@@ -1,17 +1,7 @@
 <template>
   <div>
     <div class="content" v-if="recipe">
-      <div class="columns justify-content-end">
-        <div class="column is-narrow">
-          <div class="button-group">
-            <b-button icon-left="pen-alt" type="is-primary" outlined @click="editRecipe(recipe.id)">
-              Edit recipe
-            </b-button>
-            <b-button icon-left="trash" type="is-primary" outlined @click="deletePrompt(recipe.id)">
-            </b-button>
-          </div>
-        </div>
-      </div>
+      <recipe-actions :id="$route.params.id"></recipe-actions>
       <section class="info-section">
         <!--    title-->
         <div class="columns mb-0 is-multiline">
@@ -127,8 +117,8 @@
 </template>
 
 <script>
-  import { mapState, mapMutations, mapActions } from 'vuex'
-  import router from '../store/actions'
+  import { mapState } from 'vuex'
+  import RecipeActions from './RecipeActions'
 
   export default {
     name: 'ViewRecipe',

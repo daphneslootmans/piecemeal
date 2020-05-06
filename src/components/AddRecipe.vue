@@ -1,11 +1,11 @@
 <template>
   <div>
+    <recipe-actions @save-form="addRecipe"></recipe-actions>
     <div class="content">
       <h1>Add a recipe</h1>
     </div>
     <recipe-form
       :loading="loading"
-      @save-form="addRecipe"
     ></recipe-form>
   </div>
 </template>
@@ -14,11 +14,13 @@
   import { db, auth } from '../firebaseConfig.js'
   import { mapState } from 'vuex'
   import RecipeForm from './RecipeForm'
+  import RecipeActions from './RecipeActions'
 
   export default {
     name: 'AddRecipe',
     components: {
-      RecipeForm
+      RecipeForm,
+      RecipeActions
     },
     data () {
       return {
@@ -54,7 +56,7 @@
         form.users = [this.user.uid]
         form.isDeleted = false
 
-        let setDoc = db.collection('recipes').add(form)
+        db.collection('recipes').add(form)
           .then(docRef => {
             this.loading = false
             this.$buefy.toast.open({

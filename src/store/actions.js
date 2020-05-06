@@ -63,7 +63,7 @@ const actions = {
           return
         }
         snapshot.docChanges().forEach(change => {
-          if (!snapshot.metadata.hasPendingWrites) {
+          if (snapshot.metadata) {
             console.log('no pending writes')
             if (change.type === 'added') {
               console.log('Added recipe: ', change.doc)
@@ -103,12 +103,15 @@ const actions = {
     commit('updateIngredients', ingredientsList)
     commit('updateDirections', directionsList)
   },
-  deleteRecipe ({ state }, id) {
+  deleteRecipe ({ state, commit }, id) {
     let recipe = recipeCollection.doc(id)
     return recipe.update({
       isDeleted: true,
       deletedTimestamp: timestamp
-    }).then(() => commit('clearCurrentRecipe'))
+    }).then(() => {
+      router.push('/recipes')
+      commit('clearCurrentRecipe')
+    })
   }
 }
 

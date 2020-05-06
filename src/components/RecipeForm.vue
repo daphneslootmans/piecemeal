@@ -161,20 +161,6 @@
         </b-field>
       </div>
     </div>
-    <div class="columns">
-      <div class="column is-narrow ml-auto">
-        <b-button
-          icon-left="cloud-upload-alt"
-          type="is-primary"
-          expanded
-          size="is-medium"
-          @click="save"
-          :loading="this.loading"
-          :disabled="this.loading"
-        >Save recipe
-        </b-button>
-      </div>
-    </div>
   </form>
 </template>
 
@@ -206,7 +192,7 @@
       },
       title: {
         get () {
-          return this.recipe.message
+          return this.recipe.title
         },
         set (value) {
           this.$store.commit('updateTitle', value)
@@ -302,15 +288,9 @@
       },
     },
     methods: {
-      ...mapActions({
-        parseRecipe: 'parseRecipe'
-      }),
       deleteDropFiles (index) {
         this.dropFiles.splice(index, 1)
-      },
-      save () {
-        this.parseRecipe().then(() => this.$emit('save-form', this.recipe))
-      },
+      }
     },
     watch: {
       currentUser () {
