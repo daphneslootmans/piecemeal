@@ -2,6 +2,14 @@
   <div class="columns justify-content-end actions">
     <div class="column is-narrow">
       <div class="button-group">
+        <b-button v-if="editing && id"
+                  icon-left="times"
+                  type="is-primary"
+                  outlined
+                  @click="stopEditing(id)"
+        >
+          Stop editing
+        </b-button>
         <b-button v-if="!editing && id"
                   icon-left="pen-alt"
                   type="is-primary"
@@ -33,7 +41,7 @@
 </template>
 
 <script>
-  import { mapActions, mapState } from 'vuex'
+  import { mapActions, mapState, mapMutations } from 'vuex'
 
   export default {
     name: 'RecipeActions',
@@ -53,12 +61,19 @@
       }),
     },
     methods: {
+      ...mapMutations({
+        setEditing: 'setEditing'
+      }),
       ...mapActions({
         deleteRecipe: 'deleteRecipe',
         parseRecipe: 'parseRecipe'
       }),
       editRecipe (id) {
-        this.$router.push({ name: 'edit-recipe', params: { id: id }, query: { 'editing': true } })
+        this.$router.push({ name: 'edit-recipe', params: { id: id } })
+      },
+      stopEditing (id) {
+        this.setEditing({ editing: false})
+        this.$router.push({ name: 'recipe', params: { id: id } })
       },
       deletePrompt (id) {
         this.$buefy.dialog.confirm({
@@ -79,7 +94,7 @@
         })
       },
       save () {
-        this.parseRecipe().then(() => this.$emit('save-form', this.recipe))
+        this.parseRecipe().then(() => {this.$emit('save-form', this.recipe)})
       }
     },
     watch: {}

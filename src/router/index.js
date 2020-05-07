@@ -19,6 +19,10 @@ const routes = [
     component: NotFoundComponent
   },
   {
+    path: '/',
+    redirect: '/recipes'
+  },
+  {
     path: '/login',
     name: 'login',
     component: Login
@@ -49,7 +53,7 @@ const routes = [
       requiresAuth: true
     }
   },
-  { path: '/recipes/:id',
+  { path: '/recipes/:id/edit',
     name: 'edit-recipe',
     components: {
       default: EditRecipe,

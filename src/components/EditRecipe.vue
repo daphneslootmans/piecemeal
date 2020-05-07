@@ -15,7 +15,7 @@
 
 <script>
   import { auth, recipeCollection } from '../firebaseConfig.js'
-  import { mapState } from 'vuex'
+  import { mapState, mapMutations } from 'vuex'
   import RecipeForm from './RecipeForm'
   import RecipeActions from './RecipeActions'
 
@@ -40,6 +40,9 @@
       }
     },
     methods: {
+      ...mapMutations({
+        setEditing: 'setEditing'
+      }),
       updateRecipe (form) {
         this.loading = true
 
@@ -47,6 +50,7 @@
         recipe.update(form)
           .then(() => {
             this.loading = false
+            this.setEditing({ editing: false })
             this.$buefy.toast.open({
               message: `Recipe saved successfully!`,
               type: 'is-dark',
@@ -56,6 +60,9 @@
             this.$router.push({ name: 'recipe', params: { id: recipe.id } })
           })
       }
+    },
+    created () {
+      this.setEditing({ editing: true })
     },
     mounted () {
     }

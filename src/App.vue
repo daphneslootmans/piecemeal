@@ -42,7 +42,6 @@
       ...mapMutations({
         setRecipe: 'setCurrentRecipe',
         clearCurrentRecipe: 'clearCurrentRecipe',
-        setEditing: 'setEditing'
       }),
       ...mapActions({
         getUser: 'getUser',
@@ -80,19 +79,13 @@
       },
       checkRoute () {
         console.log('checking route')
-        if (this.$route.params.id) {
+        if (this.$route.params.id && this.recipe) {
           console.log('id in route')
           if (this.recipe.id !== this.currentRecipe.id) {
             this.setRecipe(this.recipe)
           }
         } else {
           this.clearCurrentRecipe()
-        }
-        if (this.$route.query.editing) {
-          console.log('editing in route')
-          this.setEditing({editing: true})
-        } else {
-          this.setEditing({editing: false})
         }
       }
     },
@@ -113,6 +106,8 @@
         this.getRecipes()
       }
     },
+    mounted () {
+    }
   }
 </script>
 
