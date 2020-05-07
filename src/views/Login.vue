@@ -67,14 +67,19 @@
     },
     methods: {
       ...mapActions({
-        signIn: 'signIn'
+        signIn: 'signIn',
+        getUser: 'getUser',
+        getRecipes: 'getRecipes'
       }),
       signInEmail () {
         console.log('trying to sign in')
         auth.signInWithEmailAndPassword(this.email, this.password)
             .then(response => {
-                  this.$router.push('/dashboard')
+                  console.log(response)
+                  this.$router.push('/recipes')
                   this.$store.commit('setError', null)
+                  this.getUser()
+                  this.getRecipes()
                 }
             )
             .catch(error => { this.$store.commit('setError', error)})

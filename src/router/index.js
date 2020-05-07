@@ -4,15 +4,23 @@ import { auth } from '../firebaseConfig'
 
 import Login from '../views/Login.vue'
 import Register from '../views/Register.vue'
-import Dashboard from '../views/Dashboard.vue'
+import Sidebar from '../components/Sidebar'
 import Settings from '../views/Settings.vue'
+import AddRecipe from '../components/AddRecipe'
+import EditRecipe from '../components/EditRecipe'
+import ViewRecipe from '../components/ViewRecipe'
+import NotFoundComponent from '../views/NotFoundComponent'
 
 Vue.use(VueRouter)
 
 const routes = [
   {
     path: '*',
-    redirect: '/dashboard'
+    component: NotFoundComponent
+  },
+  {
+    path: '/',
+    redirect: '/recipes'
   },
   {
     path: '/login',
@@ -25,9 +33,40 @@ const routes = [
     component: Register
   },
   {
-    path: '/dashboard',
-    name: 'dashboard',
-    component: Dashboard,
+    path: '/recipes',
+    name: 'recipes',
+    components: {
+      default: AddRecipe,
+      sidebar: Sidebar
+    },
+    meta: {
+      requiresAuth: true
+    }
+  },
+  { path: '/recipes/:id',
+    name: 'recipe',
+    components: {
+      default: ViewRecipe,
+      sidebar: Sidebar
+    },
+    meta: {
+      requiresAuth: true
+    }
+  },
+  { path: '/recipes/:id/edit',
+    name: 'edit-recipe',
+    components: {
+      default: EditRecipe,
+      sidebar: Sidebar
+    },
+    props: {
+      default: {
+        editing: true
+      }
+    },
+    query: {
+      editing: true
+    },
     meta: {
       requiresAuth: true
     }

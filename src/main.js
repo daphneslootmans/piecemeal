@@ -28,10 +28,19 @@ import {
   faHashtag,
   faBlender,
   faCookie,
+  faCookieBite,
   faHeart,
   faAngleUp,
   faBookOpen,
-  faUtensils
+  faUtensils,
+  faStopwatch,
+  faPenAlt,
+  faTrashAlt,
+  faTrash,
+  faCloudUploadAlt,
+  faCog,
+  faTimes,
+
 } from '@fortawesome/free-solid-svg-icons'
 
 library.add(
@@ -54,10 +63,18 @@ library.add(
   faHashtag,
   faBlender,
   faCookie,
+  faCookieBite,
   faHeart,
   faAngleUp,
   faBookOpen,
-  faUtensils
+  faUtensils,
+  faStopwatch,
+  faPenAlt,
+  faTrashAlt,
+  faTrash,
+  faCloudUploadAlt,
+  faCog,
+  faTimes,
 )
 
 Vue.component('vue-fontawesome', FontAwesomeIcon)
@@ -68,6 +85,7 @@ Vue.use(Buefy, {
   defaultIconComponent: 'vue-fontawesome',
   defaultIconPack: 'fas'
 })
+Vue.use(require('vue-moment'))
 
 let app
 auth.onAuthStateChanged(user => {
