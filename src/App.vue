@@ -33,7 +33,7 @@
         return auth.currentUser
       },
       recipe () {
-        if (this.$route.params.id && this.recipes) {
+        if (this.$route.params.id && this.recipes.length) {
           return this.recipes.find(recipe => recipe.id === this.$route.params.id)
         }
       },
@@ -102,6 +102,9 @@
       },
       $route (to, from){
         this.checkRoute()
+      },
+      recipes () {
+        if (this.recipes.length) this.checkRoute()
       }
     },
     created () {
