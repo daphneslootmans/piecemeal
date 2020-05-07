@@ -43,7 +43,8 @@
       ...mapMutations({
         setRecipe: 'setCurrentRecipe',
         clearCurrentRecipe: 'clearCurrentRecipe',
-        setMobile: 'setMobile'
+        setMobile: 'setMobile',
+        setEditing: 'setEditing'
       }),
       ...mapActions({
         getUser: 'getUser',
@@ -89,6 +90,9 @@
         } else {
           this.clearCurrentRecipe()
         }
+        if (this.$route.name !== 'edit-recipe') {
+          this.setEditing({ editing: false })
+        }
       },
       checkWindow () {
         let windowWidth = window.innerWidth
@@ -99,7 +103,7 @@
       user () {
         this.getRecipes()
       },
-      $route (to, from){
+      $route (to, from) {
         this.checkRoute()
       },
       recipes () {
@@ -114,7 +118,7 @@
     },
     mounted () {
       this.$nextTick(() => {
-        window.addEventListener('resize', this.checkWindow);
+        window.addEventListener('resize', this.checkWindow)
         this.checkWindow()
       })
     }
