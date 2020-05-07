@@ -69,7 +69,7 @@
               </div>
             </div>
           </div>
-          <div class="column is-half" v-if="recipe.materials">
+          <div class="column is-half" v-if="recipe.materials.length">
             <div class="card">
               <div class="card-header">
                 <div class="card-header-title">
