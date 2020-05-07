@@ -97,6 +97,9 @@ const mutations = {
   updateDropFiles (state, payload) {
     state.currentRecipe.dropFiles = payload
   },
+  setMobile (state, width) {
+    state.isMobile = width <= 768
+  },
 }
 
 export default mutations
