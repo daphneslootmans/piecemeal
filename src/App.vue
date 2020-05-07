@@ -4,7 +4,7 @@
     <section class="section main-section">
       <div class="container">
         <div class="columns">
-          <router-view name="sidebar"></router-view>
+          <router-view name="sidebar" v-if="!isMobile"></router-view>
           <div class="column main-content">
             <router-view/>
           </div>
@@ -27,7 +27,8 @@
     computed: {
       ...mapState({
         currentRecipe: 'currentRecipe',
-        recipes: 'recipes'
+        recipes: 'recipes',
+        isMobile: 'isMobile'
       }),
       user () {
         return auth.currentUser
@@ -42,6 +43,7 @@
       ...mapMutations({
         setRecipe: 'setCurrentRecipe',
         clearCurrentRecipe: 'clearCurrentRecipe',
+        setMobile: 'setMobile'
       }),
       ...mapActions({
         getUser: 'getUser',
@@ -87,6 +89,10 @@
         } else {
           this.clearCurrentRecipe()
         }
+      },
+      checkWindow () {
+        let windowWidth = window.innerWidth
+        this.setMobile(windowWidth)
       }
     },
     watch: {
@@ -107,6 +113,10 @@
       }
     },
     mounted () {
+      this.$nextTick(() => {
+        window.addEventListener('resize', this.checkWindow);
+        this.checkWindow()
+      })
     }
   }
 </script>
@@ -135,6 +145,8 @@
   }
 
   .main-content {
-    padding-left: 2rem;
+    @media screen and (min-width: 769px) {
+      padding-left: 2rem;
+    }
   }
 </style>

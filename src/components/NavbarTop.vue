@@ -8,7 +8,7 @@
     </template>
 
     <template slot="start">
-
+      <sidebar v-if="isMobile"></sidebar>
     </template>
 
     <template slot="end">
@@ -33,16 +33,21 @@
 <script>
   import { auth } from '../firebaseConfig'
   import { mapActions, mapState } from 'vuex'
+  import Sidebar from './Sidebar'
 
   export default {
     name: 'NavbarTop',
     props: {},
+    components: {
+      Sidebar
+    },
     data () {
       return {}
     },
     computed: {
       ...mapState({
         currentUser: 'currentUser',
+        isMobile: 'isMobile',
       }),
       user () {
         return auth.currentUser

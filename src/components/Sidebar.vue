@@ -86,13 +86,18 @@
   .sidebar {
     position: sticky;
     top: 0;
-    height: calc(100vh - 132px - 1.5rem);
-    max-height: calc(100vh - 132px - 1.5rem);
-    border-right: 1px solid $grey-lightest;
+
     button {
       margin-bottom: 1rem;
     }
+
+    @media screen and (min-width: 769px) {
+      border-right: 1px solid $grey-lightest;
+      height: calc(100vh - 132px - 1.5rem);
+      max-height: calc(100vh - 132px - 1.5rem);
+    }
   }
+
   .menu-list {
     a {
       line-height: 1;

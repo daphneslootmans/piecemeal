@@ -28,7 +28,8 @@ export default new Vuex.Store({
       directions: [],
       dropFiles: [],
     },
-    editing: false
+    editing: false,
+    isMobile: false
   },
   getters,
   mutations,
