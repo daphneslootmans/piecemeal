@@ -3,7 +3,7 @@
     <template slot="brand">
       <b-navbar-item tag="router-link" :to="{ path: '/' }">
         <vue-fontawesome icon="drumstick-bite" size="lg"></vue-fontawesome>
-        <span>piecemeal</span>
+        <span>piecemeal</span><span class="version">v-{{ version }}</span>
       </b-navbar-item>
     </template>
 
@@ -48,6 +48,7 @@
       ...mapState({
         currentUser: 'currentUser',
         isMobile: 'isMobile',
+        version: 'version'
       }),
       user () {
         return auth.currentUser
@@ -65,5 +66,10 @@
 <style scoped lang="scss">
   .user-name {
     padding-right: 1em;
+  }
+  .version {
+    font-size: 0.8rem;
+    margin-left: 1em;
+    padding-top: 6px;
   }
 </style>

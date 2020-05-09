@@ -50,6 +50,7 @@ const mutations = {
       directionsRaw: '',
       directions: [],
       dropFiles: [],
+      portions: null,
     }
   },
   setEditing (state, payload) {
@@ -96,6 +97,9 @@ const mutations = {
   },
   updateDropFiles (state, payload) {
     state.currentRecipe.dropFiles = payload
+  },
+  updatePortions (state, payload) {
+    state.currentRecipe.portions = payload
   },
   setMobile (state, width) {
     state.isMobile = width <= 768

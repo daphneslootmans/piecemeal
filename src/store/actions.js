@@ -86,20 +86,24 @@ const actions = {
     let ingredientsList = []
     let directionsList = []
     console.log(state.currentRecipe)
-    let ingredients = state.currentRecipe.ingredientsRaw.replace(/\r\n/g, '\n').split('\n')
-    let directions = state.currentRecipe.directionsRaw.replace(/\r\n/g, '\n').split('\n')
-    commit('updateIngredients', ingredients)
-    commit('updateDirections', directions)
-    ingredients.forEach(item => {
-      if (item !== '') {
-        ingredientsList.push(item)
-      }
-    })
-    directions.forEach(item => {
-      if (item !== '') {
-        directionsList.push(item)
-      }
-    })
+    let ingredientsRaw = state.currentRecipe.ingredientsRaw
+    let directionsRaw = state.currentRecipe.directionsRaw
+    if (ingredientsRaw) {
+      let ingredients = ingredientsRaw.replace(/\r\n/g, '\n').split('\n')
+      ingredients.forEach(item => {
+        if (item !== '') {
+          ingredientsList.push(item)
+        }
+      })
+    }
+    if (directionsRaw) {
+      let directions = directionsRaw.replace(/\r\n/g, '\n').split('\n')
+      directions.forEach(item => {
+        if (item !== '') {
+          directionsList.push(item)
+        }
+      })
+    }
     commit('updateIngredients', ingredientsList)
     commit('updateDirections', directionsList)
   },

@@ -75,6 +75,7 @@ library.add(
   faCloudUploadAlt,
   faCog,
   faTimes,
+  faUtensils
 )
 
 Vue.component('vue-fontawesome', FontAwesomeIcon)

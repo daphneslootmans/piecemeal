@@ -9,6 +9,7 @@ Vue.use(Vuex)
 
 export default new Vuex.Store({
   state: {
+    version: '0.0.1',
     currentUser: {},
     error: null,
     recipes: [],
@@ -27,6 +28,7 @@ export default new Vuex.Store({
       directionsRaw: '',
       directions: [],
       dropFiles: [],
+      portions: null
     },
     editing: false,
     isMobile: false

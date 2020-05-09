@@ -19,6 +19,12 @@
           <div class="column date-stamp">
             <p class="is-italic">{{ recipe.createdAt | moment('DD-MM-YYYY HH:mm') }}</p>
           </div>
+          <div class="column is-narrow" v-if="recipe.portions > 0">
+            <div class="prep-time has-text-right">
+              <vue-fontawesome icon="utensils"/>
+              {{ recipe.portions }} pers
+            </div>
+          </div>
           <div class="column is-narrow">
             <div class="prep-time has-text-right">
               <vue-fontawesome icon="stopwatch"/>
@@ -49,7 +55,7 @@
 
       <section class="body-section">
         <div class="columns">
-          <div class="column is-half">
+          <div class="column is-half" v-if="recipe.ingredients.length">
             <div class="card ingredients">
               <div class="card-header">
                 <div class="card-header-title">
@@ -91,7 +97,7 @@
           </div>
         </div>
 
-        <div class="columns">
+        <div class="columns" v-if="recipe.directions.length">
           <div class="column is-full">
             <h4>Directions</h4>
             <div v-for="(step, index) in recipe.directions" class="card">
