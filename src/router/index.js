@@ -82,7 +82,6 @@ const routes = [
 ]
 
 const router = new VueRouter({
-  mode: 'history',
   routes,
   linkExactActiveClass: "is-active"
 })
