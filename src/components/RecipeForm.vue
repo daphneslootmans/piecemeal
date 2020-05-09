@@ -74,6 +74,14 @@
               ></b-numberinput>
             </b-field>
           </div>
+
+          <div class="column is-6">
+            <b-field label="Portions">
+              <b-numberinput
+                v-model.number="portions"
+              ></b-numberinput>
+            </b-field>
+          </div>
         </div>
       </div>
 
@@ -284,6 +292,14 @@
         },
         set (value) {
           this.$store.commit('updateDropFiles', value)
+        }
+      },
+      portions: {
+        get () {
+          return this.recipe.portions
+        },
+        set (value) {
+          this.$store.commit('updatePortions', value)
         }
       },
     },

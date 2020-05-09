@@ -19,6 +19,12 @@
           <div class="column date-stamp">
             <p class="is-italic">{{ recipe.createdAt | moment('DD-MM-YYYY HH:mm') }}</p>
           </div>
+          <div class="column is-narrow" v-if="recipe.portions > 0">
+            <div class="prep-time has-text-right">
+              <vue-fontawesome icon="utensils"/>
+              {{ recipe.portions }} pers
+            </div>
+          </div>
           <div class="column is-narrow">
             <div class="prep-time has-text-right">
               <vue-fontawesome icon="stopwatch"/>

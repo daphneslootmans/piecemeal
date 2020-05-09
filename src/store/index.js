@@ -28,6 +28,7 @@ export default new Vuex.Store({
       directionsRaw: '',
       directions: [],
       dropFiles: [],
+      portions: null
     },
     editing: false,
     isMobile: false
