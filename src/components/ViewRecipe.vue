@@ -53,6 +53,7 @@
         </div>
       </section>
 
+      <!--      ingredients-->
       <section class="body-section">
         <div class="columns">
           <div class="column is-half" v-if="recipe.ingredients.length">
@@ -97,16 +98,39 @@
           </div>
         </div>
 
+        <!--        directions-->
         <div class="columns" v-if="recipe.directions.length">
           <div class="column is-full">
-            <h4>Directions</h4>
-            <div v-for="(step, index) in recipe.directions" class="card">
+<!--            <h4>Directions</h4>-->
+            <div class="card">
               <header class="card-header">
-                <p class="card-header-title">Step {{ index +1 }}</p>
+                <p class="card-header-title">Directions</p>
+              </header>
+              <div class="card-content">
+                <ol>
+                  <li v-for="(step, index) in recipe.directions" class="">
+                    <p class="">{{ step }}</p>
+                  </li>
+                </ol>
+              </div>
+            </div>
+<!--            <ol>-->
+<!--              <li v-for="(step, index) in recipe.directions">-->
+<!--                {{ step }}-->
+<!--              </li>-->
+<!--            </ol>-->
+          </div>
+        </div>
+
+        <div class="columns" v-if="recipe.comment">
+          <div class="column is-full">
+            <div class="card">
+              <header class="card-header">
+                <p class="card-header-title">Comment</p>
               </header>
               <div class="card-content">
                 <p>
-                  {{ step }}
+                  {{ recipe.comment }}
                 </p>
               </div>
             </div>
@@ -183,6 +207,7 @@
 
   .card {
     margin-bottom: 1rem;
+    height: 100%;
   }
 
   .card-header {
@@ -192,11 +217,12 @@
   .card-content {
     p {
       display: flex;
-      align-items: center;
+      /*align-items: center;*/
     }
 
     span {
       margin-right: 0.8em;
+      margin-top: 3px;
       font-size: 0.8em;
     }
   }
@@ -211,5 +237,15 @@
 
   .date-stamp {
     font-size: 0.9em;
+  }
+
+  ol {
+    li {
+      font-weight: 700;
+    }
+    p {
+      font-weight: initial;
+      margin-bottom: 0.5em;
+    }
   }
 </style>
