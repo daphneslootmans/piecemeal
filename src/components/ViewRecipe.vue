@@ -15,18 +15,18 @@
           </div>
         </div>
 
-        <div class="columns is-multiline">
-          <div class="column date-stamp">
+        <div class="columns is-multiline is-mobile">
+          <div class="column is-full-mobile date-stamp">
             <p class="is-italic">{{ recipe.createdAt | moment('DD-MM-YYYY HH:mm') }}</p>
           </div>
-          <div class="column is-narrow" v-if="recipe.portions > 0">
-            <div class="prep-time has-text-right">
+          <div class="column is-narrow is-half-mobile" v-if="recipe.portions > 0">
+            <div class="prep-time has-text-right-desktop">
               <vue-fontawesome icon="utensils"/>
               {{ recipe.portions }} pers
             </div>
           </div>
-          <div class="column is-narrow">
-            <div class="prep-time has-text-right">
+          <div class="column is-narrow is-half-mobile">
+            <div class="prep-time has-text-right-desktop">
               <vue-fontawesome icon="stopwatch"/>
               {{ recipe.prepTime }} min
             </div>
