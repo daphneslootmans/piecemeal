@@ -44,7 +44,8 @@
         setRecipe: 'setCurrentRecipe',
         clearCurrentRecipe: 'clearCurrentRecipe',
         setMobile: 'setMobile',
-        setEditing: 'setEditing'
+        setEditing: 'setEditing',
+        setNavbarActive: 'setNavbarActive'
       }),
       ...mapActions({
         getUser: 'getUser',
@@ -105,6 +106,7 @@
       },
       $route (to, from) {
         this.checkRoute()
+        this.setNavbarActive({navbarActive: false})
       },
       recipes () {
         if (this.recipes.length) this.checkRoute()
