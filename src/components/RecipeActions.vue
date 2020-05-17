@@ -67,7 +67,8 @@
     },
     methods: {
       ...mapMutations({
-        setEditing: 'setEditing'
+        setEditing: 'setEditing',
+        isMobile: 'isMobile'
       }),
       ...mapActions({
         deleteRecipe: 'deleteRecipe',
@@ -90,8 +91,8 @@
           onConfirm: () => this.deleteRecipe(id).then(() => {
             this.$buefy.toast.open({
               message: `Recipe deleted`,
-              type: 'is-dark',
-              position: 'is-top-right',
+              type: 'is-success',
+              position: this.isMobile? 'is-bottom' : 'is-top-right',
               duration: 3000
             })
             this.$router.push({ name: 'recipes' })
