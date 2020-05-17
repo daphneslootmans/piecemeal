@@ -5,8 +5,9 @@
       <section class="info-section">
         <!--    title-->
         <div class="columns mb-0 is-multiline">
-          <div class="column">
+          <div class="column title-column">
             <h1 :class="['is-marginless']">{{ recipe.title }}</h1>
+            <p class="is-italic mobile-date" v-if="isMobile">{{ recipe.createdAt | moment('DD-MM-YYYY HH:mm') }}</p>
           </div>
           <div class="column is-narrow">
             <b-field label="">
@@ -16,16 +17,16 @@
         </div>
 
         <div class="columns is-multiline is-mobile">
-          <div class="column is-full-mobile date-stamp">
+          <div class="column date-stamp" v-if="!isMobile">
             <p class="is-italic">{{ recipe.createdAt | moment('DD-MM-YYYY HH:mm') }}</p>
           </div>
-          <div class="column is-narrow is-half-mobile" v-if="recipe.portions > 0">
+          <div class="column is-narrow" v-if="recipe.portions > 0">
             <div class="prep-time has-text-right-desktop">
               <vue-fontawesome icon="utensils"/>
               {{ recipe.portions }} pers
             </div>
           </div>
-          <div class="column is-narrow is-half-mobile">
+          <div class="column is-narrow">
             <div class="prep-time has-text-right-desktop">
               <vue-fontawesome icon="stopwatch"/>
               {{ recipe.prepTime }} min
@@ -159,7 +160,8 @@
     computed: {
       ...mapState({
         recipes: 'recipes',
-        recipe: 'currentRecipe'
+        recipe: 'currentRecipe',
+        isMobile: 'isMobile'
       }),
       randIngredient () {
         let ingr = this.recipe.ingredients
@@ -246,6 +248,16 @@
     p {
       font-weight: initial;
       margin-bottom: 0.5em;
+    }
+  }
+
+  .mobile-date {
+    margin-top: 0.5em;
+  }
+
+  .title-column {
+    @media screen and (max-width: 768px) {
+      padding-bottom: 0;
     }
   }
 </style>

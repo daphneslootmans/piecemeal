@@ -33,11 +33,12 @@
     computed: {
       ...mapState({
         currentUser: 'currentUser',
-        recipe: 'currentRecipe'
+        recipe: 'currentRecipe',
+        isMobile: 'isMobile'
       }),
       user () {
         return auth.currentUser
-      }
+      },
     },
     methods: {
       ...mapMutations({
@@ -53,8 +54,8 @@
             this.setEditing({ editing: false })
             this.$buefy.toast.open({
               message: `Recipe saved successfully!`,
-              type: 'is-dark',
-              position: 'is-top-right',
+              type: 'is-success',
+              position: this.isMobile ? 'is-bottom' : 'is-top-right',
               duration: 3000
             })
             this.$router.push({ name: 'recipe', params: { id: recipe.id } })

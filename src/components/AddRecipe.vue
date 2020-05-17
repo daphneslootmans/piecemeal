@@ -61,8 +61,8 @@
             this.loading = false
             this.$buefy.toast.open({
               message: `Recipe saved successfully!`,
-              type: 'is-dark',
-              position: 'is-top-right',
+              type: 'is-success',
+              position: this.isMobile ? 'is-bottom' : 'is-top-right',
               duration: 3000
             })
           })
