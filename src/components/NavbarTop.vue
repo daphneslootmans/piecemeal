@@ -1,5 +1,5 @@
 <template>
-  <b-navbar type="is-primary" spaced :is-active.sync="navbarActive">
+  <b-navbar type="is-primary" spaced :is-active.sync="navbarActive" class="navbar-top">
     <template slot="brand">
       <b-navbar-item tag="router-link" :to="{ path: '/' }">
         <vue-fontawesome icon="drumstick-bite" size="lg"></vue-fontawesome>
@@ -72,13 +72,20 @@
   }
 </script>
 
-<style scoped lang="scss">
-  .user-name {
-    padding-right: 1em;
-  }
-  .version {
-    font-size: 0.8rem;
-    margin-left: 1em;
-    padding-top: 6px;
+<style lang="scss">
+  .navbar-top{
+    .user-name {
+      padding-right: 1em;
+    }
+    .version {
+      font-size: 0.8rem;
+      margin-left: 1em;
+      padding-top: 6px;
+    }
+    .navbar-burger {
+      @media screen and (max-width: 768px) {
+        margin-right: 3px;
+      }
+    }
   }
 </style>

@@ -1,7 +1,6 @@
 <template>
   <div>
     <div class="content" v-if="recipe">
-      <recipe-actions :id="$route.params.id"></recipe-actions>
       <section class="info-section">
         <!--    title-->
         <div class="columns mb-0 is-multiline">

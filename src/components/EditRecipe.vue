@@ -1,9 +1,5 @@
 <template>
   <div>
-    <recipe-actions
-      :id="recipe.id"
-      @save-form="updateRecipe"
-    ></recipe-actions>
     <div class="content">
       <h1>Edit recipe</h1>
     </div>
@@ -16,6 +12,7 @@
 <script>
   import { auth, recipeCollection } from '../firebaseConfig.js'
   import { mapState, mapMutations } from 'vuex'
+  import { eventBus } from '../services/event-bus'
   import RecipeForm from './RecipeForm'
   import RecipeActions from './RecipeActions'
 
@@ -66,6 +63,7 @@
       this.setEditing({ editing: true })
     },
     mounted () {
+      eventBus.$on('update-recipe', this.updateRecipe)
     }
   }
 </script>
