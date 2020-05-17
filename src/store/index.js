@@ -9,7 +9,7 @@ Vue.use(Vuex)
 
 export default new Vuex.Store({
   state: {
-    version: '0.0.2',
+    version: '0.0.3',
     currentUser: {},
     error: null,
     recipes: [],
