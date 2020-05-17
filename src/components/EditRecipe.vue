@@ -1,8 +1,11 @@
 <template>
   <div>
-    <recipe-actions @save-form="addRecipe"></recipe-actions>
+    <recipe-actions
+      :id="recipe.id"
+      @save-form="updateRecipe"
+    ></recipe-actions>
     <div class="content">
-      <h1>Add a recipe</h1>
+      <h1>Edit recipe</h1>
     </div>
     <recipe-form
       :loading="loading"
@@ -11,65 +14,55 @@
 </template>
 
 <script>
-  import { db, auth } from '../firebaseConfig.js'
-  import { mapState } from 'vuex'
+  import { auth, recipeCollection } from '../firebaseConfig.js'
+  import { mapState, mapMutations } from 'vuex'
   import RecipeForm from './RecipeForm'
   import RecipeActions from './RecipeActions'
 
   export default {
-    name: 'AddRecipe',
+    name: 'EditRecipe',
     components: {
-      RecipeForm,
-      RecipeActions
+      RecipeActions,
+      RecipeForm
     },
     data () {
       return {
-        title: '',
-        category: '',
-        description: '',
-        rating: 0,
-        imageUrl: '',
-        tags: [],
-        prepTime: null,
-        ingredientsRaw: '',
-        ingredients: [],
-        materials: [],
-        comment: '',
-        directions: [''],
-        dropFiles: [],
         loading: false
       }
     },
     computed: {
       ...mapState({
-        currentUser: 'currentUser'
+        currentUser: 'currentUser',
+        recipe: 'currentRecipe'
       }),
       user () {
         return auth.currentUser
       }
     },
     methods: {
-      addRecipe (form) {
+      ...mapMutations({
+        setEditing: 'setEditing'
+      }),
+      updateRecipe (form) {
         this.loading = true
 
-        form.createdAt = new Date()
-        form.users = [this.user.uid]
-        form.isDeleted = false
-
-        db.collection('recipes').add(form)
-          .then(docRef => {
+        let recipe = recipeCollection.doc(this.recipe.id)
+        recipe.update(form)
+          .then(() => {
             this.loading = false
+            this.setEditing({ editing: false })
             this.$buefy.toast.open({
               message: `Recipe saved successfully!`,
               type: 'is-dark',
               position: 'is-top-right',
               duration: 3000
             })
+            this.$router.push({ name: 'recipe', params: { id: recipe.id } })
           })
       }
     },
-    watch: {
-
+    created () {
+      this.setEditing({ editing: true })
     },
     mounted () {
     }
