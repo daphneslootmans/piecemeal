@@ -1,9 +1,5 @@
 <template>
   <div>
-    <recipe-actions
-      :id="recipe.id"
-      @save-form="updateRecipe"
-    ></recipe-actions>
     <div class="content">
       <h1>Edit recipe</h1>
     </div>
@@ -16,6 +12,7 @@
 <script>
   import { auth, recipeCollection } from '../firebaseConfig.js'
   import { mapState, mapMutations } from 'vuex'
+  import { eventBus } from '../services/event-bus'
   import RecipeForm from './RecipeForm'
   import RecipeActions from './RecipeActions'
 
@@ -33,11 +30,12 @@
     computed: {
       ...mapState({
         currentUser: 'currentUser',
-        recipe: 'currentRecipe'
+        recipe: 'currentRecipe',
+        isMobile: 'isMobile'
       }),
       user () {
         return auth.currentUser
-      }
+      },
     },
     methods: {
       ...mapMutations({
@@ -53,8 +51,8 @@
             this.setEditing({ editing: false })
             this.$buefy.toast.open({
               message: `Recipe saved successfully!`,
-              type: 'is-dark',
-              position: 'is-top-right',
+              type: 'is-success',
+              position: this.isMobile ? 'is-bottom' : 'is-top-right',
               duration: 3000
             })
             this.$router.push({ name: 'recipe', params: { id: recipe.id } })
@@ -65,6 +63,7 @@
       this.setEditing({ editing: true })
     },
     mounted () {
+      eventBus.$on('update-recipe', this.updateRecipe)
     }
   }
 </script>

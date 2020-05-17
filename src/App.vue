@@ -1,6 +1,7 @@
 <template>
   <div id="app">
     <navbar-top></navbar-top>
+    <recipe-actions :id="$route.params.id" v-if="recipeRoute"></recipe-actions>
     <section class="section main-section">
       <div class="container">
         <div class="columns">
@@ -17,12 +18,13 @@
 
 <script>
   import NavbarTop from './components/NavbarTop'
+  import RecipeActions from './components/RecipeActions'
   import { auth, db } from './firebaseConfig'
   import { mapState, mapMutations, mapActions } from 'vuex'
 
   export default {
     components: {
-      NavbarTop
+      NavbarTop, RecipeActions
     },
     computed: {
       ...mapState({
@@ -38,13 +40,17 @@
           return this.recipes.find(recipe => recipe.id === this.$route.params.id)
         }
       },
+      recipeRoute () {
+        return this.$route.params.id || this.$route.name === 'recipes'
+      }
     },
     methods: {
       ...mapMutations({
         setRecipe: 'setCurrentRecipe',
         clearCurrentRecipe: 'clearCurrentRecipe',
         setMobile: 'setMobile',
-        setEditing: 'setEditing'
+        setEditing: 'setEditing',
+        setNavbarActive: 'setNavbarActive'
       }),
       ...mapActions({
         getUser: 'getUser',
@@ -105,6 +111,7 @@
       },
       $route (to, from) {
         this.checkRoute()
+        this.setNavbarActive({navbarActive: false})
       },
       recipes () {
         if (this.recipes.length) this.checkRoute()

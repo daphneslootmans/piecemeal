@@ -1,11 +1,12 @@
 <template>
-  <div class="columns justify-content-end actions">
+  <div class="columns justify-content-end actions is-marginless">
     <div class="column is-narrow">
       <div class="button-group">
         <b-button v-if="editing && id"
                   icon-left="times"
                   type="is-primary"
                   outlined
+                  inverted
                   @click="stopEditing(id)"
         >
           Stop editing
@@ -14,6 +15,7 @@
                   icon-left="pen-alt"
                   type="is-primary"
                   outlined
+                  inverted
                   @click="editRecipe(id)"
         >
           Edit recipe
@@ -23,6 +25,7 @@
           icon-left="cloud-upload-alt"
           type="is-primary"
           outlined
+          inverted
           @click="save"
           :loading="this.loading"
           :disabled="this.loading"
@@ -31,6 +34,7 @@
         <b-button icon-left="trash"
                   type="is-primary"
                   outlined
+                  inverted
                   @click="deletePrompt(id)"
                   v-if="id"
         >
@@ -42,6 +46,7 @@
 
 <script>
   import { mapActions, mapState, mapMutations } from 'vuex'
+  import { eventBus } from '../services/event-bus'
 
   export default {
     name: 'RecipeActions',
@@ -62,7 +67,8 @@
     },
     methods: {
       ...mapMutations({
-        setEditing: 'setEditing'
+        setEditing: 'setEditing',
+        isMobile: 'isMobile'
       }),
       ...mapActions({
         deleteRecipe: 'deleteRecipe',
@@ -85,8 +91,8 @@
           onConfirm: () => this.deleteRecipe(id).then(() => {
             this.$buefy.toast.open({
               message: `Recipe deleted`,
-              type: 'is-dark',
-              position: 'is-top-right',
+              type: 'is-success',
+              position: this.isMobile? 'is-bottom' : 'is-top-right',
               duration: 3000
             })
             this.$router.push({ name: 'recipes' })
@@ -94,7 +100,9 @@
         })
       },
       save () {
-        this.parseRecipe().then(() => {this.$emit('save-form', this.recipe)})
+        this.parseRecipe().then(() => {
+          this.editing ? eventBus.$emit('update-recipe', this.recipe) : eventBus.$emit('add-recipe', this.recipe)
+        })
       }
     },
     watch: {}
@@ -106,8 +114,11 @@
     position: sticky;
     top: 0;
     z-index: 40;
+    background: $primary;
+    justify-content: flex-end;
   }
   .button-group {
-    background: $bg-color;
+    display: flex;
+    justify-content: flex-end;
   }
 </style>

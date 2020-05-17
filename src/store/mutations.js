@@ -104,6 +104,9 @@ const mutations = {
   setMobile (state, width) {
     state.isMobile = width <= 768
   },
+  setNavbarActive (state, payload) {
+    state.navbarActive = payload.navbarActive
+  }
 }
 
 export default mutations

@@ -1,6 +1,5 @@
 <template>
   <div>
-    <recipe-actions @save-form="addRecipe"></recipe-actions>
     <div class="content">
       <h1>Add a recipe</h1>
     </div>
@@ -13,6 +12,7 @@
 <script>
   import { db, auth } from '../firebaseConfig.js'
   import { mapState } from 'vuex'
+  import { eventBus } from '../services/event-bus'
   import RecipeForm from './RecipeForm'
   import RecipeActions from './RecipeActions'
 
@@ -42,7 +42,8 @@
     },
     computed: {
       ...mapState({
-        currentUser: 'currentUser'
+        currentUser: 'currentUser',
+        isMobile: 'isMobile'
       }),
       user () {
         return auth.currentUser
@@ -61,8 +62,8 @@
             this.loading = false
             this.$buefy.toast.open({
               message: `Recipe saved successfully!`,
-              type: 'is-dark',
-              position: 'is-top-right',
+              type: 'is-success',
+              position: this.isMobile ? 'is-bottom' : 'is-top-right',
               duration: 3000
             })
           })
@@ -72,6 +73,7 @@
 
     },
     mounted () {
+      eventBus.$on('add-recipe', this.addRecipe)
     }
   }
 </script>
