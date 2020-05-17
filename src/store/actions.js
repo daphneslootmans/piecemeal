@@ -6,6 +6,7 @@ const actions = {
     auth.signOut()
       .then(() => {
         commit('clearUserData')
+        commit('clearCurrentRecipe')
         router.push('/login')
       })
       .catch(error => { state.error = error })
@@ -15,7 +16,7 @@ const actions = {
       .then(response => {
         console.log('new user uid:', response.user.uid)
         router.push('/recipes')
-        dispatch('setUser', response.user.uid)
+        dispatch('setUser', {uid: response.user.uid, email: payload.email})
       })
       .catch(error => { state.error = error })
   },
@@ -31,19 +32,20 @@ const actions = {
         }
       })
   },
-  setUser ({ state }, uid) {
+  setUser ({ state }, payload) {
     let users = db.collection('users')
     users.doc('categories').get().then(doc => {
       if (!doc.exists) {
         console.log('No such document!')
       } else {
         console.log('Document data:', doc.data())
-        let setDoc = users.doc(uid).set({
+        let setDoc = users.doc(payload.uid).set({
           categories: doc.data().standard,
           settings: {
             mode: 'light',
             linkedUsers: []
-          }
+          },
+          email: payload.email
         })
       }
     })

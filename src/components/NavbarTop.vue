@@ -13,7 +13,8 @@
 
     <template slot="end">
       <b-navbar-item tag="div">
-        <div v-if="user" class="user-name">{{ user.email }}</div>
+        <div v-if="currentUser.username" class="user-name">{{ currentUser.username }}</div>
+        <div v-else class="user-name">{{ currentUser.email }}</div>
         <div class="buttons">
           <b-button tag="router-link"
                     to="/settings"
@@ -31,7 +32,6 @@
 </template>
 
 <script>
-  import { auth } from '../firebaseConfig'
   import { mapActions, mapState } from 'vuex'
   import Sidebar from './Sidebar'
 
@@ -49,10 +49,7 @@
         currentUser: 'currentUser',
         isMobile: 'isMobile',
         version: 'version'
-      }),
-      user () {
-        return auth.currentUser
-      }
+      })
     },
     methods: {
       ...mapActions({
