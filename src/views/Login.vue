@@ -1,7 +1,7 @@
 <template>
   <section class="section">
     <div class="container">
-      <div class="columns">
+      <div class="columns is-centered is-v-centered">
         <div class="column is-6">
           <form @submit.prevent="signInEmail">
             <div class="content">
