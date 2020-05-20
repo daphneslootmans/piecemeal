@@ -1,6 +1,6 @@
 <template>
   <div class="friend-row">
-    <p>This is a friend row <span>recipe count</span></p>
+    <p>{{ data.username }} - {{ data.email }} <span>recipe count</span></p>
     <div class="button-group">
       <b-button @click="removePrompt"
                 type="is-primary"
@@ -13,7 +13,11 @@
 <script>
   export default {
     name: 'FriendRow',
-    props: {},
+    props: {
+      data: {
+        type: Object
+      }
+    },
     data () {
       return {}
     },

@@ -1,7 +1,8 @@
-import { db, auth, timestamp, recipeCollection } from '../firebaseConfig'
+import { db, auth, timestamp, recipeCollection, userCollection } from '../firebaseConfig'
 import router from '@/router/'
 
 const actions = {
+  // USER
   signOut ({ state, commit }) {
     auth.signOut()
       .then(() => {
@@ -16,21 +17,16 @@ const actions = {
       .then(response => {
         console.log('new user uid:', response.user.uid)
         router.push('/recipes')
-        dispatch('setUser', {uid: response.user.uid, email: payload.email})
+        dispatch('setUser', { uid: response.user.uid, email: payload.email })
       })
       .catch(error => { state.error = error })
   },
   getUser ({ commit }) {
     let users = db.collection('users')
-    users.doc(auth.currentUser.uid).get()
-      .then(doc => {
-        if (!doc.exists) {
-          console.log('No user data!')
-        } else {
-          console.log('User data:', doc.data())
-          commit('setCurrentUser', doc.data())
-        }
-      })
+    users.doc(auth.currentUser.uid).onSnapshot(snapshot => {
+      console.log('User data:', snapshot.data())
+      commit('setCurrentUser', snapshot.data())
+    })
   },
   setUser ({ state }, payload) {
     let users = db.collection('users')
@@ -45,11 +41,13 @@ const actions = {
             mode: 'light',
             linkedUsers: []
           },
-          email: payload.email
+          email: payload.email,
+          friends: []
         })
       }
     })
   },
+  // RECIPES
   getRecipes ({ commit, state }) {
     let uid = auth.currentUser.uid
     commit('clearRecipes')
@@ -72,7 +70,7 @@ const actions = {
               commit('addRecipe', change.doc)
             } else if (change.type === 'modified') {
               console.log('Modified recipe: ', change.doc)
-                commit('updateRecipe', change.doc)
+              commit('updateRecipe', change.doc)
             } else if (change.type === 'removed') {
               console.log('Removed recipe: ', change.doc)
               commit('removeRecipe', change.doc)
@@ -84,7 +82,7 @@ const actions = {
       commit('clearRecipes')
     }
   },
-  parseRecipe ({state, commit}) {
+  parseRecipe ({ state, commit }) {
     let ingredientsList = []
     let directionsList = []
     console.log(state.currentRecipe)
@@ -118,7 +116,8 @@ const actions = {
       router.push('/recipes')
       commit('clearCurrentRecipe')
     })
-  }
+  },
+  // FRIENDS
 }
 
 export default actions
