@@ -1,7 +1,13 @@
 <template>
   <div class="column is-3 sidebar">
-    <b-button icon-left="plus" type="is-primary" outlined expanded @click="addRecipe">
-      Add a recipe
+    <b-button icon-left="plus"
+              type="is-primary"
+              outlined
+              expanded
+              tag="router-link"
+              to="/friends"
+              :disabled="$route.name === 'friend-list'"
+    >Manage Friends
     </b-button>
     <b-menu>
       <b-menu-list
@@ -60,11 +66,8 @@
         signOut: 'signOut',
         getUser: 'getUser',
         setUser: 'setUser',
-        getRecipes: 'getRecipes'
+        getFriendRecipes: 'getFriendRecipes'
       }),
-      addRecipe () {
-        this.$router.push({ name: 'recipes' })
-      },
       setActiveCat (cat, index) {
         this.activeCat = cat.name
         let catExp = this.currentUser.categories[index].expanded
@@ -72,7 +75,7 @@
       },
       getRecipeDetail (id) {
         console.log('id: ', id)
-        this.$router.push({ name: 'recipe', params: { id } })
+        this.$router.push({ name: 'friend-recipe', params: { id } })
       },
       categoryRecipes (cat) {
         return this.recipes.some(recipe => recipe.category === cat)

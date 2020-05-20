@@ -74,7 +74,7 @@ const routes = [
     }
   },
   { path: '/friends',
-    name: 'friends-list',
+    name: 'friend-list',
     components: {
       default: FriendList,
       sidebar: FriendSidebar
