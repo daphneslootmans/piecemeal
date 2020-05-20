@@ -1,5 +1,5 @@
 <template>
-  <b-navbar type="is-primary" spaced>
+  <b-navbar type="is-primary" :is-active.sync="navbarActive" class="navbar-top">
     <template slot="brand">
       <b-navbar-item tag="router-link" :to="{ path: '/' }">
         <vue-fontawesome icon="drumstick-bite" size="lg"></vue-fontawesome>
@@ -13,7 +13,8 @@
 
     <template slot="end">
       <b-navbar-item tag="div">
-        <div v-if="user" class="user-name">{{ user.email }}</div>
+        <div v-if="currentUser.username" class="user-name">{{ currentUser.username }}</div>
+        <div v-else class="user-name">{{ currentUser.email }}</div>
         <div class="buttons">
           <b-button tag="router-link"
                     to="/settings"
@@ -31,8 +32,7 @@
 </template>
 
 <script>
-  import { auth } from '../firebaseConfig'
-  import { mapActions, mapState } from 'vuex'
+  import { mapActions, mapState, mapMutations } from 'vuex'
   import Sidebar from './Sidebar'
 
   export default {
@@ -48,13 +48,22 @@
       ...mapState({
         currentUser: 'currentUser',
         isMobile: 'isMobile',
-        version: 'version'
+        version: 'version',
+        navbarActiveStore: 'navbarActive'
       }),
-      user () {
-        return auth.currentUser
-      }
+      navbarActive: {
+        get () {
+          return this.navbarActiveStore
+        },
+        set (value) {
+          this.$store.commit('setNavbarActive', {navbarActive: value})
+        }
+      },
     },
     methods: {
+      ...mapMutations({
+        setNavbarActive: 'setNavbarActive'
+      }),
       ...mapActions({
         signOut: 'signOut'
       }),
@@ -63,13 +72,26 @@
   }
 </script>
 
-<style scoped lang="scss">
-  .user-name {
-    padding-right: 1em;
-  }
-  .version {
-    font-size: 0.8rem;
-    margin-left: 1em;
-    padding-top: 6px;
+<style lang="scss">
+  .navbar-top.navbar {
+    padding-bottom: 0;
+
+    .user-name {
+      padding-right: 1em;
+    }
+    .version {
+      font-size: 0.8rem;
+      margin-left: 1em;
+      padding-top: 6px;
+    }
+    .navbar-burger {
+      @media screen and (max-width: 768px) {
+        margin-right: 3px;
+      }
+    }
+
+    .navbar-brand {
+      padding-left: 0.5em;
+    }
   }
 </style>

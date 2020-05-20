@@ -85,7 +85,7 @@
 <style lang="scss">
   .sidebar {
     position: sticky;
-    top: 0;
+    top: 70px;
 
     button {
       margin-bottom: 1rem;
