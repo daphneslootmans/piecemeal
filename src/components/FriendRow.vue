@@ -13,7 +13,7 @@
       <b-button @click="removePrompt"
                 type="is-primary"
                 icon-left="trash"
-                :loading="removeFriendLoading"
+                :loading="removeFriendLoading > 0"
       ></b-button>
     </div>
   </div>
@@ -33,12 +33,12 @@
     },
     data () {
       return {
-        removeFriendLoading: false
+        removeFriendLoading: 0
       }
     },
     computed: {
       ...mapState({
-          user: 'currentUser'
+        user: 'currentUser'
       }),
       authUser () {
         return auth.currentUser
@@ -53,41 +53,34 @@
           confirmText: 'Remove friend',
           type: 'is-danger',
           hasIcon: true,
-          onConfirm: () => this.removeFriend().then(() => {
-            this.$buefy.toast.open({
-              message: `Friend removed`,
-              type: 'is-success',
-              position: this.isMobile ? 'is-bottom' : 'is-top-right',
-              duration: 3000
-            })
-          })
+          onConfirm: () => this.removeFriend()
         })
       },
       removeFriend () {
         console.log('removing friend')
-        this.removeFriendLoading = true
+        this.removeFriendLoading = 2
 
-        let removedFriend = userCollection.doc(this.data.id)
-        removedFriend.update({
-          friends: firebase.firestore.FieldValue.arrayRemove({
-            id: this.authUser.uid,
-            username: this.user.username,
-            email: this.user.email,
-            pending: true
-          })
+        userCollection.doc(this.data.id).collection('friends').doc(this.authUser.uid).delete().then(() => {
+          this.removeFriendLoading--
         })
-        let user = userCollection.doc(this.authUser.uid)
-        user.update({
-          friends: firebase.firestore.FieldValue.arrayRemove({
-            id: removedFriend.id,
-            username: removedFriend.username,
-            email: removedFriend.email,
-            pending: true
-          })
+          .catch(error => console.log(error))
+
+        userCollection.doc(this.authUser.uid).collection('friends').doc(this.data.id).delete().then(() => {
+          this.removeFriendLoading--
         })
+          .catch(error => console.log(error))
+
+        if (this.removeFriendLoading === 0) {
+          this.$buefy.toast.open({
+            message: `Friend removed`,
+            type: 'is-success',
+            position: this.isMobile ? 'is-bottom' : 'is-top-right',
+            duration: 3000
+          })
+        }
       },
-  },
-  watch: {}
+    },
+    watch: {}
   }
 </script>
 
