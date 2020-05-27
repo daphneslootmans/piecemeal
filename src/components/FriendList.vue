@@ -34,8 +34,8 @@
         </form>
       </div>
     </div>
-    <template v-if="user.friends">
-      <friend-row v-for="friend in user.friends" :data="friend"></friend-row>
+    <template v-if="friends.length">
+      <friend-row v-for="friend in friends" :data="friend"></friend-row>
     </template>
   </div>
 </template>
@@ -43,7 +43,7 @@
 <script>
   import FriendRow from './FriendRow'
   import { mapState, mapActions } from 'vuex'
-  import { auth, userCollection } from '../firebaseConfig'
+  import { auth, currentUser, friendsCollection, userCollection } from '../firebaseConfig'
   import firebase from 'firebase'
 
   export default {
@@ -55,7 +55,8 @@
         email: '',
         showError: false,
         error: '',
-        addFriendLoading: false
+        addFriendLoading: false,
+        friends: []
       }
     },
     computed: {
@@ -84,26 +85,20 @@
             } else {
               this.error = ''
               this.showError = false
-              querySnapshot.forEach((doc) => {
-                console.log(doc.id, ' => ', doc.data())
-                let newFriend = userCollection.doc(doc.id)
-                newFriend.update({
-                  friends: firebase.firestore.FieldValue.arrayUnion({
+              querySnapshot.forEach((document) => {
+                console.log(document.id, ' => ', document.data())
+                userCollection.doc(document.id).collection('friends').doc(this.authUser.uid).set({
                     id: this.authUser.uid,
                     username: this.user.username,
                     email: this.user.email,
-                    pending: true
-                  })
+                    status: 'pending'
                 })
-                let user = userCollection.doc(this.authUser.uid)
-                let friend = doc.data()
-                user.update({
-                  friends: firebase.firestore.FieldValue.arrayUnion({
-                    id: doc.id,
-                    username: friend.username,
-                    email: friend.email,
-                    pending: true
-                  })
+                let friend = document.data()
+                userCollection.doc(this.authUser.uid).collection('friends').doc(document.id).set({
+                  id: document.id,
+                  username: friend.username,
+                  email: friend.email,
+                  status: 'pending'
                 })
               })
             }
@@ -116,7 +111,16 @@
           })
       },
     },
-    watch: {}
+    watch: {},
+    created () {
+      userCollection.doc(this.authUser.uid).collection('friends').onSnapshot( (snapshot) => {
+        let friends = []
+          snapshot.forEach((friend) => {
+            friends.push(friend.data())
+          })
+        this.friends = friends
+      })
+    }
   }
 </script>
 
