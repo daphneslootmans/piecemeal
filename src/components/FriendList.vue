@@ -43,7 +43,7 @@
 <script>
   import FriendRow from './FriendRow'
   import { mapState, mapActions } from 'vuex'
-  import { auth, currentUser, friendsCollection, userCollection } from '../firebaseConfig'
+  import { auth, currentUser, userCollection } from '../firebaseConfig'
   import firebase from 'firebase'
 
   export default {
@@ -91,7 +91,8 @@
                     id: this.authUser.uid,
                     username: this.user.username,
                     email: this.user.email,
-                    status: 'pending'
+                    status: 'pending',
+                    validationRequired: true
                 })
                 let friend = document.data()
                 userCollection.doc(this.authUser.uid).collection('friends').doc(document.id).set({

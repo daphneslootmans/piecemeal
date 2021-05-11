@@ -79,14 +79,6 @@ const routes = [
       default: FriendList,
       sidebar: FriendSidebar
     },
-    props: {
-      default: {
-        editing: true
-      }
-    },
-    query: {
-      editing: true
-    },
     meta: {
       requiresAuth: true
     }
@@ -120,6 +112,7 @@ const routes = [
 ]
 
 const router = new VueRouter({
+  mode: 'history',
   routes,
   linkExactActiveClass: "is-active"
 })

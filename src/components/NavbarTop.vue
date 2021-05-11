@@ -22,6 +22,11 @@
                     @click="toggleNotifications"
           ></b-button>
           <b-button tag="router-link"
+                    to="/friends"
+                    type="is-primary"
+                    icon-left="people-arrows"
+          ></b-button>
+          <b-button tag="router-link"
                     to="/settings"
                     type="is-primary"
                     icon-left="cog"

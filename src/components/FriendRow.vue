@@ -10,6 +10,12 @@
                   class="icon-only"
         ></b-button>
       </b-tooltip>
+      <b-button @click="acceptFriend"
+                type="is-primary"
+                icon-left="check"
+                :loading="verifying > 0"
+                v-if="data.validationRequired"
+      ></b-button>
       <b-button @click="removePrompt"
                 type="is-primary"
                 icon-left="trash"
@@ -33,7 +39,8 @@
     },
     data () {
       return {
-        removeFriendLoading: 0
+        removeFriendLoading: 0,
+        verifying: 0
       }
     },
     computed: {
@@ -79,6 +86,34 @@
           })
         }
       },
+      acceptFriend () {
+        console.log('Accepting friend')
+        this.verifying = 2
+
+        userCollection.doc(this.data.id).collection('friends').doc(this.authUser.uid).update({
+          'status': 'active'
+        }).then(() => {
+          this.verifying--
+        })
+          .catch(error => console.log(error))
+
+        userCollection.doc(this.authUser.uid).collection('friends').doc(this.data.id).update({
+          'validationRequired': false,
+          'status': 'active'
+        }).then(() => {
+          this.verifying--
+        })
+          .catch(error => console.log(error))
+
+        if (this.verifying === 0) {
+          this.$buefy.toast.open({
+            message: `Friend request accepted`,
+            type: 'is-success',
+            position: this.isMobile ? 'is-bottom' : 'is-top-right',
+            duration: 3000
+          })
+        }
+      }
     },
     watch: {}
   }
@@ -100,6 +135,6 @@
 
   .icon-only {
     cursor: initial;
-    margin-right: 0.5em;
+    margin-right: 1em;
   }
 </style>

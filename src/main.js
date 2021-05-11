@@ -42,6 +42,7 @@ import {
   faTimes,
   faHourglassHalf,
   faBell,
+  faPeopleArrows
 } from '@fortawesome/free-solid-svg-icons'
 
 library.add(
@@ -79,6 +80,7 @@ library.add(
   faUtensils,
   faHourglassHalf,
   faBell,
+  faPeopleArrows,
 )
 
 Vue.component('vue-fontawesome', FontAwesomeIcon)
