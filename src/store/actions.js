@@ -82,6 +82,37 @@ const actions = {
       commit('clearRecipes')
     }
   },
+  getNotifications ({ commit, state }) {
+    let uid = auth.currentUser.uid
+    commit('clearNotifications')
+    if (uid) {
+      let notificationsQuery = db.collection('notifications')
+        .where('user', '==', auth.currentUser.uid)
+      notificationsQuery.onSnapshot(snapshot => {
+        snapshot.forEach((doc) => {
+          if (snapshot.empty) {
+            console.log('No matching documents.')
+            return
+          }
+          snapshot.docChanges().forEach(change => {
+            if (snapshot.metadata) {
+              console.log('no pending writes')
+              if (change.type === 'added') {
+                commit('addNotification', change.doc)
+              } else if (change.type === 'modified') {
+                commit('updateNotification', change.doc)
+              } else if (change.type === 'removed') {
+                console.log('Removed recipe: ', change.doc)
+                commit('removeNotification', change.doc)
+              }
+            }
+          })
+        })
+      })
+    } else {
+      commit('clearNotifications')
+    }
+  },
   parseRecipe ({ state, commit }) {
     let ingredientsList = []
     let directionsList = []

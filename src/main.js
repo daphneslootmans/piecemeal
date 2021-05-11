@@ -40,7 +40,8 @@ import {
   faCloudUploadAlt,
   faCog,
   faTimes,
-  faHourglassHalf
+  faHourglassHalf,
+  faBell,
 } from '@fortawesome/free-solid-svg-icons'
 
 library.add(
@@ -77,6 +78,7 @@ library.add(
   faTimes,
   faUtensils,
   faHourglassHalf,
+  faBell,
 )
 
 Vue.component('vue-fontawesome', FontAwesomeIcon)

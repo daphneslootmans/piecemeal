@@ -32,7 +32,9 @@ export default new Vuex.Store({
     },
     editing: false,
     isMobile: false,
-    navbarActive: false
+    navbarActive: false,
+    notifications: [],
+    notificationsOpen: false,
   },
   getters,
   mutations,

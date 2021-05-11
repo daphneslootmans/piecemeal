@@ -106,6 +106,29 @@ const mutations = {
   },
   setNavbarActive (state, payload) {
     state.navbarActive = payload.navbarActive
+  },
+  updateNotification (state, notification) {
+    let data = notification.data()
+    data.id = notification.id
+    let index = state.notifications.findIndex(rec => rec.id === data.id)
+    state.notifications.splice(index, 1, data)
+  },
+  addNotification (state, notification) {
+    let data = notification.data()
+    data.id = notification.id
+    state.notifications.push(data)
+  },
+  removeNotification (state, notification) {
+    console.log('remove id: ', notification.id)
+    let index = state.notifications.findIndex(rec => rec.id === notification.id)
+    console.log('index: ', index)
+    state.notifications.splice(index, 1)
+  },
+  clearNotifications (state) {
+    state.notifications = []
+  },
+  toggleNotifications (state) {
+    state.notificationsOpen = !state.notificationsOpen
   }
 }
 

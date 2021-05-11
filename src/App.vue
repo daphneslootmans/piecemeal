@@ -2,6 +2,7 @@
   <div id="app">
     <navbar-top></navbar-top>
     <recipe-actions :id="$route.params.id" v-if="recipeRoute"></recipe-actions>
+    <notification-tray :notifications="notifications" v-show="notificationsOpen"></notification-tray>
     <section class="section main-section">
       <div class="container">
         <div class="columns">
@@ -19,18 +20,21 @@
 <script>
   import NavbarTop from './components/NavbarTop'
   import RecipeActions from './components/RecipeActions'
+  import NotificationTray from '@/components/NotificationTray'
   import { auth, db } from './firebaseConfig'
   import { mapState, mapMutations, mapActions } from 'vuex'
 
   export default {
     components: {
-      NavbarTop, RecipeActions
+      NavbarTop, RecipeActions, NotificationTray
     },
     computed: {
       ...mapState({
         currentRecipe: 'currentRecipe',
         recipes: 'recipes',
-        isMobile: 'isMobile'
+        isMobile: 'isMobile',
+        notifications: 'notifications',
+        notificationsOpen: 'notificationsOpen'
       }),
       user () {
         return auth.currentUser
@@ -55,7 +59,8 @@
       ...mapActions({
         getUser: 'getUser',
         setUser: 'setUser',
-        getRecipes: 'getRecipes'
+        getRecipes: 'getRecipes',
+        getNotifications: 'getNotifications'
       }),
       setCategories () {
         // tmp function to edit standard categories
@@ -121,6 +126,7 @@
       if (this.user) {
         this.getUser()
         this.getRecipes()
+        this.getNotifications()
       }
     },
     mounted () {

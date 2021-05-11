@@ -10,6 +10,7 @@ const auth = firebase.auth()
 const currentUser = auth.currentUser
 const recipeCollection = db.collection('recipes')
 const userCollection = db.collection('users')
+const notificationCollection = db.collection('notifications')
 const timestamp = firebase.firestore.FieldValue.serverTimestamp()
 
 export {
@@ -18,5 +19,6 @@ export {
   currentUser,
   recipeCollection,
   userCollection,
+  notificationCollection,
   timestamp
 }
