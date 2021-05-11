@@ -82,6 +82,39 @@ const actions = {
       commit('clearRecipes')
     }
   },
+  getFriendRecipes ({commit, state}, id) {
+    let uid = auth.currentUser.uid
+    console.log('getting friend recipes from id: ', id)
+    commit('clearFriendRecipes', id)
+    if (uid) {
+      let recipeQuery = db.collection('recipes')
+        .where('users', 'array-contains', id)
+        .where('isDeleted', '==', false)
+      recipeQuery.onSnapshot(snapshot => {
+        if (snapshot.empty) {
+          console.log('no matching documents')
+          return
+        }
+        snapshot.docChanges().forEach(change => {
+          let payload = {
+            doc: change.doc,
+            id: id
+          }
+          if (snapshot.metadata) {
+            if (change.type === 'added') {
+              commit('addFriendRecipe', payload)
+            } else if (change.type === 'modified') {
+              commit('updateFriendRecipe', payload)
+            } else if (change.type === 'removed') {
+              commit('removeFriendRecipe', payload)
+            }
+          }
+        })
+      })
+    } else {
+      commit('clearFriendRecipes', id)
+    }
+  },
   getNotifications ({ commit, state }) {
     let uid = auth.currentUser.uid
     commit('clearNotifications')

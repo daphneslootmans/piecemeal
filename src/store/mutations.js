@@ -129,7 +129,25 @@ const mutations = {
   },
   toggleNotifications (state) {
     state.notificationsOpen = !state.notificationsOpen
-  }
+  },
+  clearFriendRecipes (state, id) {
+    state.friendRecipes[id] = []
+  },
+  updateFriendRecipe (state, payload) {
+    let data = payload.doc.data()
+    data.id = payload.doc.id
+    let index = state.friendRecipes[payload.id].findIndex(rec => rec.id === data.id)
+    state.friendRecipes[payload.id].splice(index, 1, data)
+  },
+  addFriendRecipe (state, payload) {
+    let data = payload.doc.data()
+    data.id = payload.doc.id
+    state.friendRecipes[payload.id].push(data)
+  },
+  removeFriendRecipe (state, payload) {
+    let index = state.friendRecipes[payload.id].findIndex(rec => rec.id === payload.doc.id)
+    state.friendRecipes[payload.id].splice(index, 1)
+  },
 }
 
 export default mutations

@@ -13,6 +13,7 @@ export default new Vuex.Store({
     currentUser: {},
     error: null,
     recipes: [],
+    friendRecipes: {},
     currentRecipe: {
       title: '',
       category: '',

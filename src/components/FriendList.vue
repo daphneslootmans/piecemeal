@@ -3,8 +3,7 @@
     <div class="columns">
       <div class="column content">
         <h1>Friends</h1>
-        <p>Friends can view and copy your recipes, and you can view and copy theirs. Enter an email address below to
-          send a friend request.</p>
+        <p>Friends can view and copy your recipes, and you can view and copy theirs. Enter an email address below to send a friend request. Once your friend request is accepted, you can see your friend's recipes in the sidebar.</p>
       </div>
     </div>
     <div class="columns">
@@ -69,7 +68,7 @@
     },
     methods: {
       ...mapActions({
-        addFriend: 'addFriend'
+        getFriendRecipes: 'getFriendRecipes'
       }),
       sendFriendRequest () {
         console.log('adding friend')
@@ -111,6 +110,11 @@
             this.addFriendLoading = false
           })
       },
+      getRecipes () {
+        this.friends.forEach(friend => {
+          this.getFriendRecipes(friend.id)
+        })
+      }
     },
     watch: {},
     created () {
@@ -120,6 +124,7 @@
             friends.push(friend.data())
           })
         this.friends = friends
+        if (friends.length) this.getRecipes()
       })
     }
   }
