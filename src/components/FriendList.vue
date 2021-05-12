@@ -41,9 +41,8 @@
 
 <script>
   import FriendRow from './FriendRow'
-  import { mapState, mapActions } from 'vuex'
-  import { auth, currentUser, userCollection } from '../firebaseConfig'
-  import firebase from 'firebase'
+  import { mapState } from 'vuex'
+  import { auth, userCollection } from '../firebaseConfig'
 
   export default {
     name: 'FriendList',
@@ -54,22 +53,19 @@
         email: '',
         showError: false,
         error: '',
-        addFriendLoading: false,
-        friends: []
+        addFriendLoading: false
       }
     },
     computed: {
       ...mapState({
-        user: 'currentUser'
+        user: 'currentUser',
+        friends: 'friends'
       }),
       authUser () {
         return auth.currentUser
       }
     },
     methods: {
-      ...mapActions({
-        getFriendRecipes: 'getFriendRecipes'
-      }),
       sendFriendRequest () {
         console.log('adding friend')
         this.addFriendLoading = true
@@ -109,23 +105,10 @@
           .finally(() => {
             this.addFriendLoading = false
           })
-      },
-      getRecipes () {
-        this.friends.forEach(friend => {
-          this.getFriendRecipes(friend.id)
-        })
       }
     },
     watch: {},
     created () {
-      userCollection.doc(this.authUser.uid).collection('friends').onSnapshot( (snapshot) => {
-        let friends = []
-          snapshot.forEach((friend) => {
-            friends.push(friend.data())
-          })
-        this.friends = friends
-        if (friends.length) this.getRecipes()
-      })
     }
   }
 </script>

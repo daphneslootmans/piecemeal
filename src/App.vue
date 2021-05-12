@@ -21,7 +21,7 @@
   import NavbarTop from './components/NavbarTop'
   import RecipeActions from './components/RecipeActions'
   import NotificationTray from '@/components/NotificationTray'
-  import { auth, db } from './firebaseConfig'
+  import { auth, db, userCollection } from './firebaseConfig'
   import { mapState, mapMutations, mapActions } from 'vuex'
 
   export default {
@@ -60,7 +60,8 @@
         getUser: 'getUser',
         setUser: 'setUser',
         getRecipes: 'getRecipes',
-        getNotifications: 'getNotifications'
+        getNotifications: 'getNotifications',
+        getFriends: 'getFriends'
       }),
       setCategories () {
         // tmp function to edit standard categories
@@ -127,6 +128,7 @@
         this.getUser()
         this.getRecipes()
         this.getNotifications()
+        this.getFriends()
       }
     },
     mounted () {

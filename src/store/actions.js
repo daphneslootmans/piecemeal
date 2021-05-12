@@ -82,7 +82,21 @@ const actions = {
       commit('clearRecipes')
     }
   },
-  getFriendRecipes ({commit, state}, id) {
+  getFriends ({commit, state, dispatch}) {
+    userCollection.doc(auth.currentUser.uid).collection('friends').onSnapshot( (snapshot) => {
+      let friends = []
+      snapshot.forEach((friend) => {
+        friends.push(friend.data())
+      })
+
+      commit('setFriends', friends)
+      if (friends.length) friends.forEach(friend => {
+        dispatch('getFriendRecipes', friend.id)
+        dispatch('getFriendCategories', friend.id)
+      })
+    })
+  },
+  getFriendRecipes ({commit, state, dispatch}, id) {
     let uid = auth.currentUser.uid
     console.log('getting friend recipes from id: ', id)
     commit('clearFriendRecipes', id)
@@ -113,6 +127,19 @@ const actions = {
       })
     } else {
       commit('clearFriendRecipes', id)
+    }
+  },
+  getFriendCategories({commit, state}, id) {
+    let uid = auth.currentUser.uid
+    console.log('getting friend categories from id: ', id)
+    if (uid) {
+      userCollection.doc(id).onSnapshot(snapshot => {
+        let payload = {
+          data: snapshot.data(),
+          id: id
+        }
+        commit('setFriendCategories', payload)
+      })
     }
   },
   getNotifications ({ commit, state }) {

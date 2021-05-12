@@ -148,6 +148,12 @@ const mutations = {
     let index = state.friendRecipes[payload.id].findIndex(rec => rec.id === payload.doc.id)
     state.friendRecipes[payload.id].splice(index, 1)
   },
+  setFriends (state, friends) {
+    state.friends = friends
+  },
+  setFriendCategories (state, payload) {
+    state.friendRecipes[payload.id].categories = payload.data.categories
+  }
 }
 
 export default mutations

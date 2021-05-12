@@ -83,7 +83,7 @@ const routes = [
       requiresAuth: true
     }
   },
-  { path: '/friends/:id',
+  { path: '/friends/:friendId/:recipeId',
     name: 'friend-recipe',
     components: {
       default: ViewRecipe,

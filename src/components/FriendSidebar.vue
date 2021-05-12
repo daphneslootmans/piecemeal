@@ -9,34 +9,37 @@
               :disabled="$route.name === 'friend-list'"
     >Manage Friends
     </b-button>
-    <b-menu>
-      <b-menu-list
-        label="Recipes"
-      >
-        <b-menu-item
-          v-for="(category, index) in currentUser.categories"
-          :key="category.name + index"
-          v-if="categoryRecipes(category.name)"
-          icon="utensils"
-          :active="activeCat === category.name"
-          :expanded="category.expanded">
-          <template slot="label" slot-scope="props">
-            {{ category.name }}
-            <b-icon
-              class="is-pulled-right"
-              :icon="props.expanded ? 'angle-down' : 'angle-up'">
-            </b-icon>
-          </template>
+    <template v-for="friend in friends">
+      <b-menu>
+        <b-menu-list
+          :label="friend.username"
+        >
           <b-menu-item
-            v-for="recipe in recipes"
-            :key="recipe.id"
-            v-if="recipe.category === category.name && !recipe.isDeleted"
-            :label="recipe.title"
-            @click="getRecipeDetail(recipe.id)"
-          ></b-menu-item>
-        </b-menu-item>
-      </b-menu-list>
-    </b-menu>
+            v-for="(category, index) in friendRecipes[friend.id].categories"
+            :key="category.name + index"
+            v-if="categoryRecipes(category.name, friend.id)"
+            icon="utensils"
+            :active="activeCat === category.name"
+            :expanded="category.expanded">
+            <template slot="label" slot-scope="props">
+              {{ category.name }}
+              <b-icon
+                class="is-pulled-right"
+                :icon="props.expanded ? 'angle-down' : 'angle-up'">
+              </b-icon>
+            </template>
+            <b-menu-item
+              v-for="recipe in friendRecipes[friend.id]"
+              :key="recipe.id"
+              v-if="recipe.category === category.name && !recipe.isDeleted"
+              :label="recipe.title"
+              @click="getRecipeDetail(friend.id, recipe.id)"
+            ></b-menu-item>
+          </b-menu-item>
+        </b-menu-list>
+      </b-menu>
+    </template>
+
   </div>
 </template>
 
@@ -55,7 +58,8 @@
     computed: {
       ...mapState({
         currentUser: 'currentUser',
-        recipes: 'recipes'
+        friendRecipes: 'friendRecipes',
+        friends: 'friends'
       }),
       user () {
         return auth.currentUser
@@ -66,20 +70,18 @@
         signOut: 'signOut',
         getUser: 'getUser',
         setUser: 'setUser',
-        getFriendRecipes: 'getFriendRecipes'
       }),
       setActiveCat (cat, index) {
         this.activeCat = cat.name
         let catExp = this.currentUser.categories[index].expanded
         // this.$set(catExp, 'expanded', !catExp)
       },
-      getRecipeDetail (id) {
-        console.log('id: ', id)
-        this.$router.push({ name: 'friend-recipe', params: { id } })
+      getRecipeDetail (friendId, recipeId) {
+        this.$router.push({ name: 'friend-recipe', params: { friendId: friendId, recipeId: recipeId } })
       },
-      categoryRecipes (cat) {
-        return this.recipes.some(recipe => recipe.category === cat)
-      }
+      categoryRecipes (cat, id) {
+        return this.friendRecipes[id].some(recipe => recipe.category === cat)
+      },
     },
     watch: {}
   }
