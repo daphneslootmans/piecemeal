@@ -15,7 +15,7 @@
           :label="friend.username"
         >
           <b-menu-item
-            v-for="(category, index) in friendRecipes[friend.id].categories"
+            v-for="(category, index) in friend.categories"
             :key="category.name + index"
             v-if="categoryRecipes(category.name, friend.id)"
             icon="utensils"

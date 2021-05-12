@@ -152,7 +152,8 @@ const mutations = {
     state.friends = friends
   },
   setFriendCategories (state, payload) {
-    state.friendRecipes[payload.id].categories = payload.data.categories
+    let friend = state.friends.find(friend => friend.id === payload.id)
+    friend.categories = payload.data.categories
   }
 }
 

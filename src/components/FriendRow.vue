@@ -1,6 +1,6 @@
 <template>
   <div class="friend-row">
-    <p>{{ data.username }} - {{ data.email }} <span v-if="data.status !== 'pending'">recipe count</span></p>
+    <p>{{ data.username }} - {{ data.email }} <span v-if="data.status !== 'pending'">{{ friendRecipeCount }} recipes</span></p>
     <div class="button-group">
       <b-tooltip label="Request is pending"
                  position="is-bottom"
@@ -27,7 +27,6 @@
 
 <script>
   import { auth, userCollection } from '../firebaseConfig'
-  import firebase from 'firebase'
   import { mapState } from 'vuex'
 
   export default {
@@ -45,10 +44,14 @@
     },
     computed: {
       ...mapState({
-        user: 'currentUser'
+        user: 'currentUser',
+        friendRecipes: 'friendRecipes'
       }),
       authUser () {
         return auth.currentUser
+      },
+      friendRecipeCount () {
+        return this.friendRecipes[this.data.id].length
       }
     },
     methods: {
