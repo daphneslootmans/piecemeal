@@ -6,7 +6,10 @@
                       aria-close-label="Close notification"
                       @close="updateNotification(notification)"
       >
-        {{ notification.message }}
+        <div class="body">
+          {{ notification.message }} <br>
+          <div class="small">{{ notification.timestamp.toDate() | moment('DD-MM-YYYY HH:mm') }}</div>
+        </div>
       </b-notification>
     </div>
   </transition>
@@ -43,11 +46,42 @@ export default {
 <style scoped lang="scss">
 .notification-tray {
   position: absolute;
-  top: 45px;
-  right: 20px;
+  top: 55px;
+  right: 40px;
   z-index: 350;
-  min-width: 300px;
+  width: 400px;
   min-height: auto;
-  background-color: $notifications-bg;
+  background-color: rgba($grey-medium, 0.6);
+  border: 1px solid $grey-light;
+  border-radius: $toast-border-radius;
+
+  .notification {
+    background: $notifications-bg;
+    margin-bottom: 0;
+    border-radius: 0;
+    border-bottom: 1px solid $grey-light;
+
+    &:first-child {
+      border-top-left-radius: $toast-border-radius;
+      border-top-right-radius: $toast-border-radius;
+    }
+
+    &:last-child {
+      border-bottom-left-radius: $toast-border-radius;
+      border-bottom-right-radius: $toast-border-radius;
+      border-bottom: none;
+    }
+  }
+
+  .body {
+    display: flex;
+    flex-flow: row wrap;
+  }
+
+  .small {
+    font-size: 0.9em;
+    color: $grey-medium;
+    margin-left: auto;
+  }
 }
 </style>
