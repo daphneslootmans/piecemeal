@@ -148,12 +148,34 @@ const mutations = {
     let index = state.friendRecipes[payload.id].findIndex(rec => rec.id === payload.doc.id)
     state.friendRecipes[payload.id].splice(index, 1)
   },
-  setFriends (state, friends) {
-    state.friends = friends
+  addFriend (state, payload) {
+    payload.doc.categories = []
+    state.friends.push(payload.doc)
   },
-  setFriendCategories (state, payload) {
-    let friend = state.friends.find(friend => friend.id === payload.id)
-    friend.categories = payload.data.categories
+  updateFriend (state, payload) {
+    let index = state.friends.findIndex(friend => friend.id === payload.id)
+    state.friends.splice(index, 1, payload.doc)
+  },
+  removeFriend (state, payload) {
+    let index = state.friends.findIndex(friend => friend.id === payload.id)
+    state.friends.splice(index, 1)
+  },
+  addFriendCategory (state, payload) {
+    payload.doc.id = payload.id
+    let friend = state.friends.find(friend => friend.id === payload.friendId)
+    if (friend.categories.length > 0) friend.categories.push(payload.doc)
+    else friend.categories = [payload.doc]
+  },
+  updateFriendCategory (state, payload) {
+    payload.doc.id = payload.id
+    let friend = state.friends.find(friend => friend.id === payload.friendId)
+    let index = friend.categories.findIndex(cat => cat.id === payload.id)
+    friend.categories.splice(index, 1, payload.doc)
+  },
+  removeFriendCategory (state, payload) {
+    let friend = state.friends.find(friend => friend.id === payload.friendId)
+    let index = friend.categories.findIndex(cat => cat.id === payload.id)
+    friend.categories.splice(index, 1)
   }
 }
 

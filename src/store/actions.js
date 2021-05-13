@@ -1,4 +1,4 @@
-import { db, auth, timestamp, recipeCollection, userCollection } from '../firebaseConfig'
+import { db, auth, timestamp, recipeCollection, userCollection, categoriesCollection } from '../firebaseConfig'
 import router from '@/router/'
 
 const actions = {
@@ -12,6 +12,7 @@ const actions = {
       })
       .catch(error => { state.error = error })
   },
+
   registerEmail ({ state, commit, dispatch }, payload) {
     auth.createUserWithEmailAndPassword(payload.email, payload.password)
       .then(response => {
@@ -21,6 +22,7 @@ const actions = {
       })
       .catch(error => { state.error = error })
   },
+
   getUser ({ commit }) {
     let users = db.collection('users')
     users.doc(auth.currentUser.uid).onSnapshot(snapshot => {
@@ -28,6 +30,7 @@ const actions = {
       commit('setCurrentUser', snapshot.data())
     })
   },
+
   setUser ({ state }, payload) {
     let users = db.collection('users')
     users.doc('categories').get().then(doc => {
@@ -47,6 +50,7 @@ const actions = {
       }
     })
   },
+
   // RECIPES
   getRecipes ({ commit, state }) {
     let uid = auth.currentUser.uid
@@ -82,20 +86,70 @@ const actions = {
       commit('clearRecipes')
     }
   },
+
+  parseRecipe ({ state, commit }) {
+    let ingredientsList = []
+    let directionsList = []
+    console.log(state.currentRecipe)
+    let ingredientsRaw = state.currentRecipe.ingredientsRaw
+    let directionsRaw = state.currentRecipe.directionsRaw
+    if (ingredientsRaw) {
+      let ingredients = ingredientsRaw.replace(/\r\n/g, '\n').split('\n')
+      ingredients.forEach(item => {
+        if (item !== '') {
+          ingredientsList.push(item)
+        }
+      })
+    }
+    if (directionsRaw) {
+      let directions = directionsRaw.replace(/\r\n/g, '\n').split('\n')
+      directions.forEach(item => {
+        if (item !== '') {
+          directionsList.push(item)
+        }
+      })
+    }
+    commit('updateIngredients', ingredientsList)
+    commit('updateDirections', directionsList)
+  },
+
+  deleteRecipe ({ state, commit }, id) {
+    let recipe = recipeCollection.doc(id)
+    return recipe.update({
+      isDeleted: true,
+      deletedTimestamp: timestamp
+    }).then(() => {
+      router.push('/recipes')
+      commit('clearCurrentRecipe')
+    })
+  },
+
+  // FRIENDS
   getFriends ({commit, state, dispatch}) {
     userCollection.doc(auth.currentUser.uid).collection('friends').onSnapshot( (snapshot) => {
-      let friends = []
-      snapshot.forEach((friend) => {
-        friends.push(friend.data())
-      })
-
-      commit('setFriends', friends)
-      if (friends.length) friends.forEach(friend => {
-        dispatch('getFriendRecipes', friend.id)
-        dispatch('getFriendCategories', friend.id)
+      snapshot.docChanges().forEach((change) => {
+        let payload = {
+          doc: change.doc.data(),
+          id: change.doc.data().id
+        }
+        if (change.type === "added") {
+          commit('addFriend', payload)
+          if (change.doc.data().status === 'active') {
+            state.friendRecipes[change.doc.data().id] = []
+            dispatch('getFriendRecipes', change.doc.data().id)
+            dispatch('getFriendCategories', change.doc.data().id)
+          }
+        }
+        if (change.type === "modified") {
+          commit('updateFriend', payload)
+        }
+        if (change.type === "removed") {
+          commit('removeFriend', payload)
+        }
       })
     })
   },
+
   getFriendRecipes ({commit, state, dispatch}, id) {
     let uid = auth.currentUser.uid
     console.log('getting friend recipes from id: ', id)
@@ -129,19 +183,33 @@ const actions = {
       commit('clearFriendRecipes', id)
     }
   },
+
   getFriendCategories({commit, state}, id) {
     let uid = auth.currentUser.uid
     console.log('getting friend categories from id: ', id)
     if (uid) {
-      userCollection.doc(id).onSnapshot(snapshot => {
-        let payload = {
-          data: snapshot.data(),
-          id: id
-        }
-        commit('setFriendCategories', payload)
+      categoriesCollection.where('users', 'array-contains', id).onSnapshot(snapshot => {
+        snapshot.docChanges().forEach(change => {
+          let payload = {
+            doc: change.doc.data(),
+            id: change.doc.id,
+            friendId: id
+          }
+          if (snapshot.metadata) {
+            if (change.type === 'added') {
+              commit('addFriendCategory', payload)
+            } else if (change.type === 'modified') {
+              commit('updateFriendCategory', payload)
+            } else if (change.type === 'removed') {
+              commit('removeFriendCategory', payload)
+            }
+          }
+        })
       })
     }
   },
+
+  // SYSTEM
   getNotifications ({ commit, state }) {
     let uid = auth.currentUser.uid
     commit('clearNotifications')
@@ -172,43 +240,7 @@ const actions = {
     } else {
       commit('clearNotifications')
     }
-  },
-  parseRecipe ({ state, commit }) {
-    let ingredientsList = []
-    let directionsList = []
-    console.log(state.currentRecipe)
-    let ingredientsRaw = state.currentRecipe.ingredientsRaw
-    let directionsRaw = state.currentRecipe.directionsRaw
-    if (ingredientsRaw) {
-      let ingredients = ingredientsRaw.replace(/\r\n/g, '\n').split('\n')
-      ingredients.forEach(item => {
-        if (item !== '') {
-          ingredientsList.push(item)
-        }
-      })
-    }
-    if (directionsRaw) {
-      let directions = directionsRaw.replace(/\r\n/g, '\n').split('\n')
-      directions.forEach(item => {
-        if (item !== '') {
-          directionsList.push(item)
-        }
-      })
-    }
-    commit('updateIngredients', ingredientsList)
-    commit('updateDirections', directionsList)
-  },
-  deleteRecipe ({ state, commit }, id) {
-    let recipe = recipeCollection.doc(id)
-    return recipe.update({
-      isDeleted: true,
-      deletedTimestamp: timestamp
-    }).then(() => {
-      router.push('/recipes')
-      commit('clearCurrentRecipe')
-    })
-  },
-  // FRIENDS
+  }
 }
 
 export default actions
