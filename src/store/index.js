@@ -14,7 +14,7 @@ export default new Vuex.Store({
     error: null,
     recipes: [],
     friends: [],
-    friendRecipes: {},
+    friendRecipes: [],
     currentRecipe: {
       title: '',
       category: '',

@@ -1,6 +1,6 @@
 <template>
   <div class="column is-3 sidebar">
-    <b-button icon-left="plus"
+    <b-button icon-left="people-arrows"
               type="is-primary"
               outlined
               expanded
@@ -9,7 +9,7 @@
               :disabled="$route.name === 'friend-list'"
     >Manage Friends
     </b-button>
-    <template v-for="friend in friends">
+    <template v-for="friend in friends" class="mt-2">
       <b-menu>
         <b-menu-list
           :label="friend.username"
@@ -17,7 +17,6 @@
           <b-menu-item
             v-for="(category, index) in friend.categories"
             :key="category.name + index"
-            v-if="categoryRecipes(category.name, friend.id)"
             icon="utensils"
             :active="activeCat === category.name"
             :expanded="category.expanded">
@@ -29,7 +28,7 @@
               </b-icon>
             </template>
             <b-menu-item
-              v-for="recipe in friendRecipes[friend.id]"
+              v-for="recipe in getFriendRecipes(friend.id)"
               :key="recipe.id"
               v-if="recipe.category === category.name && !recipe.isDeleted"
               :label="recipe.title"
@@ -44,8 +43,8 @@
 </template>
 
 <script>
-  import { mapActions, mapState } from 'vuex'
-  import { auth } from '../firebaseConfig'
+  import { mapActions, mapState, mapGetters } from 'vuex'
+  import { auth } from '@/firebaseConfig'
 
   export default {
     name: 'FriendSidebar',
@@ -71,17 +70,18 @@
         getUser: 'getUser',
         setUser: 'setUser',
       }),
-      setActiveCat (cat, index) {
+      setActiveCat (cat) {
         this.activeCat = cat.name
-        let catExp = this.currentUser.categories[index].expanded
-        // this.$set(catExp, 'expanded', !catExp)
       },
       getRecipeDetail (friendId, recipeId) {
         this.$router.push({ name: 'friend-recipe', params: { friendId: friendId, recipeId: recipeId } })
       },
       categoryRecipes (cat, id) {
-        return this.friendRecipes[id].some(recipe => recipe.category === cat)
+        return this.getFriendRecipes(id).some(recipe => recipe.category === cat)
       },
+      getFriendRecipes (id) {
+       return this.friendRecipes.filter(recipe => recipe.users.includes(id))
+      }
     },
     watch: {}
   }

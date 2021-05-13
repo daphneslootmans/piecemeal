@@ -26,7 +26,7 @@
 </template>
 
 <script>
-  import { auth, userCollection } from '../firebaseConfig'
+  import { auth, userCollection } from '@/firebaseConfig'
   import { mapState } from 'vuex'
 
   export default {

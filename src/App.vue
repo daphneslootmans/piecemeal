@@ -1,7 +1,7 @@
 <template>
   <div id="app">
     <navbar-top></navbar-top>
-    <recipe-actions :id="$route.params.id" v-if="recipeRoute"></recipe-actions>
+    <recipe-actions :friendId="$route.params.friendId" :id="$route.params.recipeId" v-if="recipeRoute"></recipe-actions>
     <notification-tray :notifications="notifications" v-show="notificationsOpen"></notification-tray>
     <section class="section main-section">
       <div class="container">
@@ -13,7 +13,6 @@
         </div>
       </div>
     </section>
-
   </div>
 </template>
 
@@ -32,6 +31,7 @@
       ...mapState({
         currentRecipe: 'currentRecipe',
         recipes: 'recipes',
+        friendRecipes: 'friendRecipes',
         isMobile: 'isMobile',
         notifications: 'notifications',
         notificationsOpen: 'notificationsOpen'
@@ -39,13 +39,8 @@
       user () {
         return auth.currentUser
       },
-      recipe () {
-        if (this.$route.params.id && this.recipes.length) {
-          return this.recipes.find(recipe => recipe.id === this.$route.params.id)
-        }
-      },
       recipeRoute () {
-        return this.$route.params.id || this.$route.name === 'recipes'
+        return this.$route.params.id || this.$route.name === 'recipes' || this.$route.params.recipeId
       }
     },
     methods: {
@@ -65,47 +60,64 @@
       }),
       setCategories () {
         // tmp function to edit standard categories
-        let data = {
-          standard:
+          let standard =
             [
               {
                 name: 'Dinner',
-                expanded: true
+                expanded: true,
+                order: 3
               },
               {
                 name: 'Lunch',
-                expanded: true
+                expanded: true,
+                order: 1
               },
               {
                 name: 'Breakfast',
-                expanded: true
+                expanded: true,
+                order: 0
               },
               {
                 name: 'Side Dish',
-                expanded: true
+                expanded: true,
+                order: 2
               },
               {
                 name: 'Dessert',
-                expanded: true
+                expanded: true,
+                order: 4
               },
             ]
-        }
-        db.collection('users').doc('categories').set(data)
+        db.collection("users").get().then((querySnapshot) => {
+          querySnapshot.forEach((doc) => {
+            // doc.data() is never undefined for query doc snapshots
+            let id = doc.id
+            console.log('user data: ', id)
+            standard.forEach(cat => {
+              cat.users = [id]
+              console.log(cat)
+              // db.collection('categories').add(cat)
+            })
+          });
+        });
+
+
       },
-      checkRoute () {
-        console.log('checking route')
-        if (this.$route.params.id && this.recipe) {
-          console.log('id in route')
-          if (this.recipe.id !== this.currentRecipe.id) {
-            this.setRecipe(this.recipe)
-          }
-        } else {
-          this.clearCurrentRecipe()
-        }
-        if (this.$route.name !== 'edit-recipe') {
-          this.setEditing({ editing: false })
-        }
-      },
+      // checkRoute () {
+      //   console.log('checking route')
+      //   console.log('route params: ', this.$route.params)
+      //   if ((this.$route.params.id || this.$route.params.recipeId) && this.recipe) {
+      //     console.log('id in route')
+      //     if (this.recipe.id !== this.currentRecipe.id) {
+      //       this.setRecipe(this.recipe)
+      //     }
+      //   } else {
+      //     this.clearCurrentRecipe()
+      //   }
+      //   if (this.$route.name !== 'edit-recipe') {
+      //     this.setEditing({ editing: false })
+      //   }
+      // },
       checkWindow () {
         let windowWidth = window.innerWidth
         this.setMobile(windowWidth)
@@ -116,11 +128,14 @@
         this.getRecipes()
       },
       $route (to, from) {
-        this.checkRoute()
+        // this.checkRoute()
         this.setNavbarActive({navbarActive: false})
       },
       recipes () {
-        if (this.recipes.length) this.checkRoute()
+        // if (this.recipes.length) this.checkRoute()
+      },
+      recipe () {
+        // if (this.recipe) this.checkRoute()
       }
     },
     created () {

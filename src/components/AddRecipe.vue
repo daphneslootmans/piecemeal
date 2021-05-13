@@ -11,7 +11,7 @@
 
 <script>
   import { db, auth } from '../firebaseConfig.js'
-  import { mapState } from 'vuex'
+  import { mapMutations, mapState } from 'vuex'
   import { eventBus } from '../services/event-bus'
   import RecipeForm from './RecipeForm'
   import RecipeActions from './RecipeActions'
@@ -50,6 +50,9 @@
       }
     },
     methods: {
+      ...mapMutations ({
+        clearRecipe: 'clearCurrentRecipe'
+      }),
       addRecipe (form) {
         this.loading = true
 
@@ -73,6 +76,7 @@
 
     },
     mounted () {
+      this.clearRecipe()
       eventBus.$on('add-recipe', this.addRecipe)
     }
   }

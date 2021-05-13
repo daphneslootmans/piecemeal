@@ -45,7 +45,7 @@ const routes = [
       requiresAuth: true
     }
   },
-  { path: '/recipes/:id',
+  { path: '/recipes/:recipeId',
     name: 'recipe',
     components: {
       default: ViewRecipe,
@@ -55,7 +55,7 @@ const routes = [
       requiresAuth: true
     }
   },
-  { path: '/recipes/:id/edit',
+  { path: '/recipes/:recipeId/edit',
     name: 'edit-recipe',
     components: {
       default: EditRecipe,

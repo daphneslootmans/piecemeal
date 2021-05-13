@@ -108,7 +108,7 @@
               </header>
               <div class="card-content">
                 <ol>
-                  <li v-for="(step, index) in recipe.directions" class="">
+                  <li v-for="(step) in recipe.directions" class="">
                     <p class="">{{ step }}</p>
                   </li>
                 </ol>
@@ -147,7 +147,7 @@
 </template>
 
 <script>
-  import { mapState } from 'vuex'
+import { mapActions, mapState } from 'vuex'
   import RecipeActions from './RecipeActions'
 
   export default {
@@ -159,6 +159,7 @@
     computed: {
       ...mapState({
         recipes: 'recipes',
+        friendRecipes: 'friendRecipes',
         recipe: 'currentRecipe',
         isMobile: 'isMobile'
       }),
@@ -173,14 +174,35 @@
         if (mat.length > 1) {
           return mat[Math.random() * mat.length | 0]
         }
-      },
-      recipeNotEmpty () {
-        return Object.entries(this.recipe).length !== 0
       }
     },
     methods: {
+      ...mapActions({
+        setRecipeById: 'setRecipeById'
+      }),
+      getRecipe () {
+        let payload = {
+          friendId: this.$route.params.friendId,
+          recipeId: this.$route.params.recipeId
+        }
+        this.setRecipeById(payload)
+      }
+    },
+    watch: {
+      recipes () {
+        this.getRecipe()
+      },
+      friendRecipes () {
+        this.getRecipe()
+      },
+      $route (to, from) {
+        this.getRecipe()
+      },
     },
     mounted () {
+    },
+    created () {
+      this.getRecipe()
     }
   }
 </script>

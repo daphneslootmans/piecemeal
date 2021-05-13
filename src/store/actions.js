@@ -124,6 +124,18 @@ const actions = {
     })
   },
 
+  setRecipeById ({ state, commit }, data) {
+    // find requested recipe in store and set it as current recipe
+    commit('clearCurrentRecipe')
+    let recipe = {}
+    let recipeSource = state.recipes
+    if (data.friendId) {
+      recipeSource = state.friendRecipes
+    }
+    if (recipeSource) recipe = recipeSource.find(recipe => recipe.id === data.recipeId)
+    if (recipe && recipe.id !== state.currentRecipe.id) commit('setCurrentRecipe', recipe)
+  },
+
   // FRIENDS
   getFriends ({commit, state, dispatch}) {
     userCollection.doc(auth.currentUser.uid).collection('friends').onSnapshot( (snapshot) => {
@@ -135,7 +147,6 @@ const actions = {
         if (change.type === "added") {
           commit('addFriend', payload)
           if (change.doc.data().status === 'active') {
-            state.friendRecipes[change.doc.data().id] = []
             dispatch('getFriendRecipes', change.doc.data().id)
             dispatch('getFriendCategories', change.doc.data().id)
           }

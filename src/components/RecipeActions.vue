@@ -11,7 +11,7 @@
         >
           Stop editing
         </b-button>
-        <b-button v-if="!editing && id"
+        <b-button v-if="!editing && id && !friendId"
                   icon-left="pen-alt"
                   type="is-primary"
                   outlined
@@ -19,6 +19,15 @@
                   @click="editRecipe(id)"
         >
           Edit recipe
+        </b-button>
+        <b-button v-if="!editing && id && friendId"
+                  icon-left="copy"
+                  type="is-primary"
+                  outlined
+                  inverted
+                  @click="copyRecipe(id)"
+        >
+          Copy recipe
         </b-button>
         <b-button
           v-else-if="editing || !id"
@@ -51,7 +60,8 @@
   export default {
     name: 'RecipeActions',
     props: {
-      id: ''
+      id: '',
+      friendId: ''
     },
     data () {
       return {
@@ -75,11 +85,14 @@
         parseRecipe: 'parseRecipe'
       }),
       editRecipe (id) {
-        this.$router.push({ name: 'edit-recipe', params: { id: id } })
+        this.$router.push({ name: 'edit-recipe', params: { recipeId: id } })
+      },
+      copyRecipe () {
+        this.save()
       },
       stopEditing (id) {
         this.setEditing({ editing: false})
-        this.$router.push({ name: 'recipe', params: { id: id } })
+        this.$router.push({ name: 'recipe', params: { recipeId: id } })
       },
       deletePrompt (id) {
         this.$buefy.dialog.confirm({

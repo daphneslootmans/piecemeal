@@ -72,7 +72,7 @@
       },
       getRecipeDetail (id) {
         console.log('id: ', id)
-        this.$router.push({ name: 'recipe', params: { id } })
+        this.$router.push({ name: 'recipe', params: { recipeId: id } })
       },
       categoryRecipes (cat) {
         return this.recipes.some(recipe => recipe.category === cat)

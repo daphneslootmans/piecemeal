@@ -142,11 +142,11 @@ const mutations = {
   addFriendRecipe (state, payload) {
     let data = payload.doc.data()
     data.id = payload.doc.id
-    state.friendRecipes[payload.id].push(data)
+    state.friendRecipes.push(data)
   },
   removeFriendRecipe (state, payload) {
-    let index = state.friendRecipes[payload.id].findIndex(rec => rec.id === payload.doc.id)
-    state.friendRecipes[payload.id].splice(index, 1)
+    let index = state.friendRecipes.findIndex(rec => rec.id === payload.doc.id)
+    state.friendRecipes.splice(index, 1)
   },
   addFriend (state, payload) {
     payload.doc.categories = []
