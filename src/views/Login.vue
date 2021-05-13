@@ -69,7 +69,9 @@
       ...mapActions({
         signIn: 'signIn',
         getUser: 'getUser',
-        getRecipes: 'getRecipes'
+        getRecipes: 'getRecipes',
+        getNotification: 'getNotifications',
+        getFriends: 'getFriends'
       }),
       signInEmail () {
         console.log('trying to sign in')
@@ -80,6 +82,8 @@
                   this.$store.commit('setError', null)
                   this.getUser()
                   this.getRecipes()
+                  this.getNotifications()
+                  this.getFriends()
                 }
             )
             .catch(error => { this.$store.commit('setError', error)})
