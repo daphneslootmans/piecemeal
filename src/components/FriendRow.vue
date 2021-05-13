@@ -1,6 +1,6 @@
 <template>
   <div class="friend-row">
-    <p>{{ data.username }} - {{ data.email }} <span v-if="data.status !== 'pending'">{{ friendRecipeCount }} recipes</span></p>
+    <p>{{ data.username }} - {{ data.email }}</p>
     <div class="button-group">
       <b-tooltip label="Request is pending"
                  position="is-bottom"
@@ -44,14 +44,10 @@
     },
     computed: {
       ...mapState({
-        user: 'currentUser',
-        friendRecipes: 'friendRecipes'
+        user: 'currentUser'
       }),
       authUser () {
         return auth.currentUser
-      },
-      friendRecipeCount () {
-        return this.friendRecipes[this.data.id].length
       }
     },
     methods: {
