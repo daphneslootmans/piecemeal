@@ -1,7 +1,21 @@
 <template>
   <div class="column is-3 sidebar">
-    <b-button icon-left="plus" type="is-primary" outlined expanded @click="addRecipe">
-      Add a recipe
+    <b-button icon-left="plus"
+              type="is-primary"
+              outlined
+              expanded
+              tag="router-link"
+              to="/recipes"
+              :disabled="$route.name === 'recipes'"
+    >Add a Recipe
+    </b-button>
+    <b-button icon-left="people-arrows"
+              type="is-primary"
+              outlined
+              expanded
+              tag="router-link"
+              to="/friends"
+    >Friend Recipes
     </b-button>
     <b-menu>
       <b-menu-list
@@ -62,9 +76,6 @@
         setUser: 'setUser',
         getRecipes: 'getRecipes'
       }),
-      addRecipe () {
-        this.$router.push({ name: 'recipes' })
-      },
       setActiveCat (cat, index) {
         this.activeCat = cat.name
         let catExp = this.currentUser.categories[index].expanded
@@ -87,7 +98,7 @@
     position: sticky;
     top: 70px;
 
-    button {
+    > a, > button {
       margin-bottom: 1rem;
     }
 

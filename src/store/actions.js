@@ -1,5 +1,6 @@
-import { db, auth, timestamp, recipeCollection, userCollection, categoriesCollection } from '../firebaseConfig'
+import { db, auth, timestamp, recipeCollection, userCollection, categoriesCollection } from '@/firebaseConfig'
 import router from '@/router/'
+import { eventBus } from '@/services/event-bus'
 
 const actions = {
   // USER
@@ -52,6 +53,26 @@ const actions = {
   },
 
   // RECIPES
+  async addRecipe ({ commit, state }, form) {
+    let uid = auth.currentUser.uid
+    if (uid) {
+      form.createdAt = new Date()
+      form.users = [uid]
+      form.isDeleted = false
+      if (!form.author) form.author = uid
+
+      return await db.collection('recipes').add(form)
+        .then(docRef => {
+          let data = {
+            message: `Recipe saved successfully!`,
+            type: 'is-success',
+            position: this.isMobile ? 'is-bottom' : 'is-top-right',
+            duration: 3000
+          }
+          eventBus.$emit('show-toast', data)
+        })
+    }
+  },
   getRecipes ({ commit, state }) {
     let uid = auth.currentUser.uid
     commit('clearRecipes')

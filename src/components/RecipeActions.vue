@@ -30,7 +30,7 @@
           Copy recipe
         </b-button>
         <b-button
-          v-else-if="editing || !id"
+          v-else-if="editing || $route.name === 'recipes'"
           icon-left="cloud-upload-alt"
           type="is-primary"
           outlined
@@ -45,7 +45,7 @@
                   outlined
                   inverted
                   @click="deletePrompt(id)"
-                  v-if="id"
+                  v-if="id && !friendId"
         >
         </b-button>
       </div>
@@ -82,13 +82,14 @@
       }),
       ...mapActions({
         deleteRecipe: 'deleteRecipe',
-        parseRecipe: 'parseRecipe'
+        parseRecipe: 'parseRecipe',
+        addRecipe: 'addRecipe'
       }),
       editRecipe (id) {
         this.$router.push({ name: 'edit-recipe', params: { recipeId: id } })
       },
       copyRecipe () {
-        this.save()
+        this.addRecipe(this.recipe)
       },
       stopEditing (id) {
         this.setEditing({ editing: false})
@@ -129,6 +130,7 @@
     z-index: 40;
     background: $primary;
     justify-content: flex-end;
+    min-height: 60px;
   }
   .button-group {
     display: flex;

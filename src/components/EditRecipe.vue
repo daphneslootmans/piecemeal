@@ -64,6 +64,9 @@
     },
     mounted () {
       eventBus.$on('update-recipe', this.updateRecipe)
+    },
+    beforeDestroy () {
+      eventBus.$off('update-recipe', this.updateRecipe)
     }
   }
 </script>

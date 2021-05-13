@@ -1,27 +1,36 @@
 <template>
   <div class="column is-3 sidebar">
-    <b-button icon-left="people-arrows"
+    <b-button icon-left="plus"
               type="is-primary"
               outlined
               expanded
               tag="router-link"
-              to="/friends"
-              :disabled="$route.name === 'friend-list'"
-    >Manage Friends
+              to="/recipes"
+              :disabled="$route.name === 'recipes'"
+    >Add a Recipe
     </b-button>
-    <template v-for="friend in friends" class="mt-2">
+    <b-button icon-left="book"
+              type="is-primary"
+              outlined
+              expanded
+              tag="router-link"
+              to="/recipes"
+    >My Recipes
+    </b-button>
+    <template v-for="friend in friends">
       <b-menu>
         <b-menu-list
           :label="friend.username"
         >
           <b-menu-item
             v-for="(category, index) in friend.categories"
+            v-if="categoryRecipes(category, friend.id) > 0"
             :key="category.name + index"
             icon="utensils"
             :active="activeCat === category.name"
             :expanded="category.expanded">
             <template slot="label" slot-scope="props">
-              {{ category.name }}
+                {{ category.name }}
               <b-icon
                 class="is-pulled-right"
                 :icon="props.expanded ? 'angle-down' : 'angle-up'">
@@ -77,7 +86,7 @@
         this.$router.push({ name: 'friend-recipe', params: { friendId: friendId, recipeId: recipeId } })
       },
       categoryRecipes (cat, id) {
-        return this.getFriendRecipes(id).some(recipe => recipe.category === cat)
+        return this.friendRecipes.filter(recipe => recipe.users.includes(id) && recipe.category === cat.name).length
       },
       getFriendRecipes (id) {
        return this.friendRecipes.filter(recipe => recipe.users.includes(id))
@@ -88,19 +97,8 @@
 </script>
 
 <style lang="scss">
-  .sidebar {
-    position: sticky;
-    top: 70px;
-
-    button {
-      margin-bottom: 1rem;
-    }
-
-    @media screen and (min-width: 769px) {
-      border-right: 1px solid $grey-lightest;
-      height: calc(100vh - 132px - 1.5rem);
-      max-height: calc(100vh - 132px - 1.5rem);
-    }
+  .menu {
+    margin-top: 1rem;
   }
 
   .menu-list {

@@ -51,6 +51,8 @@ const mutations = {
       directions: [],
       dropFiles: [],
       portions: null,
+      author: '',
+      source: ''
     }
   },
   setEditing (state, payload) {
@@ -100,6 +102,9 @@ const mutations = {
   },
   updatePortions (state, payload) {
     state.currentRecipe.portions = payload
+  },
+  updateSource (state, payload) {
+    state.currentRecipe.source = payload
   },
   setMobile (state, width) {
     state.isMobile = width <= 768

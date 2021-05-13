@@ -1,7 +1,7 @@
 <template>
   <div id="app">
     <navbar-top></navbar-top>
-    <recipe-actions :friendId="$route.params.friendId" :id="$route.params.recipeId" v-if="recipeRoute"></recipe-actions>
+    <recipe-actions :friendId="$route.params.friendId" :id="$route.params.recipeId"></recipe-actions>
     <notification-tray :notifications="notifications" v-show="notificationsOpen"></notification-tray>
     <section class="section main-section">
       <div class="container">
@@ -22,6 +22,7 @@
   import NotificationTray from '@/components/NotificationTray'
   import { auth, db, userCollection } from './firebaseConfig'
   import { mapState, mapMutations, mapActions } from 'vuex'
+  import { eventBus } from '@/services/event-bus'
 
   export default {
     components: {
@@ -92,10 +93,8 @@
           querySnapshot.forEach((doc) => {
             // doc.data() is never undefined for query doc snapshots
             let id = doc.id
-            console.log('user data: ', id)
             standard.forEach(cat => {
               cat.users = [id]
-              console.log(cat)
               // db.collection('categories').add(cat)
             })
           });
@@ -121,6 +120,14 @@
       checkWindow () {
         let windowWidth = window.innerWidth
         this.setMobile(windowWidth)
+      },
+      handleShowToast (data) {
+        this.$buefy.toast.open({
+          message: data.message,
+          type: data.type,
+          position: data.position,
+          duration: data.duration
+        })
       }
     },
     watch: {
@@ -151,6 +158,7 @@
         window.addEventListener('resize', this.checkWindow)
         this.checkWindow()
       })
+      eventBus.$on('show-toast', this.handleShowToast)
     }
   }
 </script>

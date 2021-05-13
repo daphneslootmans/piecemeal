@@ -54,6 +54,17 @@
             </b-field>
           </div>
 
+          <!--source-->
+          <div class="column is-full">
+            <b-field label="Source">
+              <b-input
+                type="text"
+                v-model="source"
+                rows="4"
+              ></b-input>
+            </b-field>
+          </div>
+
           <!--tags-->
           <div class="column is-full">
             <b-field label="Tags">
@@ -302,6 +313,14 @@
           this.$store.commit('updatePortions', value)
         }
       },
+      source: {
+        get () {
+          return this.recipe.source
+        },
+        set (value) {
+          this.$store.commit('updateSource', value)
+        }
+      }
     },
     methods: {
       deleteDropFiles (index) {

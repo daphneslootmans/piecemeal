@@ -17,12 +17,12 @@
 
         <div class="columns is-multiline is-mobile">
           <div class="column date-stamp" v-if="!isMobile">
-            <p class="is-italic">{{ recipe.createdAt | moment('DD-MM-YYYY HH:mm') }}</p>
+            <p class="is-italic">{{ recipe.createdAt | moment('DD-MM-YYYY HH:mm') }} <span v-if="recipe.author">- {{ authorName }}</span></p>
           </div>
           <div class="column is-narrow" v-if="recipe.portions > 0">
             <div class="prep-time has-text-right-desktop">
               <vue-fontawesome icon="utensils"/>
-              {{ recipe.portions }} pers
+              {{ recipe.portions }}
             </div>
           </div>
           <div class="column is-narrow">
@@ -136,6 +136,13 @@
             </div>
           </div>
         </div>
+
+        <!--   source-->
+        <div class="columns" v-if="recipe.source">
+          <div class="column pt-0">
+            <p>Source: {{ recipe.source }}</p>
+          </div>
+        </div>
       </section>
     </div>
     <div class="content" v-else>
@@ -148,20 +155,24 @@
 
 <script>
 import { mapActions, mapState } from 'vuex'
-  import RecipeActions from './RecipeActions'
+import RecipeActions from './RecipeActions'
+import { userCollection, auth } from '@/firebaseConfig'
 
   export default {
     name: 'ViewRecipe',
     components: { RecipeActions },
     data () {
-      return {}
+      return {
+        authorName: ''
+      }
     },
     computed: {
       ...mapState({
         recipes: 'recipes',
         friendRecipes: 'friendRecipes',
         recipe: 'currentRecipe',
-        isMobile: 'isMobile'
+        isMobile: 'isMobile',
+        user: 'currentUser'
       }),
       randIngredient () {
         let ingr = this.recipe.ingredients
@@ -186,6 +197,17 @@ import { mapActions, mapState } from 'vuex'
           recipeId: this.$route.params.recipeId
         }
         this.setRecipeById(payload)
+      },
+      findAuthorName (id) {
+        let uid = auth.currentUser.uid
+        if (id === uid) this.authorName = this.user.username
+        else {
+          userCollection.doc(id).get()
+            .then((doc) => {
+              this.authorName = doc.data().username
+            })
+            .catch((error) => console.log(error))
+        }
       }
     },
     watch: {
@@ -198,6 +220,9 @@ import { mapActions, mapState } from 'vuex'
       $route (to, from) {
         this.getRecipe()
       },
+      'recipe.author' () {
+        if (this.recipe.author.length > 0) this.findAuthorName(this.recipe.author)
+      }
     },
     mounted () {
     },
