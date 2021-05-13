@@ -76,12 +76,12 @@ import { auth, notificationCollection, timestamp, userCollection } from '@/fireb
         })
           .catch(error => console.log(error))
 
-        notificationCollection.add({
-          message: `${this.user.username} has removed you as a friend. You will no longer be able to view their recipes.`,
-          unread: true,
-          user: this.data.id,
-          timestamp: timestamp
-        })
+          notificationCollection.add({
+            message: this.data.status === 'active' ? `${this.user.username} has removed you as a friend. You will no longer be able to view their recipes.` : `${this.user.username} has revoked the friend request.`,
+            unread: true,
+            user: this.data.id,
+            timestamp: timestamp
+          })
 
         if (this.removeFriendLoading === 0) {
           this.$buefy.toast.open({
