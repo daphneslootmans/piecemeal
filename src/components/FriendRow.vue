@@ -26,7 +26,7 @@
 </template>
 
 <script>
-  import { auth, userCollection } from '@/firebaseConfig'
+import { auth, notificationCollection, timestamp, userCollection } from '@/firebaseConfig'
   import { mapState } from 'vuex'
 
   export default {
@@ -76,6 +76,13 @@
         })
           .catch(error => console.log(error))
 
+        notificationCollection.add({
+          message: `${this.user.username} has removed you as a friend. You will no longer be able to view their recipes.`,
+          unread: true,
+          user: this.data.id,
+          timestamp: timestamp
+        })
+
         if (this.removeFriendLoading === 0) {
           this.$buefy.toast.open({
             message: `Friend removed`,
@@ -104,6 +111,13 @@
         })
           .catch(error => console.log(error))
 
+        notificationCollection.add({
+          message: `${this.user.username} has accepted your friend request`,
+          unread: true,
+          user: this.data.id,
+          timestamp: timestamp
+        })
+
         if (this.verifying === 0) {
           this.$buefy.toast.open({
             message: `Friend request accepted`,
@@ -122,6 +136,7 @@
   .friend-row {
     display: flex;
     justify-content: space-between;
+    margin-bottom: 0.5rem;
 
     p {
       span {

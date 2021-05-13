@@ -17,7 +17,7 @@
               to="/recipes"
     >My Recipes
     </b-button>
-    <template v-for="friend in friends">
+    <template v-for="friend in friends" v-if="friend.status === 'active'">
       <b-menu>
         <b-menu-list
           :label="friend.username"
