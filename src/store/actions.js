@@ -9,6 +9,8 @@ const actions = {
       .then(() => {
         commit('clearUserData')
         commit('clearCurrentRecipe')
+        commit('clearFriendRecipes')
+        commit('clearFriends')
         router.push('/login')
       })
       .catch(error => { state.error = error })

@@ -165,6 +165,9 @@ const mutations = {
     let index = state.friends.findIndex(friend => friend.id === payload.id)
     state.friends.splice(index, 1)
   },
+  clearFriends (state) {
+    state.friends = []
+  },
   addFriendCategory (state, payload) {
     payload.doc.id = payload.id
     let friend = state.friends.find(friend => friend.id === payload.friendId)
