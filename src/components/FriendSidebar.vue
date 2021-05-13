@@ -60,9 +60,11 @@
     props: {
       source: String
     },
-    data: () => ({
-      activeCat: ''
-    }),
+    data () {
+      return {
+        activeCat: ''
+      }
+    },
     computed: {
       ...mapState({
         currentUser: 'currentUser',
@@ -74,11 +76,6 @@
       }
     },
     methods: {
-      ...mapActions({
-        signOut: 'signOut',
-        getUser: 'getUser',
-        setUser: 'setUser',
-      }),
       setActiveCat (cat) {
         this.activeCat = cat.name
       },

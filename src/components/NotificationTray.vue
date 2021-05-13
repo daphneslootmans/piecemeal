@@ -13,7 +13,7 @@
 </template>
 
 <script>
-import { auth, notificationCollection } from '../firebaseConfig.js'
+import { notificationCollection } from '@/firebaseConfig.js'
 export default {
   name: 'NotificationTray',
   props: {

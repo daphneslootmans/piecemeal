@@ -55,7 +55,7 @@
 
 <script>
   import { mapActions, mapState, mapMutations } from 'vuex'
-  import { eventBus } from '../services/event-bus'
+  import { eventBus } from '@/services/event-bus'
 
   export default {
     name: 'RecipeActions',
@@ -70,15 +70,14 @@
     },
     computed: {
       ...mapState({
-        recipes: 'recipes',
         recipe: 'currentRecipe',
-        editing: 'editing'
+        editing: 'editing',
+        isMobile: 'isMobile'
       }),
     },
     methods: {
       ...mapMutations({
-        setEditing: 'setEditing',
-        isMobile: 'isMobile'
+        setEditing: 'setEditing'
       }),
       ...mapActions({
         deleteRecipe: 'deleteRecipe',

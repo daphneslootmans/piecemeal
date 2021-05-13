@@ -20,7 +20,7 @@
   import NavbarTop from './components/NavbarTop'
   import RecipeActions from './components/RecipeActions'
   import NotificationTray from '@/components/NotificationTray'
-  import { auth, db, userCollection } from './firebaseConfig'
+  import { auth, db } from './firebaseConfig'
   import { mapState, mapMutations, mapActions } from 'vuex'
   import { eventBus } from '@/services/event-bus'
 
@@ -41,7 +41,7 @@
         return auth.currentUser
       },
       recipeRoute () {
-        return this.$route.params.id || this.$route.name === 'recipes' || this.$route.params.recipeId
+        return this.$route.name === 'recipes' || this.$route.params.recipeId
       }
     },
     methods: {
@@ -99,24 +99,7 @@
             })
           });
         });
-
-
       },
-      // checkRoute () {
-      //   console.log('checking route')
-      //   console.log('route params: ', this.$route.params)
-      //   if ((this.$route.params.id || this.$route.params.recipeId) && this.recipe) {
-      //     console.log('id in route')
-      //     if (this.recipe.id !== this.currentRecipe.id) {
-      //       this.setRecipe(this.recipe)
-      //     }
-      //   } else {
-      //     this.clearCurrentRecipe()
-      //   }
-      //   if (this.$route.name !== 'edit-recipe') {
-      //     this.setEditing({ editing: false })
-      //   }
-      // },
       checkWindow () {
         let windowWidth = window.innerWidth
         this.setMobile(windowWidth)
@@ -134,15 +117,8 @@
       user () {
         this.getRecipes()
       },
-      $route (to, from) {
-        // this.checkRoute()
+      $route () {
         this.setNavbarActive({navbarActive: false})
-      },
-      recipes () {
-        // if (this.recipes.length) this.checkRoute()
-      },
-      recipe () {
-        // if (this.recipe) this.checkRoute()
       }
     },
     created () {

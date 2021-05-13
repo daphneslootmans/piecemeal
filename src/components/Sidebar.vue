@@ -50,36 +50,29 @@
 
 <script>
   import { mapActions, mapState } from 'vuex'
-  import { auth } from '../firebaseConfig'
 
   export default {
     name: 'Sidebar',
     props: {
       source: String
     },
-    data: () => ({
-      activeCat: ''
-    }),
+    data () {
+      return {
+        activeCat: ''
+      }
+    },
     computed: {
       ...mapState({
         currentUser: 'currentUser',
         recipes: 'recipes'
-      }),
-      user () {
-        return auth.currentUser
-      }
+      })
     },
     methods: {
       ...mapActions({
-        signOut: 'signOut',
-        getUser: 'getUser',
-        setUser: 'setUser',
         getRecipes: 'getRecipes'
       }),
-      setActiveCat (cat, index) {
+      setActiveCat (cat) {
         this.activeCat = cat.name
-        let catExp = this.currentUser.categories[index].expanded
-        // this.$set(catExp, 'expanded', !catExp)
       },
       getRecipeDetail (id) {
         console.log('id: ', id)

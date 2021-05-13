@@ -61,7 +61,7 @@ const actions = {
       form.createdAt = new Date()
       form.users = [uid]
       form.isDeleted = false
-      if (!form.author) form.author = uid
+      if (form.author === '') form.author = uid
 
       return await db.collection('recipes').add(form)
         .then(docRef => {
@@ -134,6 +134,7 @@ const actions = {
     }
     commit('updateIngredients', ingredientsList)
     commit('updateDirections', directionsList)
+    return Promise.resolve()
   },
 
   deleteRecipe ({ state, commit }, id) {

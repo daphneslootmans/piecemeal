@@ -42,7 +42,7 @@
 <script>
   import FriendRow from './FriendRow'
   import { mapState } from 'vuex'
-  import { auth, userCollection } from '../firebaseConfig'
+  import { auth, userCollection } from '@/firebaseConfig'
 
   export default {
     name: 'FriendList',

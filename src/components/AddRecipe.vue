@@ -10,7 +10,7 @@
 </template>
 
 <script>
-  import { db, auth } from '@/firebaseConfig.js'
+  import { auth } from '@/firebaseConfig.js'
   import { mapMutations, mapState, mapActions } from 'vuex'
   import { eventBus } from '@/services/event-bus'
   import RecipeForm from './RecipeForm'
