@@ -11,6 +11,7 @@ const actions = {
         commit('clearCurrentRecipe')
         commit('clearFriendRecipes')
         commit('clearFriends')
+        commit('clearNotifications')
         router.push('/login')
       })
       .catch(error => { state.error = error })
@@ -52,6 +53,14 @@ const actions = {
         })
       }
     })
+  },
+
+  initializeStore ({ dispatch }) {
+    console.log('getting initial data')
+    dispatch('getUser')
+    dispatch('getRecipes')
+    dispatch('getNotifications')
+    dispatch('getFriends')
   },
 
   // RECIPES
@@ -161,31 +170,31 @@ const actions = {
   },
 
   // FRIENDS
-  getFriends ({commit, state, dispatch}) {
-    userCollection.doc(auth.currentUser.uid).collection('friends').onSnapshot( (snapshot) => {
+  getFriends ({ commit, state, dispatch }) {
+    userCollection.doc(auth.currentUser.uid).collection('friends').onSnapshot((snapshot) => {
       snapshot.docChanges().forEach((change) => {
         let payload = {
           doc: change.doc.data(),
           id: change.doc.data().id
         }
-        if (change.type === "added") {
+        if (change.type === 'added') {
           commit('addFriend', payload)
           if (change.doc.data().status === 'active') {
             dispatch('getFriendRecipes', change.doc.data().id)
             dispatch('getFriendCategories', change.doc.data().id)
           }
         }
-        if (change.type === "modified") {
+        if (change.type === 'modified') {
           commit('updateFriend', payload)
         }
-        if (change.type === "removed") {
+        if (change.type === 'removed') {
           commit('removeFriend', payload)
         }
       })
     })
   },
 
-  getFriendRecipes ({commit, state, dispatch}, id) {
+  getFriendRecipes ({ commit, state, dispatch }, id) {
     let uid = auth.currentUser.uid
     console.log('getting friend recipes from id: ', id)
     commit('clearFriendRecipes', id)
@@ -219,7 +228,7 @@ const actions = {
     }
   },
 
-  getFriendCategories({commit, state}, id) {
+  getFriendCategories ({ commit, state }, id) {
     let uid = auth.currentUser.uid
     console.log('getting friend categories from id: ', id)
     if (uid) {
@@ -247,29 +256,31 @@ const actions = {
   // SYSTEM
   getNotifications ({ commit, state }) {
     let uid = auth.currentUser.uid
+    console.log('getting notifications')
     commit('clearNotifications')
     if (uid) {
       let notificationsQuery = db.collection('notifications')
         .where('user', '==', auth.currentUser.uid)
       notificationsQuery.onSnapshot(snapshot => {
-        snapshot.forEach((doc) => {
-          if (snapshot.empty) {
-            console.log('No matching documents.')
-            return
-          }
-          snapshot.docChanges().forEach(change => {
-            if (snapshot.metadata) {
-              console.log('no pending writes')
-              if (change.type === 'added') {
-                commit('addNotification', change.doc)
-              } else if (change.type === 'modified') {
-                commit('updateNotification', change.doc)
-              } else if (change.type === 'removed') {
-                console.log('Removed recipe: ', change.doc)
-                commit('removeNotification', change.doc)
-              }
+        console.log('this is a notification doc')
+        if (snapshot.empty) {
+          console.log('No matching documents.')
+          return
+        }
+        snapshot.docChanges().forEach(change => {
+          if (snapshot.metadata) {
+            console.log('no pending writes')
+            if (change.type === 'added') {
+              console.log('Added Notification: ', change.doc)
+              commit('addNotification', change.doc)
+            } else if (change.type === 'modified') {
+              console.log('Updated Notification: ', change.doc)
+              commit('updateNotification', change.doc)
+            } else if (change.type === 'removed') {
+              console.log('Removed Notification: ', change.doc)
+              commit('removeNotification', change.doc)
             }
-          })
+          }
         })
       })
     } else {

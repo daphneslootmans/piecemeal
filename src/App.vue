@@ -53,11 +53,8 @@
         setNavbarActive: 'setNavbarActive'
       }),
       ...mapActions({
-        getUser: 'getUser',
-        setUser: 'setUser',
         getRecipes: 'getRecipes',
-        getNotifications: 'getNotifications',
-        getFriends: 'getFriends'
+        initialize: 'initializeStore'
       }),
       setCategories () {
         // tmp function to edit standard categories
@@ -123,10 +120,8 @@
     },
     created () {
       if (this.user) {
-        this.getUser()
-        this.getRecipes()
-        this.getNotifications()
-        this.getFriends()
+        console.log('getting user stuff from app.vue')
+        this.initialize()
       }
     },
     mounted () {
