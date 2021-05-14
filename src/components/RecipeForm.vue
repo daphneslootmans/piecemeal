@@ -330,12 +330,18 @@
     },
     watch: {
       currentUser () {
-        if (!this.editing && this.categories.length > 0) {
+        if (!this.editing && this.categories.length > 0 && this.category === '') {
           this.$store.commit('updateCategory', this.categories[0].id)
         }
       },
       recipe () {
-        if (!this.editing && this.categories.length > 0) {
+        if (!this.editing && this.categories.length > 0 && this.category === '') {
+          console.log('adding recipe, set category to: ', this.categories[0].id)
+          this.$store.commit('updateCategory', this.categories[0].id)
+        }
+      },
+      categories () {
+        if (!this.editing && this.categories.length > 0 && this.category === '') {
           console.log('adding recipe, set category to: ', this.categories[0].id)
           this.$store.commit('updateCategory', this.categories[0].id)
         }
