@@ -171,6 +171,22 @@ const mutations = {
   clearFriends (state) {
     state.friends = []
   },
+  addUserCategory (state, payload) {
+    payload.doc.id = payload.id
+    state.categories.push(payload.doc)
+  },
+  updateUserCategory (state, payload) {
+    payload.doc.id = payload.id
+    let index = state.categories.findIndex(cat => cat.id === payload.id)
+    state.categories.splice(index, 1, payload.doc)
+  },
+  removeUserCategory (state, payload) {
+    let index = state.categories.findIndex(cat => cat.id === payload.id)
+    state.categories.splice(index, 1)
+  },
+  clearUserCategories (state) {
+    state.categories = []
+  },
   addFriendCategory (state, payload) {
     payload.doc.id = payload.id
     let friend = state.friends.find(friend => friend.id === payload.friendId)

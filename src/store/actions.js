@@ -12,6 +12,7 @@ const actions = {
         commit('clearFriendRecipes')
         commit('clearFriends')
         commit('clearNotifications')
+        commit('clearUserCategories')
         router.push('/login')
       })
       .catch(error => { state.error = error })
@@ -27,12 +28,13 @@ const actions = {
       .catch(error => { state.error = error })
   },
 
-  getUser ({ commit }) {
+  getUser ({ commit, dispatch }) {
     let users = db.collection('users')
     users.doc(auth.currentUser.uid).onSnapshot(snapshot => {
       console.log('User data:', snapshot.data())
       commit('setCurrentUser', snapshot.data())
     })
+    dispatch('getUserCategories')
   },
 
   setUser ({ state }, payload) {
@@ -53,6 +55,30 @@ const actions = {
         })
       }
     })
+  },
+
+  getUserCategories ({ state, commit }) {
+    let uid = auth.currentUser.uid
+    console.log('getting user categories')
+    if (uid) {
+      categoriesCollection.where('users', 'array-contains', uid).onSnapshot(snapshot => {
+        snapshot.docChanges().forEach(change => {
+          let payload = {
+            doc: change.doc.data(),
+            id: change.doc.id
+          }
+          if (snapshot.metadata) {
+            if (change.type === 'added') {
+              commit('addUserCategory', payload)
+            } else if (change.type === 'modified') {
+              commit('updateUserCategory', payload)
+            } else if (change.type === 'removed') {
+              commit('removeUserCategory', payload)
+            }
+          }
+        })
+      })
+    }
   },
 
   initializeStore ({ dispatch }) {

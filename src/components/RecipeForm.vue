@@ -24,8 +24,8 @@
                 v-model="category"
               >
                 <option
-                  v-for="option in currentUser.categories"
-                  :value="option.name"
+                  v-for="option in categories"
+                  :value="option.id"
                   :key="option.name"
                 >
                   {{ option.name }}
@@ -204,6 +204,7 @@
         currentUser: 'currentUser',
         recipes: 'recipes',
         recipe: 'currentRecipe',
+        categories: 'categories',
         editing: 'editing'
       }),
       user () {
@@ -329,10 +330,16 @@
     },
     watch: {
       currentUser () {
-        if (!this.editing && this.currentUser.categories) {
-          this.category = this.currentUser.categories[0].name
+        if (!this.editing && this.categories) {
+          this.$store.commit('updateCategory', this.categories[0].id)
         }
       },
+      recipe () {
+        if (!this.editing && this.categories) {
+          console.log('adding recipe, set category to: ', this.categories[0].id)
+          this.$store.commit('updateCategory', this.categories[0].id)
+        }
+      }
     },
     mounted () {
     }
