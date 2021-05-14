@@ -17,7 +17,7 @@
 
         <div class="columns is-multiline is-mobile">
           <div class="column date-stamp" v-if="!isMobile">
-            <p class="is-italic">{{ recipe.createdAt | moment('DD-MM-YYYY HH:mm') }} <span v-if="recipe.author">- {{ authorName }}</span></p>
+            <p class="is-italic">{{ recipe.createdAt | moment('DD-MM-YYYY HH:mm') }} <span v-if="recipe.copiedFrom">- copied from {{ originName }}</span></p>
           </div>
           <div class="column is-narrow" v-if="recipe.portions > 0">
             <div class="prep-time has-text-right-desktop">
@@ -163,7 +163,7 @@ import { userCollection, auth } from '@/firebaseConfig'
     components: { RecipeActions },
     data () {
       return {
-        authorName: ''
+        originName: ''
       }
     },
     computed: {
@@ -198,13 +198,13 @@ import { userCollection, auth } from '@/firebaseConfig'
         }
         this.setRecipeById(payload)
       },
-      findAuthorName (id) {
+      findUsername (id) {
         let uid = auth.currentUser.uid
-        if (id === uid) this.authorName = this.user.username
+        if (id === uid) this.originName = this.user.username
         else {
           userCollection.doc(id).get()
             .then((doc) => {
-              this.authorName = doc.data().username
+              this.originName = doc.data().username
             })
             .catch((error) => console.log(error))
         }
@@ -220,8 +220,8 @@ import { userCollection, auth } from '@/firebaseConfig'
       $route (to, from) {
         this.getRecipe()
       },
-      'recipe.author' () {
-        if (this.recipe.author.length > 0) this.findAuthorName(this.recipe.author)
+      'recipe.copiedFrom' () {
+        if (this.recipe.copiedFrom) this.findUsername(this.recipe.copiedFrom)
       }
     },
     mounted () {
