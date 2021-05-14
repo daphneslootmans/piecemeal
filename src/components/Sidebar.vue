@@ -43,6 +43,26 @@
             @click="getRecipeDetail(recipe.id)"
           ></b-menu-item>
         </b-menu-item>
+        <b-menu-item
+          key="unsorted-recipes"
+          v-if="unsortedRecipes.length"
+          icon="utensils"
+          :expanded="true">
+          <template slot="label" slot-scope="props">
+            Unsorted recipes
+            <b-icon
+              class="is-pulled-right"
+              :icon="props.expanded ? 'angle-down' : 'angle-up'">
+            </b-icon>
+          </template>
+          <b-menu-item
+            v-for="recipe in unsortedRecipes"
+            :key="recipe.id"
+            v-if="!recipe.isDeleted"
+            :label="recipe.title"
+            @click="getRecipeDetail(recipe.id)"
+          ></b-menu-item>
+        </b-menu-item>
       </b-menu-list>
     </b-menu>
   </div>
@@ -66,7 +86,15 @@
         currentUser: 'currentUser',
         recipes: 'recipes',
         categories: 'categories'
-      })
+      }),
+      unsortedRecipes () {
+        let unsorted = []
+        this.recipes.forEach(recipe => {
+          let category = this.categories.find(cat => cat.id === recipe.category)
+          if (!category) unsorted.push(recipe)
+        })
+        return unsorted
+      }
     },
     methods: {
       ...mapActions({
