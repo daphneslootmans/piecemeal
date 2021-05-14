@@ -1,6 +1,6 @@
 <template>
   <transition name="fade">
-    <div class="notification-tray" v-on-clickaway="clickAway">
+    <div class="notification-tray" v-on-clickaway="clickAway" v-if="notifications.some(note => note.unread)">
       <b-notification v-for="notification in notifications"
                       :active.sync="notification.unread"
                       aria-close-label="Close notification"
