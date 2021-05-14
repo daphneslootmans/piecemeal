@@ -135,6 +135,9 @@ const mutations = {
   toggleNotifications (state) {
     state.notificationsOpen = !state.notificationsOpen
   },
+  closeNotifications (state) {
+    state.notificationsOpen = false
+  },
   clearFriendRecipes (state, id) {
     state.friendRecipes[id] = []
   },

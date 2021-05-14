@@ -18,7 +18,7 @@
         <div class="buttons">
           <b-button icon-left="bell"
                     type="is-primary"
-                    :class="[{'new-notifications': newNotifications}]"
+                    :class="[{'new-notifications': newNotifications}, 'notification-toggle']"
                     @click="toggleNotifications"
           ></b-button>
           <b-button tag="router-link"

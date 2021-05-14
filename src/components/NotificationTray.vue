@@ -1,6 +1,6 @@
 <template>
   <transition name="fade">
-    <div class="notification-tray">
+    <div class="notification-tray" v-on-clickaway="clickAway">
       <b-notification v-for="notification in notifications"
                       :active.sync="notification.unread"
                       aria-close-label="Close notification"
@@ -17,6 +17,9 @@
 
 <script>
 import { notificationCollection } from '@/firebaseConfig.js'
+import { mixin as clickaway } from 'vue-clickaway';
+import { mapMutations } from 'vuex'
+
 export default {
   name: 'NotificationTray',
   props: {
@@ -24,11 +27,15 @@ export default {
       type: Array
     }
   },
+  mixins: [ clickaway ],
   data () {
     return {}
   },
   computed: {},
   methods: {
+    ...mapMutations({
+      closeNotifications: 'closeNotifications'
+    }),
     updateNotification (notification) {
       this.loading = true
       notification.unread = false
@@ -37,6 +44,10 @@ export default {
         .then(() => {
           this.loading = false
         })
+    },
+    clickAway (event) {
+      console.log(event)
+      if (!event.target.parentElement.classList.contains('notification-toggle')) this.closeNotifications()
     }
   },
   watch: {}
