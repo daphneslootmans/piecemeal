@@ -190,7 +190,7 @@ import { userCollection, auth } from '@/firebaseConfig'
       getCategoryName () {
         if (this.recipe && this.categories.length > 0) {
           let cat = this.categories.find(cat => cat.id === this.recipe.category)
-          return cat ? cat : undefined
+          return cat ? cat.name : undefined
         }
       }
     },
