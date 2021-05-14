@@ -47,7 +47,7 @@
               <div v-for="tag in recipe.tags">
                 {{ tag }}
               </div>
-              <div>{{ recipe.category }}</div>
+              <div>{{ getCategoryName }}</div>
             </div>
           </div>
         </div>
@@ -172,7 +172,8 @@ import { userCollection, auth } from '@/firebaseConfig'
         friendRecipes: 'friendRecipes',
         recipe: 'currentRecipe',
         isMobile: 'isMobile',
-        user: 'currentUser'
+        user: 'currentUser',
+        categories: 'categories'
       }),
       randIngredient () {
         let ingr = this.recipe.ingredients
@@ -184,6 +185,11 @@ import { userCollection, auth } from '@/firebaseConfig'
         let mat = this.recipe.materials
         if (mat.length > 1) {
           return mat[Math.random() * mat.length | 0]
+        }
+      },
+      getCategoryName () {
+        if (this.recipe && this.categories.length > 0) {
+          return this.categories.find(cat => cat.id === this.recipe.category).name
         }
       }
     },
