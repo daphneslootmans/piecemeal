@@ -45,7 +45,11 @@
       }),
       handleAddRecipe (form) {
         this.loading = true
-        this.addRecipe(form).then(() => this.loading = false )
+        this.addRecipe(form).then((response) => {
+          this.loading = false
+          this.clearRecipe()
+          this.$router.push({ name: 'recipe', params: { recipeId: response.id } })
+        })
       }
     },
     watch: {

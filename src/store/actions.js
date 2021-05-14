@@ -66,13 +66,14 @@ const actions = {
   // RECIPES
   async addRecipe ({ commit, state }, form) {
     let uid = auth.currentUser.uid
+    let doc = ''
     if (uid) {
       form.createdAt = new Date()
       form.users = [uid]
       form.isDeleted = false
       if (form.author === '') form.author = uid
 
-      return await db.collection('recipes').add(form)
+      await db.collection('recipes').add(form)
         .then(docRef => {
           let data = {
             message: `Recipe saved successfully!`,
@@ -81,7 +82,9 @@ const actions = {
             duration: 3000
           }
           eventBus.$emit('show-toast', data)
+          doc = docRef
         })
+      return doc
     }
   },
   getRecipes ({ commit, state }) {
