@@ -49,7 +49,7 @@
           icon="utensils"
           :expanded="true">
           <template slot="label" slot-scope="props">
-            Unsorted recipes
+            Unsorted
             <b-icon
               class="is-pulled-right"
               :icon="props.expanded ? 'angle-down' : 'angle-up'">

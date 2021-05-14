@@ -47,7 +47,7 @@
               <div v-for="tag in recipe.tags">
                 {{ tag }}
               </div>
-              <div>{{ getCategoryName }}</div>
+              <div v-if="getCategoryName">{{ getCategoryName }}</div>
             </div>
           </div>
         </div>
@@ -189,7 +189,8 @@ import { userCollection, auth } from '@/firebaseConfig'
       },
       getCategoryName () {
         if (this.recipe && this.categories.length > 0) {
-          return this.categories.find(cat => cat.id === this.recipe.category).name
+          let cat = this.categories.find(cat => cat.id === this.recipe.category)
+          return cat ? cat : undefined
         }
       }
     },
