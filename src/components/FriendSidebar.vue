@@ -25,9 +25,9 @@
           <b-menu-item
             v-for="(category, index) in friend.categories"
             v-if="categoryRecipes(category, friend.id) > 0"
-            :key="category.name + index"
+            :key="category.id + index"
             icon="utensils"
-            :active="activeCat === category.name"
+            :active="activeCat === category.id"
             :expanded="category.expanded">
             <template slot="label" slot-scope="props">
                 {{ category.name }}
@@ -39,7 +39,7 @@
             <b-menu-item
               v-for="recipe in getFriendRecipes(friend.id)"
               :key="recipe.id"
-              v-if="recipe.category === category.name && !recipe.isDeleted"
+              v-if="recipe.category === category.id && !recipe.isDeleted"
               :label="recipe.title"
               @click="getRecipeDetail(friend.id, recipe.id)"
             ></b-menu-item>
@@ -77,13 +77,13 @@
     },
     methods: {
       setActiveCat (cat) {
-        this.activeCat = cat.name
+        this.activeCat = cat.id
       },
       getRecipeDetail (friendId, recipeId) {
         this.$router.push({ name: 'friend-recipe', params: { friendId: friendId, recipeId: recipeId } })
       },
       categoryRecipes (cat, id) {
-        return this.friendRecipes.filter(recipe => recipe.users.includes(id) && recipe.category === cat.name).length
+        return this.friendRecipes.filter(recipe => recipe.users.includes(id) && recipe.category === cat.id).length
       },
       getFriendRecipes (id) {
        return this.friendRecipes.filter(recipe => recipe.users.includes(id))

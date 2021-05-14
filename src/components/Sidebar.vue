@@ -22,11 +22,11 @@
         label="Recipes"
       >
         <b-menu-item
-          v-for="(category, index) in currentUser.categories"
+          v-for="(category, index) in categories"
           :key="category.name + index"
-          v-if="categoryRecipes(category.name)"
+          v-if="categoryRecipes(category.id)"
           icon="utensils"
-          :active="activeCat === category.name"
+          :active="activeCat === category.id"
           :expanded="category.expanded">
           <template slot="label" slot-scope="props">
             {{ category.name }}
@@ -38,7 +38,7 @@
           <b-menu-item
             v-for="recipe in recipes"
             :key="recipe.id"
-            v-if="recipe.category === category.name && !recipe.isDeleted"
+            v-if="recipe.category === category.id && !recipe.isDeleted"
             :label="recipe.title"
             @click="getRecipeDetail(recipe.id)"
           ></b-menu-item>
@@ -64,7 +64,8 @@
     computed: {
       ...mapState({
         currentUser: 'currentUser',
-        recipes: 'recipes'
+        recipes: 'recipes',
+        categories: 'categories'
       })
     },
     methods: {
@@ -72,7 +73,7 @@
         getRecipes: 'getRecipes'
       }),
       setActiveCat (cat) {
-        this.activeCat = cat.name
+        this.activeCat = cat.id
       },
       getRecipeDetail (id) {
         console.log('id: ', id)
