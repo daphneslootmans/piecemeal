@@ -10,16 +10,14 @@
 </template>
 
 <script>
-  import { auth, recipeCollection } from '../firebaseConfig.js'
+  import { auth, recipeCollection } from '@/firebaseConfig.js'
   import { mapState, mapMutations } from 'vuex'
-  import { eventBus } from '../services/event-bus'
+  import { eventBus } from '@/services/event-bus'
   import RecipeForm from './RecipeForm'
-  import RecipeActions from './RecipeActions'
 
   export default {
     name: 'EditRecipe',
     components: {
-      RecipeActions,
       RecipeForm
     },
     data () {
@@ -64,6 +62,9 @@
     },
     mounted () {
       eventBus.$on('update-recipe', this.updateRecipe)
+    },
+    beforeDestroy () {
+      eventBus.$off('update-recipe', this.updateRecipe)
     }
   }
 </script>

@@ -1,7 +1,8 @@
 <template>
   <div id="app">
     <navbar-top></navbar-top>
-    <recipe-actions :id="$route.params.id" v-if="recipeRoute"></recipe-actions>
+    <recipe-actions :friendId="$route.params.friendId" :id="$route.params.recipeId"></recipe-actions>
+    <notification-tray :notifications="notifications" v-show="notificationsOpen"></notification-tray>
     <section class="section main-section">
       <div class="container">
         <div class="columns">
@@ -12,36 +13,35 @@
         </div>
       </div>
     </section>
-
   </div>
 </template>
 
 <script>
   import NavbarTop from './components/NavbarTop'
   import RecipeActions from './components/RecipeActions'
+  import NotificationTray from '@/components/NotificationTray'
   import { auth, db } from './firebaseConfig'
   import { mapState, mapMutations, mapActions } from 'vuex'
+  import { eventBus } from '@/services/event-bus'
 
   export default {
     components: {
-      NavbarTop, RecipeActions
+      NavbarTop, RecipeActions, NotificationTray
     },
     computed: {
       ...mapState({
         currentRecipe: 'currentRecipe',
         recipes: 'recipes',
-        isMobile: 'isMobile'
+        friendRecipes: 'friendRecipes',
+        isMobile: 'isMobile',
+        notifications: 'notifications',
+        notificationsOpen: 'notificationsOpen'
       }),
       user () {
         return auth.currentUser
       },
-      recipe () {
-        if (this.$route.params.id && this.recipes.length) {
-          return this.recipes.find(recipe => recipe.id === this.$route.params.id)
-        }
-      },
       recipeRoute () {
-        return this.$route.params.id || this.$route.name === 'recipes'
+        return this.$route.name === 'recipes' || this.$route.params.recipeId
       }
     },
     methods: {
@@ -53,74 +53,75 @@
         setNavbarActive: 'setNavbarActive'
       }),
       ...mapActions({
-        getUser: 'getUser',
-        setUser: 'setUser',
-        getRecipes: 'getRecipes'
+        getRecipes: 'getRecipes',
+        initialize: 'initializeStore'
       }),
       setCategories () {
         // tmp function to edit standard categories
-        let data = {
-          standard:
+          let standard =
             [
               {
                 name: 'Dinner',
-                expanded: true
+                expanded: true,
+                order: 3
               },
               {
                 name: 'Lunch',
-                expanded: true
+                expanded: true,
+                order: 1
               },
               {
                 name: 'Breakfast',
-                expanded: true
+                expanded: true,
+                order: 0
               },
               {
                 name: 'Side Dish',
-                expanded: true
+                expanded: true,
+                order: 2
               },
               {
                 name: 'Dessert',
-                expanded: true
+                expanded: true,
+                order: 4
               },
             ]
-        }
-        db.collection('users').doc('categories').set(data)
-      },
-      checkRoute () {
-        console.log('checking route')
-        if (this.$route.params.id && this.recipe) {
-          console.log('id in route')
-          if (this.recipe.id !== this.currentRecipe.id) {
-            this.setRecipe(this.recipe)
-          }
-        } else {
-          this.clearCurrentRecipe()
-        }
-        if (this.$route.name !== 'edit-recipe') {
-          this.setEditing({ editing: false })
-        }
+        db.collection("users").get().then((querySnapshot) => {
+          querySnapshot.forEach((doc) => {
+            // doc.data() is never undefined for query doc snapshots
+            let id = doc.id
+            standard.forEach(cat => {
+              cat.users = [id]
+              // db.collection('categories').add(cat)
+            })
+          });
+        });
       },
       checkWindow () {
         let windowWidth = window.innerWidth
         this.setMobile(windowWidth)
+      },
+      handleShowToast (data) {
+        this.$buefy.toast.open({
+          message: data.message,
+          type: data.type,
+          position: data.position,
+          duration: data.duration
+        })
       }
     },
     watch: {
       user () {
         this.getRecipes()
       },
-      $route (to, from) {
-        this.checkRoute()
+      $route () {
         this.setNavbarActive({navbarActive: false})
-      },
-      recipes () {
-        if (this.recipes.length) this.checkRoute()
       }
     },
     created () {
       if (this.user) {
-        this.getUser()
-        this.getRecipes()
+        console.log('getting user stuff from app.vue')
+        this.initialize()
       }
     },
     mounted () {
@@ -128,6 +129,7 @@
         window.addEventListener('resize', this.checkWindow)
         this.checkWindow()
       })
+      eventBus.$on('show-toast', this.handleShowToast)
     }
   }
 </script>
@@ -136,10 +138,6 @@
   @import "sass/main.scss";
 
   #app {
-    font-family: 'Avenir', Helvetica, Arial, sans-serif;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-    color: #2c3e50;
     min-height: 100vh;
   }
 

@@ -1,18 +1,32 @@
 <template>
   <div class="column is-3 sidebar">
-    <b-button icon-left="plus" type="is-primary" outlined expanded @click="addRecipe">
-      Add a recipe
+    <b-button icon-left="plus"
+              type="is-primary"
+              outlined
+              expanded
+              tag="router-link"
+              to="/recipes"
+              :disabled="$route.name === 'recipes'"
+    >Add a Recipe
+    </b-button>
+    <b-button icon-left="people-arrows"
+              type="is-primary"
+              outlined
+              expanded
+              tag="router-link"
+              to="/friends"
+    >Friend Recipes
     </b-button>
     <b-menu>
       <b-menu-list
         label="Recipes"
       >
         <b-menu-item
-          v-for="(category, index) in currentUser.categories"
+          v-for="(category, index) in categories"
           :key="category.name + index"
-          v-if="categoryRecipes(category.name)"
+          v-if="categoryRecipes(category.id)"
           icon="utensils"
-          :active="activeCat === category.name"
+          :active="activeCat === category.id"
           :expanded="category.expanded">
           <template slot="label" slot-scope="props">
             {{ category.name }}
@@ -24,7 +38,27 @@
           <b-menu-item
             v-for="recipe in recipes"
             :key="recipe.id"
-            v-if="recipe.category === category.name && !recipe.isDeleted"
+            v-if="recipe.category === category.id && !recipe.isDeleted"
+            :label="recipe.title"
+            @click="getRecipeDetail(recipe.id)"
+          ></b-menu-item>
+        </b-menu-item>
+        <b-menu-item
+          key="unsorted-recipes"
+          v-if="unsortedRecipes.length"
+          icon="utensils"
+          :expanded="true">
+          <template slot="label" slot-scope="props">
+            Unsorted
+            <b-icon
+              class="is-pulled-right"
+              :icon="props.expanded ? 'angle-down' : 'angle-up'">
+            </b-icon>
+          </template>
+          <b-menu-item
+            v-for="recipe in unsortedRecipes"
+            :key="recipe.id"
+            v-if="!recipe.isDeleted"
             :label="recipe.title"
             @click="getRecipeDetail(recipe.id)"
           ></b-menu-item>
@@ -36,43 +70,42 @@
 
 <script>
   import { mapActions, mapState } from 'vuex'
-  import { auth } from '../firebaseConfig'
 
   export default {
     name: 'Sidebar',
     props: {
       source: String
     },
-    data: () => ({
-      activeCat: ''
-    }),
+    data () {
+      return {
+        activeCat: ''
+      }
+    },
     computed: {
       ...mapState({
         currentUser: 'currentUser',
-        recipes: 'recipes'
+        recipes: 'recipes',
+        categories: 'categories'
       }),
-      user () {
-        return auth.currentUser
+      unsortedRecipes () {
+        let unsorted = []
+        this.recipes.forEach(recipe => {
+          let category = this.categories.find(cat => cat.id === recipe.category)
+          if (!category) unsorted.push(recipe)
+        })
+        return unsorted
       }
     },
     methods: {
       ...mapActions({
-        signOut: 'signOut',
-        getUser: 'getUser',
-        setUser: 'setUser',
         getRecipes: 'getRecipes'
       }),
-      addRecipe () {
-        this.$router.push({ name: 'recipes' })
-      },
-      setActiveCat (cat, index) {
-        this.activeCat = cat.name
-        let catExp = this.currentUser.categories[index].expanded
-        // this.$set(catExp, 'expanded', !catExp)
+      setActiveCat (cat) {
+        this.activeCat = cat.id
       },
       getRecipeDetail (id) {
         console.log('id: ', id)
-        this.$router.push({ name: 'recipe', params: { id } })
+        this.$router.push({ name: 'recipe', params: { recipeId: id } })
       },
       categoryRecipes (cat) {
         return this.recipes.some(recipe => recipe.category === cat)
@@ -87,7 +120,7 @@
     position: sticky;
     top: 70px;
 
-    button {
+    > a, > button {
       margin-bottom: 1rem;
     }
 

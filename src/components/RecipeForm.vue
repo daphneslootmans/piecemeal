@@ -24,8 +24,8 @@
                 v-model="category"
               >
                 <option
-                  v-for="option in currentUser.categories"
-                  :value="option.name"
+                  v-for="option in categories"
+                  :value="option.id"
                   :key="option.name"
                 >
                   {{ option.name }}
@@ -51,6 +51,17 @@
           <div class="column is-narrow">
             <b-field label="Rating">
               <b-rate icon="heart" spaced v-model="rating"></b-rate>
+            </b-field>
+          </div>
+
+          <!--source-->
+          <div class="column is-full">
+            <b-field label="Source">
+              <b-input
+                type="text"
+                v-model="source"
+                rows="4"
+              ></b-input>
             </b-field>
           </div>
 
@@ -193,6 +204,7 @@
         currentUser: 'currentUser',
         recipes: 'recipes',
         recipe: 'currentRecipe',
+        categories: 'categories',
         editing: 'editing'
       }),
       user () {
@@ -302,6 +314,14 @@
           this.$store.commit('updatePortions', value)
         }
       },
+      source: {
+        get () {
+          return this.recipe.source
+        },
+        set (value) {
+          this.$store.commit('updateSource', value)
+        }
+      }
     },
     methods: {
       deleteDropFiles (index) {
@@ -310,10 +330,22 @@
     },
     watch: {
       currentUser () {
-        if (!this.editing && this.currentUser.categories) {
-          this.category = this.currentUser.categories[0].name
+        if (!this.editing && this.categories.length > 0 && this.category === '') {
+          this.$store.commit('updateCategory', this.categories[0].id)
         }
       },
+      recipe () {
+        if (!this.editing && this.categories.length > 0 && this.category === '') {
+          console.log('adding recipe, set category to: ', this.categories[0].id)
+          this.$store.commit('updateCategory', this.categories[0].id)
+        }
+      },
+      categories () {
+        if (!this.editing && this.categories.length > 0 && this.category === '') {
+          console.log('adding recipe, set category to: ', this.categories[0].id)
+          this.$store.commit('updateCategory', this.categories[0].id)
+        }
+      }
     },
     mounted () {
     }

@@ -17,12 +17,12 @@
 
         <div class="columns is-multiline is-mobile">
           <div class="column date-stamp" v-if="!isMobile">
-            <p class="is-italic">{{ recipe.createdAt | moment('DD-MM-YYYY HH:mm') }}</p>
+            <p class="is-italic">{{ recipe.createdAt | moment('DD-MM-YYYY HH:mm') }} <span v-if="recipe.copiedFrom">- copied from {{ originName }}</span></p>
           </div>
           <div class="column is-narrow" v-if="recipe.portions > 0">
             <div class="prep-time has-text-right-desktop">
               <vue-fontawesome icon="utensils"/>
-              {{ recipe.portions }} pers
+              {{ recipe.portions }}
             </div>
           </div>
           <div class="column is-narrow">
@@ -47,7 +47,7 @@
               <div v-for="tag in recipe.tags">
                 {{ tag }}
               </div>
-              <div>{{ recipe.category }}</div>
+              <div v-if="getCategoryName">{{ getCategoryName }}</div>
             </div>
           </div>
         </div>
@@ -108,7 +108,7 @@
               </header>
               <div class="card-content">
                 <ol>
-                  <li v-for="(step, index) in recipe.directions" class="">
+                  <li v-for="(step) in recipe.directions" class="">
                     <p class="">{{ step }}</p>
                   </li>
                 </ol>
@@ -136,6 +136,13 @@
             </div>
           </div>
         </div>
+
+        <!--   source-->
+        <div class="columns" v-if="recipe.source">
+          <div class="column pt-0">
+            <p>Source: {{ recipe.source }}</p>
+          </div>
+        </div>
       </section>
     </div>
     <div class="content" v-else>
@@ -147,20 +154,26 @@
 </template>
 
 <script>
-  import { mapState } from 'vuex'
-  import RecipeActions from './RecipeActions'
+import { mapActions, mapState } from 'vuex'
+import RecipeActions from './RecipeActions'
+import { userCollection, auth } from '@/firebaseConfig'
 
   export default {
     name: 'ViewRecipe',
     components: { RecipeActions },
     data () {
-      return {}
+      return {
+        originName: ''
+      }
     },
     computed: {
       ...mapState({
         recipes: 'recipes',
+        friendRecipes: 'friendRecipes',
         recipe: 'currentRecipe',
-        isMobile: 'isMobile'
+        isMobile: 'isMobile',
+        user: 'currentUser',
+        categories: 'categories'
       }),
       randIngredient () {
         let ingr = this.recipe.ingredients
@@ -174,13 +187,54 @@
           return mat[Math.random() * mat.length | 0]
         }
       },
-      recipeNotEmpty () {
-        return Object.entries(this.recipe).length !== 0
+      getCategoryName () {
+        if (this.recipe && this.categories.length > 0) {
+          let cat = this.categories.find(cat => cat.id === this.recipe.category)
+          return cat ? cat.name : undefined
+        }
       }
     },
     methods: {
+      ...mapActions({
+        setRecipeById: 'setRecipeById'
+      }),
+      getRecipe () {
+        let payload = {
+          friendId: this.$route.params.friendId,
+          recipeId: this.$route.params.recipeId
+        }
+        this.setRecipeById(payload)
+      },
+      findUsername (id) {
+        let uid = auth.currentUser.uid
+        if (id === uid) this.originName = this.user.username
+        else {
+          userCollection.doc(id).get()
+            .then((doc) => {
+              this.originName = doc.data().username
+            })
+            .catch((error) => console.log(error))
+        }
+      }
+    },
+    watch: {
+      recipes () {
+        this.getRecipe()
+      },
+      friendRecipes () {
+        this.getRecipe()
+      },
+      $route (to, from) {
+        this.getRecipe()
+      },
+      'recipe.copiedFrom' () {
+        if (this.recipe.copiedFrom) this.findUsername(this.recipe.copiedFrom)
+      }
     },
     mounted () {
+    },
+    created () {
+      this.getRecipe()
     }
   }
 </script>

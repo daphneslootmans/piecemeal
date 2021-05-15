@@ -51,6 +51,8 @@ const mutations = {
       directions: [],
       dropFiles: [],
       portions: null,
+      author: '',
+      source: ''
     }
   },
   setEditing (state, payload) {
@@ -101,11 +103,106 @@ const mutations = {
   updatePortions (state, payload) {
     state.currentRecipe.portions = payload
   },
+  updateSource (state, payload) {
+    state.currentRecipe.source = payload
+  },
   setMobile (state, width) {
     state.isMobile = width <= 768
   },
   setNavbarActive (state, payload) {
     state.navbarActive = payload.navbarActive
+  },
+  updateNotification (state, notification) {
+    let data = notification.data()
+    data.id = notification.id
+    let index = state.notifications.findIndex(rec => rec.id === data.id)
+    state.notifications.splice(index, 1, data)
+  },
+  addNotification (state, notification) {
+    let data = notification.data()
+    data.id = notification.id
+    state.notifications.push(data)
+  },
+  removeNotification (state, notification) {
+    console.log('remove id: ', notification.id)
+    let index = state.notifications.findIndex(rec => rec.id === notification.id)
+    console.log('index: ', index)
+    state.notifications.splice(index, 1)
+  },
+  clearNotifications (state) {
+    state.notifications = []
+  },
+  toggleNotifications (state) {
+    state.notificationsOpen = !state.notificationsOpen
+  },
+  closeNotifications (state) {
+    state.notificationsOpen = false
+  },
+  clearFriendRecipes (state, id) {
+    state.friendRecipes[id] = []
+  },
+  updateFriendRecipe (state, payload) {
+    let data = payload.doc.data()
+    data.id = payload.doc.id
+    let index = state.friendRecipes[payload.id].findIndex(rec => rec.id === data.id)
+    state.friendRecipes[payload.id].splice(index, 1, data)
+  },
+  addFriendRecipe (state, payload) {
+    let data = payload.doc.data()
+    data.id = payload.doc.id
+    state.friendRecipes.push(data)
+  },
+  removeFriendRecipe (state, payload) {
+    let index = state.friendRecipes.findIndex(rec => rec.id === payload.doc.id)
+    state.friendRecipes.splice(index, 1)
+  },
+  addFriend (state, payload) {
+    payload.doc.categories = []
+    state.friends.push(payload.doc)
+  },
+  updateFriend (state, payload) {
+    let index = state.friends.findIndex(friend => friend.id === payload.id)
+    state.friends.splice(index, 1, payload.doc)
+  },
+  removeFriend (state, payload) {
+    let index = state.friends.findIndex(friend => friend.id === payload.id)
+    state.friends.splice(index, 1)
+  },
+  clearFriends (state) {
+    state.friends = []
+  },
+  addUserCategory (state, payload) {
+    payload.doc.id = payload.id
+    state.categories.push(payload.doc)
+  },
+  updateUserCategory (state, payload) {
+    payload.doc.id = payload.id
+    let index = state.categories.findIndex(cat => cat.id === payload.id)
+    state.categories.splice(index, 1, payload.doc)
+  },
+  removeUserCategory (state, payload) {
+    let index = state.categories.findIndex(cat => cat.id === payload.id)
+    state.categories.splice(index, 1)
+  },
+  clearUserCategories (state) {
+    state.categories = []
+  },
+  addFriendCategory (state, payload) {
+    payload.doc.id = payload.id
+    let friend = state.friends.find(friend => friend.id === payload.friendId)
+    if (friend.categories.length > 0) friend.categories.push(payload.doc)
+    else friend.categories = [payload.doc]
+  },
+  updateFriendCategory (state, payload) {
+    payload.doc.id = payload.id
+    let friend = state.friends.find(friend => friend.id === payload.friendId)
+    let index = friend.categories.findIndex(cat => cat.id === payload.id)
+    friend.categories.splice(index, 1, payload.doc)
+  },
+  removeFriendCategory (state, payload) {
+    let friend = state.friends.find(friend => friend.id === payload.friendId)
+    let index = friend.categories.findIndex(cat => cat.id === payload.id)
+    friend.categories.splice(index, 1)
   }
 }
 
