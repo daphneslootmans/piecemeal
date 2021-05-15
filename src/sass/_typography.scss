@@ -1,0 +1,17 @@
+#app {
+  font-family: $font-stack;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  color: #2c3e50;
+}
+
+h1, h2 {
+  font-family: $font-heading;
+}
+
+.content {
+  h1 {
+    font-size: 2.5em;
+  }
+}
+

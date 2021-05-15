@@ -9,6 +9,8 @@ import Settings from '../views/Settings.vue'
 import AddRecipe from '../components/AddRecipe'
 import EditRecipe from '../components/EditRecipe'
 import ViewRecipe from '../components/ViewRecipe'
+import FriendList from '../components/FriendList'
+import FriendSidebar from '../components/FriendSidebar'
 import NotFoundComponent from '../views/NotFoundComponent'
 
 Vue.use(VueRouter)
@@ -43,7 +45,7 @@ const routes = [
       requiresAuth: true
     }
   },
-  { path: '/recipes/:id',
+  { path: '/recipes/:recipeId',
     name: 'recipe',
     components: {
       default: ViewRecipe,
@@ -53,11 +55,39 @@ const routes = [
       requiresAuth: true
     }
   },
-  { path: '/recipes/:id/edit',
+  { path: '/recipes/:recipeId/edit',
     name: 'edit-recipe',
     components: {
       default: EditRecipe,
       sidebar: Sidebar
+    },
+    props: {
+      default: {
+        editing: true
+      }
+    },
+    query: {
+      editing: true
+    },
+    meta: {
+      requiresAuth: true
+    }
+  },
+  { path: '/friends',
+    name: 'friend-list',
+    components: {
+      default: FriendList,
+      sidebar: FriendSidebar
+    },
+    meta: {
+      requiresAuth: true
+    }
+  },
+  { path: '/friends/:friendId/:recipeId',
+    name: 'friend-recipe',
+    components: {
+      default: ViewRecipe,
+      sidebar: FriendSidebar
     },
     props: {
       default: {

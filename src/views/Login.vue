@@ -44,7 +44,7 @@
 </template>
 
 <script>
-  import { db, auth } from '../firebaseConfig'
+  import { db, auth } from '@/firebaseConfig'
   import { mapState, mapActions } from 'vuex'
 
   export default {
@@ -67,9 +67,7 @@
     },
     methods: {
       ...mapActions({
-        signIn: 'signIn',
-        getUser: 'getUser',
-        getRecipes: 'getRecipes'
+        initialize: 'initializeStore'
       }),
       signInEmail () {
         console.log('trying to sign in')
@@ -78,8 +76,8 @@
                   console.log(response)
                   this.$router.push('/recipes')
                   this.$store.commit('setError', null)
-                  this.getUser()
-                  this.getRecipes()
+                  console.log('getting user stuff from login.vue')
+                  this.initialize()
                 }
             )
             .catch(error => { this.$store.commit('setError', error)})

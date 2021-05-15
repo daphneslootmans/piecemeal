@@ -40,7 +40,10 @@ import {
   faCloudUploadAlt,
   faCog,
   faTimes,
-
+  faHourglassHalf,
+  faBell,
+  faPeopleArrows,
+  faCopy,
 } from '@fortawesome/free-solid-svg-icons'
 
 library.add(
@@ -75,7 +78,11 @@ library.add(
   faCloudUploadAlt,
   faCog,
   faTimes,
-  faUtensils
+  faUtensils,
+  faHourglassHalf,
+  faBell,
+  faPeopleArrows,
+  faCopy,
 )
 
 Vue.component('vue-fontawesome', FontAwesomeIcon)

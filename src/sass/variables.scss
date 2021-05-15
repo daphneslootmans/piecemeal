@@ -1,9 +1,16 @@
 @import "buefy";
 $white: #fff;
+$grey-medium: #7f7f7f;
 $grey-light: #ccc;
 $grey-lightest: hsl(0, 0%, 93%);
+$red-alert: #cf1a1a;
 
 $bg-color: $white;
+
+$notifications-bg: $bg-color;
+
+$font-stack: 'Roboto', 'Arial', sans-serif;
+$font-heading: 'Crete Round', serif;
 
 //$mobile: "(max-width: 768px)";
 //$tablet: "(min-width: 769px)";

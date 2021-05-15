@@ -9,10 +9,13 @@ Vue.use(Vuex)
 
 export default new Vuex.Store({
   state: {
-    version: '0.0.3',
+    version: '0.1.0',
     currentUser: {},
     error: null,
     recipes: [],
+    friends: [],
+    categories: [],
+    friendRecipes: [],
     currentRecipe: {
       title: '',
       category: '',
@@ -32,7 +35,9 @@ export default new Vuex.Store({
     },
     editing: false,
     isMobile: false,
-    navbarActive: false
+    navbarActive: false,
+    notifications: [],
+    notificationsOpen: false,
   },
   getters,
   mutations,
